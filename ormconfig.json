@@ -1,0 +1,23 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "watershed",
+    "password": "watershed",
+    "database": "watershed",
+    "synchronize": true,
+    "entities": [
+      "dist/entity/*.js"
+    ],
+    "subscribers": [
+      "dist/subscriber/*.js"
+    ],
+    "migrations": [
+      "dist/migration/*.js"
+    ],
+    "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+    }
+  }

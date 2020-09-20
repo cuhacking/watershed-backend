@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
  * Routes
  */
 import ping from './ping';
+import user from './user';
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.get('/', (req: Request, res: Response) => {
 
 // Install routes as middleware here
 router.use('/ping', ping);
+router.use('/user', user);
 
 export = router;
