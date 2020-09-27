@@ -11,9 +11,11 @@ const PORT = 8080;
 const API_ROOT = '/api';
 const ENV = process.env.NODE_ENV || 'development';
 
-createConnection().then(() => {
-    const app = express();
+async function main() {
+    await createConnection();
 
+    const app = express();
+    
     /**
      * Middleware
      */
@@ -22,10 +24,7 @@ createConnection().then(() => {
     
     app.use(API_ROOT, routes)
     
-    // Start the server
-    app.listen(PORT, function(){
-        console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
-    });
-});
+    app.listen(PORT);
+}
 
-
+main().then(() => console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`));
