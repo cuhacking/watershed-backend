@@ -42,7 +42,7 @@ jobs:
       - name: Start server
         run: |
           yarn start &
-          sleep 10
+          sleep 30
         env:
           host: postgres
           port: 5432
