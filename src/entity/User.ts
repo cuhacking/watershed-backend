@@ -23,6 +23,9 @@ export class User {
     @IsDefined()
     password!: string;
 
+    @Column({nullable: true})
+    role!: number;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {

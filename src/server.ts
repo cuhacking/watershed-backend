@@ -11,20 +11,19 @@ const PORT = 8080;
 const API_ROOT = '/api';
 const ENV = process.env.NODE_ENV || 'development';
 
-async function main() {
-    await createConnection();
+const app = express();
 
-    const app = express();
-    
-    /**
-     * Middleware
-     */
-    app.use(express.json({ limit: '50mb' }));
-    app.use(morgan('tiny'));
-    
-    app.use(API_ROOT, routes)
-    
+/**
+ * Middleware
+ */
+app.use(express.json({ limit: '50mb' }));
+app.use(morgan('tiny'));
+
+app.use(API_ROOT, routes)
+
+createConnection().then(() => {
     app.listen(PORT);
-}
+    console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
+});
 
-main().then(() => console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`));
+export = app;

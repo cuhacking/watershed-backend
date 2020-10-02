@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 /**
  * Routes
  */
-import ping from './ping';
+import status from './status';
 import user from './user';
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.get('/', (req: Request, res: Response) => {
 });
 
 // Install routes as middleware here
-router.use('/ping', ping);
+router.use('/status', status);
 router.use('/user', user);
 
 export = router;
