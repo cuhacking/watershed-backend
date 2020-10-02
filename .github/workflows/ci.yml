@@ -51,5 +51,5 @@ jobs:
           database: watershed_test
           synchronize: true
 
-        - name: Run tests
-          run: yarn test
+      - name: Run tests
+        run: yarn test
