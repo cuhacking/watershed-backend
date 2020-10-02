@@ -39,11 +39,10 @@ jobs:
           yarn set version berry
           yarn
           
-      - name: Start server and run tests
+      - name: Start server
         run: |
           yarn start &
-          sleep 5
-          yarn test
+          sleep 10
         env:
           host: postgres
           port: 5432
@@ -51,3 +50,6 @@ jobs:
           password: postgres
           database: watershed_test
           synchronize: true
+
+        - name: Run tests
+          run: yarn test
