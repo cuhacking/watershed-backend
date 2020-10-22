@@ -7,24 +7,34 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({nullable: false})
+    @Column()
+    @IsDefined()
+    uuid!: string;
+
+    @Column()
     @IsDefined()
     firstName!: string;
 
-    @Column({nullable: false})
+    @Column()
     @IsDefined()
     lastName!: string;
 
-    @Column({nullable: false, unique: true})
+    @Column({unique: true})
     @IsDefined()
     email!: string;
 
-    @Column({nullable: false})
+    @Column()
     @IsDefined()
     password!: string;
 
     @Column({nullable: true})
-    role!: number;
+    role?: number;
+
+    @Column({nullable: true})
+    discordId?: string;
+
+    @Column({nullable: true})
+    githubId?: string;
 
     @BeforeInsert()
     @BeforeUpdate()

@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
  */
 import status from './status';
 import user from './user';
+import auth from './auth';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.get('/', (req: Request, res: Response) => {
 // Install routes as middleware here
 router.use('/status', status);
 router.use('/user', user);
+router.use('/login', auth);
 
 export = router;

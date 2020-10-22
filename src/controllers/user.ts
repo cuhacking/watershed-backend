@@ -2,6 +2,8 @@ import {User} from '../entity/User';
 import {getManager} from "typeorm";
 import {Request, Response} from "express";
 import {validate} from "class-validator";
+import { v4 as uuidv4 } from 'uuid';
+import * as bcrypt from "bcrypt";
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
@@ -11,7 +13,14 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
-    const newUser = userRepository.create(req.body);
+
+    const userData = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(userData.password, salt);
+    userData.password = password;
+    userData.uuid = uuidv4();
+
+    const newUser = userRepository.create(userData);
     const errors = await validate(newUser);
     if(errors.length > 0) {
         res.sendStatus(400);
@@ -30,6 +39,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
     const user = await userRepository.findOne(req.params.userId);
     if(user){
+        delete user.password;
         res.status(200).send(user);
     } else {
         res.sendStatus(404);
