@@ -1,7 +1,7 @@
 FROM node:12
 COPY . /watershed-backend
 WORKDIR /watershed-backend
-RUN yarn --prod && yarn build
+RUN yarn && yarn build
 EXPOSE 8080
 CMD ["yarn", "serve"]
 
