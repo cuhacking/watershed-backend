@@ -57,9 +57,9 @@ jobs:
           TYPEORM_CONNECTION: postgres
 
       - name: Run tests
-        if: ${{ always() }}
         run: yarn test
       
       - name: Dump run log
+        if: ${{ always() }}
         run: cat run.log
       
