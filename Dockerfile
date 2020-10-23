@@ -1,4 +1,4 @@
-FROM node:12 AS builder
+FROM node:12
 COPY . /watershed-backend
 WORKDIR /watershed-backend
 RUN yarn --prod && yarn build
