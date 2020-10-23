@@ -55,6 +55,7 @@ jobs:
           TYPEORM_DATABASE: watershed-test
           TYPEORM_SYNCHRONIZE : true
           TYPEORM_CONNECTION: postgres
+          TYPEORM_LOGGING: true
 
       - name: Run tests
         run: yarn test
