@@ -1,0 +1,8 @@
+FROM node:12 AS builder
+COPY . /watershed-backend
+WORKDIR /watershed-backend
+RUN yarn --prod && yarn build
+EXPOSE 8080
+CMD ["yarn", "serve"]
+
+LABEL org.opencontainers.image.source https://github.com/cuhacking/watershed-backend
