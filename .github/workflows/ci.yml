@@ -38,16 +38,11 @@ jobs:
         run: | 
           yarn set version berry
           yarn
-          
-      # Performs a clean installation of all dependencies in the `package.json` file
-      # For more information, see https://docs.npmjs.com/cli/ci.html
-      - name: Install dependencies
-        run: npm ci
 
       - name: Connect to PostgreSQL
         # Runs a script that creates a PostgreSQL client, populates
         # the client with data, and retrieves data
-        run: node client.js
+        run: yarn node client.js
         # Environment variable used by the `client.js` script to create
         # a new PostgreSQL client.
         env:
