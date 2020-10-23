@@ -20,13 +20,12 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: watershed-test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 5432:5432
 
     steps:
       - name: Git checkout
@@ -47,11 +46,11 @@ jobs:
           yarn start &
           sleep 30
         env:
-          TYPEORM_HOST: localhost
+          TYPEORM_HOST: postgres
           TYPEORM_PORT: 5432
           TYPEORM_USERNAME: postgres
           TYPEORM_PASSWORD: postgres
-          TYPEORM_DATABASE: postgres
+          TYPEORM_DATABASE: watershed-test
           TYPEORM_SYNCHRONIZE : true
           TYPEORM_CONNECTION: postgres
       - name: Run tests
