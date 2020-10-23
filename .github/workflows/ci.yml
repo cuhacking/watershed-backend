@@ -1,5 +1,4 @@
 name: CI (Integration)
-
 on:
   push:
     branches: [ master ]
@@ -7,20 +6,23 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  # Label of the container job
+  container-job:
+    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: node:12.19.0-buster-slim
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-        
+    # Service containers to run with `container-job`
     services:
+      # Label used to access the service container
       postgres:
+        # Docker Hub image
         image: postgres
+        # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: watershed-test
+        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -28,19 +30,32 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Git checkout
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
         uses: actions/checkout@v2
-        
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-    
+
       - name: Setup yarn and install dependencies
         run: | 
           yarn set version berry
           yarn
           
+      # Performs a clean installation of all dependencies in the `package.json` file
+      # For more information, see https://docs.npmjs.com/cli/ci.html
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL client, populates
+        # the client with data, and retrieves data
+        run: node client.js
+        # Environment variable used by the `client.js` script to create
+        # a new PostgreSQL client.
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: postgres
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+
       - name: Start server
         run: |
           yarn start &
@@ -55,3 +70,62 @@ jobs:
           TYPEORM_CONNECTION: postgres
       - name: Run tests
         run: yarn test
+
+
+# name: CI (Integration)
+
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
+
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [12.x]
+        
+#     services:
+#       postgres:
+#         image: postgres
+#         env:
+#           POSTGRES_PASSWORD: postgres
+#           POSTGRES_DB: watershed-test
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
+
+#     steps:
+#       - name: Git checkout
+#         uses: actions/checkout@v2
+        
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ matrix.node-version }}
+    
+#       - name: Setup yarn and install dependencies
+#         run: | 
+#           yarn set version berry
+#           yarn
+          
+#       - name: Start server
+#         run: |
+#           yarn start &
+#           sleep 30
+#         env:
+#           TYPEORM_HOST: postgres
+#           TYPEORM_PORT: 5432
+#           TYPEORM_USERNAME: postgres
+#           TYPEORM_PASSWORD: postgres
+#           TYPEORM_DATABASE: watershed-test
+#           TYPEORM_SYNCHRONIZE : true
+#           TYPEORM_CONNECTION: postgres
+#       - name: Run tests
+#         run: yarn test
