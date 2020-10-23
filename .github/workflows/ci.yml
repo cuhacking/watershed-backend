@@ -45,7 +45,7 @@ jobs:
 
       - name: Start server
         run: |
-          yarn start &
+          yarn start > run.log &
           sleep 30
         env:
           TYPEORM_HOST: postgres
@@ -55,5 +55,10 @@ jobs:
           TYPEORM_DATABASE: watershed-test
           TYPEORM_SYNCHRONIZE : true
           TYPEORM_CONNECTION: postgres
+
       - name: Run tests
         run: yarn test
+      
+      - name: Dump run log
+        run: cat run.log
+      

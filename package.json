@@ -9,7 +9,7 @@
     "serve": "yarn node dist/server.js",
     "lint": "yarn tsc --noEmit && yarn eslint . --ext .ts,.js --fix",
     "start": "yarn build && yarn serve",
-    "test": "yarn newman run ./tests/postman/Watershed.postman_collection.json -e ./tests/postman/Watershed.postman_environment.json --verbose -n 2"
+    "test": "yarn newman run ./tests/postman/Watershed.postman_collection.json -e ./tests/postman/Watershed.postman_environment.json"
   },
   "author": "",
   "license": "ISC",
