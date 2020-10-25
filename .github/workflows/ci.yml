@@ -1,5 +1,4 @@
 name: CI (Integration)
-
 on:
   push:
     branches: [ master ]
@@ -7,47 +6,62 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  # Label of the container job
+  build-and-test:
+    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: node:12.19.0-buster-slim
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-        
+    # Service containers to run with `container-job`
     services:
+      # Label used to access the service container
       postgres:
+        # Docker Hub image
         image: postgres
+        # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: watershed-test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
-      - name: Git checkout
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
         uses: actions/checkout@v2
-        
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-    
+
       - name: Setup yarn and install dependencies
         run: | 
           yarn set version berry
           yarn
-          
-      - name: Start server and run tests
+
+      - name: Start server
         run: |
-          yarn start &
-          sleep 5
-          yarn test
+          yarn start > run.log &
+          sleep 30
         env:
-          host: postgres
-          port: 5432
-          username: postgres
-          password: postgres
-          database: watershed_test
-          synchronize: true
+          TYPEORM_HOST: postgres
+          TYPEORM_PORT: 5432
+          TYPEORM_USERNAME: test
+          TYPEORM_PASSWORD: test
+          TYPEORM_DATABASE: watershed-test
+          TYPEORM_SYNCHRONIZE : true
+          TYPEORM_CONNECTION: postgres
+          TYPEORM_LOGGING: true
+          TYPEORM_ENTITIES: dist/entity/*.js
+
+      - name: Run tests
+        run: yarn test
+      
+      - name: Dump run log
+        if: ${{ always() }}
+        run: cat run.log
+      

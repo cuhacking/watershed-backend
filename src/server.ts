@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 
 import routes from './routes/routes';
+import {createConnection} from 'typeorm';
 
 /**
  * Constants
@@ -20,7 +21,9 @@ app.use(morgan('tiny'));
 
 app.use(API_ROOT, routes)
 
-// Start the server
-app.listen(PORT, function(){
+createConnection().then(() => {
+    app.listen(PORT);
     console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
 });
+
+export = app;
