@@ -1,4 +1,4 @@
-import * as auth from '../middleware/auth';
+import * as auth from '../middleware/authMiddleware';
 import {User} from '../entity/User';
 import {AccessToken} from '../entity/AccessToken';
 import {RefreshToken} from '../entity/RefreshToken';
