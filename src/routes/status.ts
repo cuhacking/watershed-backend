@@ -1,6 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import {getConnection} from "typeorm";
+import {getConnection} from 'typeorm';
 
 const router = express.Router();
 

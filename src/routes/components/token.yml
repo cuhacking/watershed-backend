@@ -1,0 +1,23 @@
+components:
+  schemas:
+    Token:
+      type: object
+      properties:
+        token: 
+          type: string
+        expiryDate:
+          type: date
+        issueDate:
+          type: date
+      xml:
+        name: Token
+
+    Login:
+      type: object
+      properties:
+        accessToken:
+          type: Token
+        refreshToken:
+          type: Token
+      xml:
+        name: User

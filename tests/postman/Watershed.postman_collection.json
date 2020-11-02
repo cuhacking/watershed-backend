@@ -89,7 +89,7 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.environment.set(\"userId\", pm.response.json().id);"
+									"pm.environment.set(\"userId\", pm.response.json().uuid);"
 								],
 								"type": "text/javascript"
 							}
@@ -100,7 +100,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test7@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -121,26 +121,115 @@
 					"response": []
 				},
 				{
-					"name": "1.2 Get All Users",
+					"name": "1.2 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dcf9cbbd-72e4-4854-8aa9-490831c7dc5b",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{HOST}}/api/user/1",
+							"raw": "{{HOST}}/api/auth/login",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"api",
-								"user",
-								"1"
+								"auth",
+								"login"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "1.3 Get Created User",
+					"name": "1.3 Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a2494c-34dc-4cf9-9db6-b47b4dc624a8",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Array should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZCI6Ik5vbmUiLCJpc3N1ZURhdGUiOjE2MDQzMjk1MTA4MTAsImV4cGlyeURhdGUiOjE2MDQzMzEzMTA4MTB9._sDrhVfGk9zKuy-WHF8890TLOhQ4MDunTF310HUy38YdBLz6Xdrzfi9R8v0tkBqQxBJ9agJ2N3FiW4JzfChJ6A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 Get Created User",
 					"event": [
 						{
 							"listen": "test",
@@ -173,16 +262,17 @@
 					"response": []
 				},
 				{
-					"name": "1.4 Delete Created User",
+					"name": "1.5 Delete Created User",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc9d3ed5-1c93-43d6-8611-2d2b368a6170",
+								"id": "2c59f5d6-c05b-457d-ace1-344f34e74b27",
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"pm.environment.get(\"variable_key\");"
 								],
 								"type": "text/javascript"
 							}
@@ -206,7 +296,7 @@
 					"response": []
 				},
 				{
-					"name": "1.5 Check Deleted User No Longer Exists",
+					"name": "1.6 Check Deleted User No Longer Exists",
 					"event": [
 						{
 							"listen": "test",
@@ -233,6 +323,370 @@
 								"api",
 								"user",
 								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "2. Auth",
+			"item": [
+				{
+					"name": "2.1 Protected Enpoint Not Logged In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60a03979-a772-49a5-afab-1f3b934076be",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Invalid Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ead9d1a2-e315-4a2b-a8a9-59a2d7556c5c",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer blah",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60638675-d8a1-4e76-be8d-e46d69194d45",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4 Protected Enpoint Logged In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "628ad01f-a6c6-4b7c-8a33-f46b99e03341",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.5 Refresh Token Can't Be Used For Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "875e17bf-3c49-4ad0-9fc5-a0fb7734a29e",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{REFRESH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.6 Refresh Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ddbaed2d-6e49-4550-8469-cbfdf4113275",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token is returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.property(\"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"NEW_ACCESS_TOKEN\", jsonData.accessToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"{{REFRESH_TOKEN}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/refresh",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.7 Protected Enpoint New Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "07434091-4698-4cae-ae17-c45aebb1927d",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.8 Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.9 Protected Enpoint After Logout fails",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "26574270-1202-4bc5-96e1-a52d000617fe",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
 							]
 						}
 					},

@@ -5,13 +5,43 @@ import * as auth from '../middleware/auth';
 
 const router = express.Router();
 
-// Get all users
+/**
+ * GET /user
+ * @tag Users
+ * @summary Gets all users.
+ * @response 200 - An array of all the users
+ * @responseContent {User} 200.application/json
+ */
 router.get('/', auth.authenticate, user.getUsers);
-// Create a user
+
+/**
+ * POST /users
+ * @tag Users
+ * @summary Creates a new user.
+ * @bodyContent {User} application/json
+ * @bodyRequired
+ * @response 201 - Created
+ */
 router.post('/', user.createUser);
-// Get a single user by ID
+
+/**
+ * GET /user/{userId}
+ * @tag Users
+ * @summary Gets a user by user uuid
+ * @pathParam {string} userId - the uuid of the user to get
+ * @response 200 - The user
+ * @responseContent {User} 200.application/json
+ * @response 404 - A user with that ID was not found
+ */
 router.get('/:userId', user.getUser);
-// Delete a user
+
+/**
+ * DELETE /user/{userId}
+ * @tag Users
+ * @summary Deletes the user with the specified user ID
+ * @pathParam {string} userId - the uuid of the user to get
+ * @response 200 - The user was sucessfully deleted.
+ */
 router.delete('/:userId', user.deleteUser);
 
 export = router;

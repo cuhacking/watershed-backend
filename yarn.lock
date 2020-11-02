@@ -445,6 +445,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/swagger-ui-express@npm:^4":
+  version: 4.1.2
+  resolution: "@types/swagger-ui-express@npm:4.1.2"
+  dependencies:
+    "@types/express": "*"
+    "@types/serve-static": "*"
+  checksum: 999c83bffaa70fb63af7619ccb7bb3b26f15eff6f335b34b8a625bb7d234e5fe9ec2292f052cc3be77c9e21175313fecacad4e1ad49ee74fef46c36566e4e790
+  languageName: node
+  linkType: hard
+
 "@types/uuid@npm:^8":
   version: 8.3.0
   resolution: "@types/uuid@npm:8.3.0"
@@ -2795,6 +2805,7 @@ fsevents@~2.1.2:
     "@types/passport": ^0
     "@types/passport-discord": ^0
     "@types/passport-local": ^1
+    "@types/swagger-ui-express": ^4
     "@types/uuid": ^8
     "@typescript-eslint/eslint-plugin": ^3.6.1
     "@typescript-eslint/parser": ^3.6.1
@@ -2812,6 +2823,7 @@ fsevents@~2.1.2:
     morgan: ^1.10.0
     newman: ^5.2.0
     nodemon: ^2.0.4
+    openapi-comment-parser: ^1.0.0
     passport: ^0.4.1
     passport-discord: ^0.1.4
     passport-github2: ^0.1.12
@@ -2820,6 +2832,7 @@ fsevents@~2.1.2:
     postman-collection: ^3.6.7
     prettier: ^2.0.5
     reflect-metadata: ^0.1.13
+    swagger-ui-express: ^4.1.4
     ts-node: ^8.10.2
     ts-node-dev: ^1.0.0-pre.52
     typeorm: ^0.2.25
@@ -4395,6 +4408,15 @@ fsevents@~2.1.2:
   dependencies:
     wrappy: 1
   checksum: c68086bafeee1e66c5913a79a9466dbdfca9f0f9c3217aae808a219eac7648f7b164da615028d04dd7642596f6d097e6ba2f4b1c97560ca26c7502dac2ad4859
+  languageName: node
+  linkType: hard
+
+"openapi-comment-parser@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "openapi-comment-parser@npm:1.0.0"
+  bin:
+    openapi-comment-parser: bin/index.js
+  checksum: 30c9f462b64569eaf6bedb173dcc392b5216ff1caf07a9ab38b88e9320002b5f32be093d9dfe4deb869e13e4d2e2e1bb01daa26818c23f1ec9aa81a1f44f19dd
   languageName: node
   linkType: hard
 
@@ -6025,6 +6047,24 @@ fsevents@~2.1.2:
   dependencies:
     has-flag: ^3.0.0
   checksum: 86821571295ad9f808d5e0149f13c2b0ca6faaf1325c427b369e6f4b2b1e4759046b7a4ea0e3c3c7f2546035fa2fb0d6a90f31c6c4f751eaedbcdc1b983a08cc
+  languageName: node
+  linkType: hard
+
+"swagger-ui-dist@npm:^3.18.1":
+  version: 3.36.1
+  resolution: "swagger-ui-dist@npm:3.36.1"
+  checksum: 90e347d7ccaf9c20e2749b5a6326e0800ea261fbe2710eeaf8b7a485ae71fb2e8334078312602b5423283b9d8f3c37c5af2214b237deff25c9c5415979cc2250
+  languageName: node
+  linkType: hard
+
+"swagger-ui-express@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "swagger-ui-express@npm:4.1.4"
+  dependencies:
+    swagger-ui-dist: ^3.18.1
+  peerDependencies:
+    express: ">=4.0.0"
+  checksum: bbf95b5fcf67b7a51944bac0205a628f7dcabf290a7ca6ca7197274062fdd321fb9c3f7ff3716a9d0dec41359502096ccef56f6cedd277819c851c08e6f085d8
   languageName: node
   linkType: hard
 
