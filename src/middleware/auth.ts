@@ -5,7 +5,7 @@ import {RefreshToken} from '../entity/RefreshToken';
 import {PasswordReset} from '../entity/PasswordReset';
 import {getManager} from 'typeorm';
 
-const SECRET_KEY = 'abc'; // Use env for prod
+const SECRET_KEY = process.env.JWT_KEY || ''; // This must be defined, or server.ts will kill the application 
 const ACCESS_EXPIRY = 30 * 60 * 1000; // 30 minutes
 const RESET_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 

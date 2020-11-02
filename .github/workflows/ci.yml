@@ -57,6 +57,7 @@ jobs:
           TYPEORM_CONNECTION: postgres
           TYPEORM_LOGGING: true
           TYPEORM_ENTITIES: dist/entity/*.js
+          JWT_KEY: abc
 
       - name: Run tests
         run: yarn test

@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
@@ -13,6 +16,11 @@ import swaggerUi from 'swagger-ui-express';
 const PORT = 8080;
 const API_ROOT = '/api';
 const ENV = process.env.NODE_ENV || 'development';
+
+if(!process.env.JWT_KEY) {
+    console.log('JWT key must be set.');
+    process.exit(1);
+}
 
 const app = express();
 const spec = openapi({cwd: path.join(__dirname,'../src')});
