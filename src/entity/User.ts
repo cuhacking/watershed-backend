@@ -1,6 +1,12 @@
 import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate} from 'typeorm';
 import { validateOrReject, IsDefined } from 'class-validator';
 
+export enum Role {
+    Hacker,
+    Sponsor,
+    Organizer
+};
+
 @Entity()
 export class User {
 
@@ -28,7 +34,7 @@ export class User {
     password!: string;
 
     @Column({nullable: true})
-    role?: number;
+    role?: Role;
 
     @Column({nullable: true})
     discordId?: string;

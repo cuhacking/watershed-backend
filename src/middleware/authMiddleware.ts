@@ -4,8 +4,8 @@ import {AccessToken} from '../entity/AccessToken';
 import {RefreshToken} from '../entity/RefreshToken';
 import {PasswordReset} from '../entity/PasswordReset';
 import {getManager} from 'typeorm';
-
-const SECRET_KEY = process.env.JWT_KEY || ''; // This must be defined, or server.ts will kill the application 
+import { User, Role } from '../entity/User';
+const SECRET_KEY = process.env.JWT_KEY ?? ''; // This must be defined, or server.ts will kill the application 
 const ACCESS_EXPIRY = 30 * 60 * 1000; // 30 minutes
 const RESET_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -40,6 +40,8 @@ export interface VerifyResult {
     uid: string | undefined;
 }
 
+type TokenType = "access" | "refresh" | "reset";
+
 /**
  * Generates a JWT to be used as a token
  * 
@@ -48,7 +50,7 @@ export interface VerifyResult {
  * 
  * @returns an Encode Result object containing the token, issue date and expiry date
  */
-export const encodeJWT = (uid: string, type: string): EncodeResult => {
+export const encodeJWT = (uid: string, type: TokenType): EncodeResult => {
     const algorithm: TAlgorithm = 'HS512';
     const issueDate = Date.now();
     let expiryDate;
@@ -104,7 +106,7 @@ export const decodeJWT = (token: string): DecodeResult => {
  * 
  * @returns the EncodeResult returned by encodeJWT()
  */
-export const generateToken = async (uid: string, type: string): Promise<EncodeResult> => {
+export const generateToken = async (uid: string, type: TokenType): Promise<EncodeResult> => {
     const result: EncodeResult = encodeJWT(uid, type);
     if(type === 'access') {
         const accessTokenRepo = getManager().getRepository(AccessToken);
@@ -128,7 +130,7 @@ export const generateToken = async (uid: string, type: string): Promise<EncodeRe
  * 
  * @returns VerifyResult object, with result of the decoding and the uid of the token owner if the token was valid
  */
-export const verifyToken = async (token: string, type: string): Promise<VerifyResult> => {
+export const verifyToken = async (token: string, type: TokenType): Promise<VerifyResult> => {
     const session: DecodeResult = decodeJWT(token);
     if(!session.valid) {
         return {
@@ -172,12 +174,6 @@ export const verifyToken = async (token: string, type: string): Promise<VerifyRe
                 uid: undefined
             }
         }
-    } else {
-        // Should never happen, but if we get an unrecognized type, just make it invalid
-        return {
-            result: AuthTokenStatus.Invalid, 
-            uid: undefined
-        }
     }
 
     return {
@@ -187,19 +183,27 @@ export const verifyToken = async (token: string, type: string): Promise<VerifyRe
 }
 
 // Middleware for verifying if a request is authenticated via a Bearer token in Authentication header
-// TODO: Implement authorization based on role
-export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const header = req.header('Authorization')?.split(' ')[1];
-    if(!header) {
-        res.status(401).send('Authorization header not provided');
-    } else {
-        const verify = await verifyToken(header, 'access');
-        if(verify.result === AuthTokenStatus.Invalid) {
-            res.status(401).send('Invalid token');
-        } else if(verify.result === AuthTokenStatus.Expired){
-            res.status(401).send('Token expired');
+export const authenticate = (role: Role): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
+
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const header = req.header('Authorization')?.split(' ')[1];
+        if(!header) {
+            res.status(401).send('Authorization header not provided');
         } else {
-            next();
+            const verify = await verifyToken(header, 'access');
+            if(verify.result === AuthTokenStatus.Invalid) {
+                res.status(401).send('Invalid token');
+            } else if(verify.result === AuthTokenStatus.Expired){
+                res.status(401).send('Token expired');
+            } else {
+                const userRepo = getManager().getRepository(User);
+                const user = await userRepo.findOne({uuid: verify.uid});
+                if(user?.role && user.role >= role) {
+                    next();
+                } else {
+                    res.sendStatus(403);
+                }
+            }
         }
     }
 };

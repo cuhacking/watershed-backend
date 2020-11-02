@@ -3,6 +3,8 @@ import express from 'express';
 import * as user from '../controllers/userController';
 import * as auth from '../middleware/authMiddleware';
 
+import {Role} from '../entity/User';
+
 const router = express.Router();
 
 /**
@@ -12,7 +14,7 @@ const router = express.Router();
  * @response 200 - An array of all the users
  * @responseContent {User} 200.application/json
  */
-router.get('/', auth.authenticate, user.getUsers);
+router.get('/', auth.authenticate(Role.Organizer), user.getUsers);
 
 /**
  * POST /users
