@@ -41,7 +41,7 @@ export interface VerifyResult {
     uid: string | undefined;
 }
 
-type TokenType = "access" | "refresh" | "reset";
+type TokenType = 'access' | 'refresh' | 'reset';
 
 /**
  * Generates a JWT to be used as a token

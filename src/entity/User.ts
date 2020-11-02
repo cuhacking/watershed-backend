@@ -5,10 +5,10 @@ export enum Role {
     Hacker,
     Sponsor,
     Organizer
-};
+}
 
 function ValidRole() {
-    return function (object: Object, propertyName: string) {
+    return function (object: User, propertyName: string) {
       registerDecorator({
         name: 'validRole',
         target: object.constructor,
