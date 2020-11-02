@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "1005e352-6c74-44c3-8031-a8916a06f580",
-		"name": "Watershed Copy",
+		"name": "Watershed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -280,7 +280,13 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{HOST}}/api/user/{{userId}}",
 							"host": [
@@ -683,6 +689,15 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/api/auth/logout",
 							"host": [
@@ -856,7 +871,7 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
+								"value": "Bearer {{ACCESS_TOKEN}}"
 							}
 						],
 						"url": {
