@@ -21,7 +21,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     userData.uuid = uuidv4();
 
     //eslint-disable-next-line @typescript-eslint/ban-types
-    const newUser = userRepository.create({...userData} as Object); // This makes TypeORM not return an array...
+    const newUser = userRepository.create({...userData} as User); // This makes TypeORM not return an array...
     const errors = await validate(newUser);
     if(errors.length > 0) {
         res.sendStatus(400);

@@ -100,7 +100,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -335,7 +335,7 @@
 			"name": "2. Auth",
 			"item": [
 				{
-					"name": "2.1 Create User",
+					"name": "2.1 Create Organizer User",
 					"event": [
 						{
 							"listen": "test",
@@ -357,7 +357,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -684,14 +684,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/api/auth/login",
+							"raw": "{{HOST}}/api/auth/logout",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"api",
 								"auth",
-								"login"
+								"logout"
 							]
 						}
 					},
@@ -706,7 +706,144 @@
 								"id": "9c97cbb0-fd15-4215-8374-498cc2acd4a7",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.11 Create Hacker User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "58b47983-2878-45d6-98f2-4706c084cf15",
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userId\", pm.response.json().uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Hacker\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"hacker@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.12 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "200dc523-8d22-4cd5-884d-ec7300ecfa9e",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"hacker@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.13 Protected Enpoint Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cda296d8-3978-44a8-96fc-e0fd081e64e6",
+								"exec": [
+									"pm.test(\"Status code is 403\", () => {\r",
+									"    pm.response.to.have.status(403);\r",
 									"});"
 								],
 								"type": "text/javascript"

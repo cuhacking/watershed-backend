@@ -1,5 +1,5 @@
 import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate} from 'typeorm';
-import { validateOrReject, IsDefined } from 'class-validator';
+import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 
 export enum Role {
     Hacker,
@@ -7,6 +7,20 @@ export enum Role {
     Organizer
 };
 
+function ValidRole() {
+    return function (object: Object, propertyName: string) {
+      registerDecorator({
+        name: 'validRole',
+        target: object.constructor,
+        propertyName: propertyName,
+        validator: {
+          validate(value: any, args: ValidationArguments) {
+              return Object.values(Role).includes(value);
+          },
+        },
+      });
+    };
+  }
 @Entity()
 export class User {
 
@@ -34,6 +48,7 @@ export class User {
     password!: string;
 
     @Column({nullable: true})
+    @ValidRole()
     role?: Role;
 
     @Column({nullable: true})

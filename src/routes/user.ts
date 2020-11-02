@@ -44,6 +44,6 @@ router.get('/:userId', user.getUser);
  * @pathParam {string} userId - the uuid of the user to get
  * @response 200 - The user was sucessfully deleted.
  */
-router.delete('/:userId', user.deleteUser);
+router.delete('/:userId', auth.authenticate(Role.Organizer), user.deleteUser);
 
 export = router;
