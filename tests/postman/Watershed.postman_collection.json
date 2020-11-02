@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "595fa2e1-b4a2-432d-97e3-1d35eb609935",
-		"name": "Watershed",
+		"_postman_id": "1005e352-6c74-44c3-8031-a8916a06f580",
+		"name": "Watershed Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "de19300a-41c1-4803-b3cb-21dcc407a4dc",
+								"id": "9e309947-cf1d-4ea7-ac2a-43ca76a04072",
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -45,7 +45,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "78e3e0e7-7bc3-459b-bf51-41754c671ba0",
+								"id": "cf55ada5-92a4-40b7-b483-5808709f8a88",
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -83,7 +83,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dba02ee1-fc75-417d-967d-b6c7084f27a8",
+								"id": "7405907c-9889-48ba-888b-56c581c83a9f",
 								"exec": [
 									"pm.test(\"Status code is 201\", () => {\r",
 									"    pm.response.to.have.status(201);\r",
@@ -126,7 +126,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dcf9cbbd-72e4-4854-8aa9-490831c7dc5b",
+								"id": "58686c11-e682-491e-8bc1-a99b940d8500",
 								"exec": [
 									"const jsonData = pm.response.json();\r",
 									"\r",
@@ -182,7 +182,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "73a2494c-34dc-4cf9-9db6-b47b4dc624a8",
+								"id": "4f59c211-8742-425d-b5bf-0e255f2d5ae8",
 								"exec": [
 									"const jsonData = pm.response.json();\r",
 									"\r",
@@ -207,7 +207,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpZCI6Ik5vbmUiLCJpc3N1ZURhdGUiOjE2MDQzMjk1MTA4MTAsImV4cGlyeURhdGUiOjE2MDQzMzEzMTA4MTB9._sDrhVfGk9zKuy-WHF8890TLOhQ4MDunTF310HUy38YdBLz6Xdrzfi9R8v0tkBqQxBJ9agJ2N3FiW4JzfChJ6A",
+								"value": "Bearer {{ACCESS_TOKEN}}",
 								"type": "text"
 							}
 						],
@@ -234,7 +234,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e92ac1d5-27d1-4ce9-b278-78fde3a9ce7c",
+								"id": "eb88ea35-0389-4d91-9d87-e6dd6f4f3c4f",
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -267,7 +267,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2c59f5d6-c05b-457d-ace1-344f34e74b27",
+								"id": "b2303652-403e-409e-a2a0-4920178a505b",
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -301,7 +301,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3be99be4-1f6e-4f10-8c6a-23c26b343c28",
+								"id": "be32bed3-ddef-4dca-b88e-e422a98c56f8",
 								"exec": [
 									"pm.test(\"Status code is 404\", () => {\r",
 									"    pm.response.to.have.status(404);\r",
@@ -335,12 +335,55 @@
 			"name": "2. Auth",
 			"item": [
 				{
-					"name": "2.1 Protected Enpoint Not Logged In",
+					"name": "2.1 Create User",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "60a03979-a772-49a5-afab-1f3b934076be",
+								"id": "a97b76cf-1ec9-46e5-9fd7-b63fe7c313a0",
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userId\", pm.response.json().uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Password\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Protected Enpoint Not Logged In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49714206-9506-4b12-bd43-e45d74aebb54",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(401);\r",
@@ -367,12 +410,12 @@
 					"response": []
 				},
 				{
-					"name": "2.2 Invalid Token",
+					"name": "2.3 Invalid Token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "ead9d1a2-e315-4a2b-a8a9-59a2d7556c5c",
+								"id": "2f7e2edb-30ff-49a0-aa60-858729c10024",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(401);\r",
@@ -405,12 +448,12 @@
 					"response": []
 				},
 				{
-					"name": "2.3 Login",
+					"name": "2.4 Login",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "60638675-d8a1-4e76-be8d-e46d69194d45",
+								"id": "7425cf76-38a6-4667-b1af-b4bd24497b9c",
 								"exec": [
 									"const jsonData = pm.response.json();\r",
 									"\r",
@@ -461,12 +504,12 @@
 					"response": []
 				},
 				{
-					"name": "2.4 Protected Enpoint Logged In",
+					"name": "2.5 Protected Enpoint Logged In",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "628ad01f-a6c6-4b7c-8a33-f46b99e03341",
+								"id": "c48abbd0-8d53-4fdf-a3f2-be01ee245dfc",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -499,12 +542,12 @@
 					"response": []
 				},
 				{
-					"name": "2.5 Refresh Token Can't Be Used For Auth",
+					"name": "2.6 Refresh Token Can't Be Used For Auth",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "875e17bf-3c49-4ad0-9fc5-a0fb7734a29e",
+								"id": "da7c86db-cc64-4351-9d1e-96a0ed20ed1c",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(401);\r",
@@ -537,12 +580,12 @@
 					"response": []
 				},
 				{
-					"name": "2.6 Refresh Access Token",
+					"name": "2.7 Refresh Access Token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "ddbaed2d-6e49-4550-8469-cbfdf4113275",
+								"id": "8d1c0988-3a01-46f5-8341-c9b714d3d748",
 								"exec": [
 									"const jsonData = pm.response.json();\r",
 									"\r",
@@ -592,12 +635,12 @@
 					"response": []
 				},
 				{
-					"name": "2.7 Protected Enpoint New Access Token",
+					"name": "2.8 Protected Enpoint New Access Token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "07434091-4698-4cae-ae17-c45aebb1927d",
+								"id": "ff5823c5-5bad-4560-b044-a0e73e5c60a7",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -630,7 +673,7 @@
 					"response": []
 				},
 				{
-					"name": "2.8 Logout",
+					"name": "2.9 Logout",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -655,12 +698,12 @@
 					"response": []
 				},
 				{
-					"name": "2.9 Protected Enpoint After Logout fails",
+					"name": "2.10 Protected Enpoint After Logout fails",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "26574270-1202-4bc5-96e1-a52d000617fe",
+								"id": "9c97cbb0-fd15-4215-8374-498cc2acd4a7",
 								"exec": [
 									"pm.test(\"Status code is 401\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
