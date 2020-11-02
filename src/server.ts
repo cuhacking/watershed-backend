@@ -29,7 +29,6 @@ if(ENV === 'development') {
     app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec));
 }
 
-
 createConnection().then(() => {
     app.listen(PORT);
     console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
