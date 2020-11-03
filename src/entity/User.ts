@@ -1,30 +1,61 @@
 import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate} from 'typeorm';
-import { validateOrReject, IsDefined } from 'class-validator';
+import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 
+export enum Role {
+    Hacker,
+    Sponsor,
+    Organizer
+}
+
+function ValidRole() {
+    return function (object: User, propertyName: string) {
+      registerDecorator({
+        name: 'validRole',
+        target: object.constructor,
+        propertyName: propertyName,
+        validator: {
+          validate(value: any, args: ValidationArguments) {
+              return Object.values(Role).includes(value);
+          },
+        },
+      });
+    };
+  }
 @Entity()
 export class User {
 
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({nullable: false})
+    @Column()
+    @IsDefined()
+    uuid!: string;
+
+    @Column()
     @IsDefined()
     firstName!: string;
 
-    @Column({nullable: false})
+    @Column()
     @IsDefined()
     lastName!: string;
 
-    @Column({nullable: false, unique: true})
+    @Column({unique: true})
     @IsDefined()
     email!: string;
 
-    @Column({nullable: false})
+    @Column()
     @IsDefined()
     password!: string;
 
     @Column({nullable: true})
-    role!: number;
+    @ValidRole()
+    role?: Role;
+
+    @Column({nullable: true})
+    discordId?: string;
+
+    @Column({nullable: true})
+    githubId?: string;
 
     @BeforeInsert()
     @BeforeUpdate()

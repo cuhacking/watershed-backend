@@ -6,3 +6,4 @@
 .pnp.*
 dist
 ormconfig.json
+.env

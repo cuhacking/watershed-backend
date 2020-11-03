@@ -1,0 +1,21 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+        role:
+          type: integer
+        githubId:
+          type: string
+        discordId:
+          type: string
+      xml:
+        name: User

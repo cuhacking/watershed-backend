@@ -14,13 +14,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/chai": "^4.2.12",
     "@types/chai-http": "^4.2.0",
     "@types/express": "^4",
+    "@types/jwt-simple": "^0.5.33",
     "@types/mime-types": "^2",
     "@types/mocha": "^8.0.3",
     "@types/morgan": "^1",
     "@types/newman": "^5",
+    "@types/swagger-ui-express": "^4",
+    "@types/uuid": "^8",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.6.1",
     "@yarnpkg/pnpify": "^2.1.0",
@@ -38,12 +42,18 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
     "morgan": "^1.10.0",
+    "openapi-comment-parser": "^1.0.0",
     "pg": "^8.3.3",
     "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.1.4",
     "ts-node": "^8.10.2",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "uuid": "^8.3.1"
   }
 }

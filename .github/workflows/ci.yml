@@ -11,7 +11,7 @@ jobs:
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
     # Docker Hub image that `container-job` executes in
-    container: node:12.19.0-buster-slim
+    container: node:14.15.0-buster-slim
 
     # Service containers to run with `container-job`
     services:
@@ -57,6 +57,7 @@ jobs:
           TYPEORM_CONNECTION: postgres
           TYPEORM_LOGGING: true
           TYPEORM_ENTITIES: dist/entity/*.js
+          JWT_KEY: abc
 
       - name: Run tests
         run: yarn test
