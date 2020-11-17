@@ -33,7 +33,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
             // Login the new user
             const accessToken = await auth.generateToken(newUser.uuid, 'access');
             const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-            res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+            res.status(201).send({uuid: newUser.uuid, accessToken: accessToken, refreshToken: refreshToken});
         } catch (error) {
             res.status(400).send(error);
         }
