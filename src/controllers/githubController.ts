@@ -41,13 +41,9 @@ export const linkGithub = async (req: Request, res: Response): Promise<void> => 
 
     const state = crypto.randomBytes(16).toString('hex') + '/' + uuid
 
-    if(!token) {
-        res.sendStatus(401);    
-    } else {  
-        const stateRepo = getManager().getRepository(State);
-        await stateRepo.save(stateRepo.create({state: state, type: 'github'}));
-        res.redirect(githubAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/github/callback/link', state: state}));
-    }
+    const stateRepo = getManager().getRepository(State);
+    await stateRepo.save(stateRepo.create({state: state, type: 'github'}));
+    res.redirect(githubAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/github/callback/link', state: state}));
 }
 
 export const githubAuthCallback = async (req: Request, res: Response): Promise<void> => {
@@ -94,7 +90,6 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
             if(errors.length > 0) {
                 res.sendStatus(400);
             } else {
-                // TODO: Better validation for email uniqueness
                 try {
                     await userRepo.save(newUser);
                     // Login the new user

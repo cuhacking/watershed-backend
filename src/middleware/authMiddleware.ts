@@ -183,6 +183,13 @@ export const verifyToken = async (token: string, type: TokenType): Promise<Verif
     }
 }
 
+/**
+ * Grabs user UUID from a token
+ * 
+ * @param token the token
+ * 
+ * @returns the user's UUID 
+ */
 export const getUserFromToken = (token: string): string|undefined => {
     return decodeJWT(token).session?.id;
 }

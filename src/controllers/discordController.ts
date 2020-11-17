@@ -41,13 +41,9 @@ export const linkDiscord = async (req: Request, res: Response): Promise<void> =>
 
     const state = crypto.randomBytes(16).toString('hex') + '/' + uuid
 
-    if(!token) {
-        res.sendStatus(401);    
-    } else {  
-        const stateRepo = getManager().getRepository(State);
-        await stateRepo.save(stateRepo.create({state: state, type: 'discord'}));
-        res.redirect(discordAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/discord/callback/link', state: state}));
-    }
+    const stateRepo = getManager().getRepository(State);
+    await stateRepo.save(stateRepo.create({state: state, type: 'discord'}));
+    res.redirect(discordAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/discord/callback/link', state: state}));
 }
 
 export const discordAuthCallback = async (req: Request, res: Response): Promise<void> => {
