@@ -183,6 +183,10 @@ export const verifyToken = async (token: string, type: TokenType): Promise<Verif
     }
 }
 
+export const getUserFromToken = (token: string): string|undefined => {
+    return decodeJWT(token).session?.id;
+}
+
 // Middleware for verifying if a request is authenticated via a Bearer token in Authentication header
 export const authenticate = (role: Role): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
 

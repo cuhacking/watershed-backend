@@ -31,31 +31,28 @@ export class User {
     @IsDefined()
     uuid!: string;
 
-    @Column()
-    @IsDefined()
-    firstName!: string;
+    @Column({nullable: true, type: 'varchar'})
+    firstName?: string | null;
 
-    @Column()
-    @IsDefined()
-    lastName!: string;
+    @Column({nullable: true, type: 'varchar'})
+    lastName?: string | null;
 
     @Column({unique: true})
     @IsDefined()
     email!: string;
 
-    @Column()
-    @IsDefined()
-    password!: string;
+    @Column({nullable: true, type: 'varchar'})
+    password?: string | null;
 
-    @Column({nullable: true})
+    @Column({nullable: true, type: 'int4'})
     @ValidRole()
-    role?: Role;
+    role?: Role | null;
 
-    @Column({nullable: true})
-    discordId?: string;
+    @Column({nullable: true, type: 'varchar'})
+    discordId?: string | null;
 
-    @Column({nullable: true})
-    githubId?: string;
+    @Column({nullable: true, type: 'varchar'})
+    githubId?: string | null;;
 
     @BeforeInsert()
     @BeforeUpdate()

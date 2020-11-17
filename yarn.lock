@@ -106,6 +106,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@servie/events@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@servie/events@npm:1.0.0"
+  checksum: 55c6b9c248df9ac09592a4e4323c3393afb51187369989a73d11f0b847aac6c4cf24550b90fb8b5f52a78a3ed6506c860f7f96bcc6d582a31f45ce7d919b1b24
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^0.14.0":
   version: 0.14.0
   resolution: "@sindresorhus/is@npm:0.14.0"
@@ -406,6 +413,13 @@ __metadata:
     "@types/express": "*"
     "@types/serve-static": "*"
   checksum: 999c83bffaa70fb63af7619ccb7bb3b26f15eff6f335b34b8a625bb7d234e5fe9ec2292f052cc3be77c9e21175313fecacad4e1ad49ee74fef46c36566e4e790
+  languageName: node
+  linkType: hard
+
+"@types/tough-cookie@npm:^2.3.5":
+  version: 2.3.7
+  resolution: "@types/tough-cookie@npm:2.3.7"
+  checksum: 6419df55f92b6dc328db994f30c8c20fc2a39a594b03137cf93c1551263faa4a921baff6dcf46df98c197d0723589982f8174b9ff7b59724d424823e6377f654
   languageName: node
   linkType: hard
 
@@ -946,6 +960,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "axios@npm:0.21.0"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: 4b08ecab39040948c03cae5fa726fdcf8bc299679818179c146e779a922ce887fad9261d82ad57ad1a3aa1fcba3612f14b490fdfa2cd28fa23c190fd48517f5f
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^1.0.0":
   version: 1.0.0
   resolution: "balanced-match@npm:1.0.0"
@@ -1110,6 +1133,13 @@ __metadata:
     base64-js: ^1.3.1
     ieee754: ^1.1.13
   checksum: 33a6a08be4f4208ab76b2080bc8e2f6aa6d6b65e0ee48ea2062cf8230d477a1658232b18a3799e86794a2c1922b0fc8d4823576b9542f5a820246e67283eacc5
+  languageName: node
+  linkType: hard
+
+"byte-length@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "byte-length@npm:1.0.2"
+  checksum: 3c01939a3d8fffa2b7d4cf23edd85f15396ac00c2e3e477e89fdd1d292d5989196d560794aedf6d5d4b14a9dde6b5bcd5b177819dc6e372bf8dbd0b93cf6e694
   languageName: node
   linkType: hard
 
@@ -1402,6 +1432,16 @@ __metadata:
     colors:
       optional: true
   checksum: 4b61f9db4fb26039ab9299089d5a8a6a269f0d79eefd1e8b9479746f26ec186365bc6bf2bceb4812446cc213426b0f86cd86b7fc130a43d270d0f76e77f251f3
+  languageName: node
+  linkType: hard
+
+"client-oauth2@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "client-oauth2@npm:4.3.3"
+  dependencies:
+    popsicle: ^12.0.5
+    safe-buffer: ^5.2.0
+  checksum: c08489730a6028985f25ee1a5727fa2a4fa6b84aac0bb3f576f43f6d8724d377d47684250ef190d33087222926bba08b9c6854d08aea234cbb7e9ead3c2f2e91
   languageName: node
   linkType: hard
 
@@ -2458,6 +2498,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.10.0":
+  version: 1.13.0
+  resolution: "follow-redirects@npm:1.13.0"
+  checksum: f220828d3f153da30ea616fdbe9f6676e74e4e68c51d336a751037c1d556e2de34aa5918f58951fa19bb6517c9c88b4403a0a8bdfc40d3e779d37def2ac0f2c4
+  languageName: node
+  linkType: hard
+
 "forever-agent@npm:~0.6.1":
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
@@ -2786,10 +2833,12 @@ fsevents@~2.1.2:
     "@typescript-eslint/eslint-plugin": ^3.6.1
     "@typescript-eslint/parser": ^3.6.1
     "@yarnpkg/pnpify": ^2.1.0
+    axios: ^0.21.0
     bcrypt: ^5.0.0
     chai: ^4.2.0
     chai-http: ^4.3.0
     class-validator: ^0.12.2
+    client-oauth2: ^4.3.3
     dotenv: ^8.2.0
     eslint: ^7.5.0
     express: ^4.17.1
@@ -3666,7 +3715,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"make-error@npm:^1.1.1":
+"make-error-cause@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "make-error-cause@npm:2.3.0"
+  dependencies:
+    make-error: ^1.3.5
+  checksum: da72742bc40943915353f48ba5438ef39c893f6055206fb0b997ef0ef5dff833737f671819932d526f1acde3d13223178b9f6ec88850c76a90594b509b8f87a7
+  languageName: node
+  linkType: hard
+
+"make-error@npm:^1.1.1, make-error@npm:^1.3.5":
   version: 1.3.6
   resolution: "make-error@npm:1.3.6"
   checksum: 2c780bab8409b865e8ee86697c599a2bf2765ec64d21eb67ccda27050e039f983feacad05a0d43aba3c966ea03d305d2612e94fec45474bcbc61181f57c5bb88
@@ -4667,6 +4725,82 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"popsicle-content-encoding@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "popsicle-content-encoding@npm:1.0.0"
+  peerDependencies:
+    servie: ^4.0.0
+  checksum: 45eefd43cc52b2ba0481080941b641b45b41372455b36537839ee34710e16ea23412cf68f2b885ca1e83e3f346b2e4a0de950a506e53005aba749660a792bb48
+  languageName: node
+  linkType: hard
+
+"popsicle-cookie-jar@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "popsicle-cookie-jar@npm:1.0.0"
+  dependencies:
+    "@types/tough-cookie": ^2.3.5
+    tough-cookie: ^3.0.1
+  peerDependencies:
+    servie: ^4.0.0
+  checksum: b573934ac94b9d997e49e836b18fca16ac9ed60b8569b59cf297ab43ec946ca40e4393431de3356de2b2235da410ce24d59baf3ee666948685252cdeb6d4b13e
+  languageName: node
+  linkType: hard
+
+"popsicle-redirects@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "popsicle-redirects@npm:1.1.0"
+  peerDependencies:
+    servie: ^4.1.0
+  checksum: 0deb6040ce445922d16c3f45003b9caef56664289d627cba9515ad49d5b2c278f1afcb2e8585924dda71554be7c2824f65c8bec0c25b6f0b6ea63d6b2d705c2d
+  languageName: node
+  linkType: hard
+
+"popsicle-transport-http@npm:^1.0.8":
+  version: 1.0.9
+  resolution: "popsicle-transport-http@npm:1.0.9"
+  dependencies:
+    make-error-cause: ^2.2.0
+    pump: ^3.0.0
+  peerDependencies:
+    servie: ^4.2.0
+  checksum: b762ae32b25ae66121a081fc5d32f824bdbb44c65703a9be387c38d21bfa2e0886e16061daea29f6e83b1ef53570651e25a4dd5dbc479e9e8db306cdc5db4d74
+  languageName: node
+  linkType: hard
+
+"popsicle-transport-xhr@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "popsicle-transport-xhr@npm:2.0.0"
+  peerDependencies:
+    servie: ^4.2.0
+  checksum: d08dbf0b42c3d635d47369c0b6753df3a36328a3e7260c2c3509e14c27cbe9f6019f71b58ddf4eee11065134ff5d26426ae2d0545f6566a4ce79070fab9d0364
+  languageName: node
+  linkType: hard
+
+"popsicle-user-agent@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "popsicle-user-agent@npm:1.0.0"
+  peerDependencies:
+    servie: ^4.0.0
+  checksum: d2790dbcd262fbef467174898477e734d0bd1655788ed8efb633538491e8c396803aed707d128854d5820f7d362da232cde000d004804fb14b29876ed029d994
+  languageName: node
+  linkType: hard
+
+"popsicle@npm:^12.0.5":
+  version: 12.1.0
+  resolution: "popsicle@npm:12.1.0"
+  dependencies:
+    popsicle-content-encoding: ^1.0.0
+    popsicle-cookie-jar: ^1.0.0
+    popsicle-redirects: ^1.1.0
+    popsicle-transport-http: ^1.0.8
+    popsicle-transport-xhr: ^2.0.0
+    popsicle-user-agent: ^1.0.0
+    servie: ^4.3.3
+    throwback: ^4.1.0
+  checksum: 3f386348b6c3c0528715a4c8ad1cb1e5c1a850b6e6c9508750eea02db87017413c0817388bd602227e57ce46bdd7f05e88b0282e76c24725aa712acb31d1a839
+  languageName: node
+  linkType: hard
+
 "postcss@npm:^7.0.5":
   version: 7.0.35
   resolution: "postcss@npm:7.0.35"
@@ -5293,6 +5427,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"safe-buffer@npm:^5.2.0":
+  version: 5.2.1
+  resolution: "safe-buffer@npm:5.2.1"
+  checksum: 0bb57f0d8f9d1fa4fe35ad8a2db1f83a027d48f2822d59ede88fd5cd4ddad83c0b497213feb7a70fbf90597a70c5217f735b0eb1850df40ce9b4ae81dd22b3f9
+  languageName: node
+  linkType: hard
+
 "safer-buffer@npm:>= 2.1.2 < 3, safer-buffer@npm:>= 2.1.2 < 3.0.0, safer-buffer@npm:^2.0.2, safer-buffer@npm:^2.1.0, safer-buffer@npm:~2.1.0":
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
@@ -5411,6 +5552,17 @@ fsevents@~2.1.2:
     parseurl: ~1.3.3
     send: 0.17.1
   checksum: 97e8c94ec02950d019000ca12a8e0b4fdeaaabb7ae965c1c05557b55b48114716ae92688972a8d9f06a5e2d5957c305253a859ec223bb39a1e0732366d0e2768
+  languageName: node
+  linkType: hard
+
+"servie@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "servie@npm:4.3.3"
+  dependencies:
+    "@servie/events": ^1.0.0
+    byte-length: ^1.0.2
+    ts-expect: ^1.1.0
+  checksum: cde881a5412c4dda3954e8d7ca04abb88c65a9aa16e65cf7665775c711cbe858280ef1fa1aa5e56ee3737b3fd7aee1837eaceefef1d3792d99693a9b3ae59500
   languageName: node
   linkType: hard
 
@@ -5935,6 +6087,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"throwback@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "throwback@npm:4.1.0"
+  checksum: 2f559ad1d953d508b081ef99df809c05e8fb41599052c32c23aaf642ebca47ae61ac174357434f0c8a939b3ebc0d975cfa6564e0c4afc9a3fd360eb035362d42
+  languageName: node
+  linkType: hard
+
 "to-readable-stream@npm:^1.0.0":
   version: 1.0.0
   resolution: "to-readable-stream@npm:1.0.0"
@@ -5969,7 +6128,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"tough-cookie@npm:3.0.1":
+"tough-cookie@npm:3.0.1, tough-cookie@npm:^3.0.1":
   version: 3.0.1
   resolution: "tough-cookie@npm:3.0.1"
   dependencies:
@@ -6010,6 +6169,13 @@ fsevents@~2.1.2:
   version: 1.0.0
   resolution: "trim-newlines@npm:1.0.0"
   checksum: acc229ae8f6e7615df28a9cdb33a40db3f385afa9076c8b53a0a2d63d49dd646a6a4827ad93e1bc92ef24286121f66042c00da089f1585e473c010ca88309c78
+  languageName: node
+  linkType: hard
+
+"ts-expect@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "ts-expect@npm:1.1.0"
+  checksum: 6d449a7e87e94c6111b3248a829e784fbf2f76d1c77be175277caae2873be8c423de741299a4a687467757e6848eb0150def0fd9a07a8ffed3326dfba5fc1c8b
   languageName: node
   linkType: hard
 
