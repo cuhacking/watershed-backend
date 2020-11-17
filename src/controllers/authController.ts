@@ -96,7 +96,17 @@ export const performReset = async (req: Request, res: Response): Promise<void> =
 
 // Logs out a user (i.e. invalidates all of their access and refresh tokens) - see /auth/logout
 export const logout = async (req: Request, res: Response): Promise<void> => {
-    const userId = req.body.userId;
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
+
+    const userId = auth.getUserFromToken(token);
+    if(!userId) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
 
     // Invalidate their access and refresh tokens 
     const accessTokenRepo = getManager().getRepository(AccessToken);
