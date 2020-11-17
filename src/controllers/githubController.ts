@@ -124,7 +124,7 @@ export const githubLinkCallback = async (req: Request, res: Response): Promise<v
     const userUuid = state?.split('/')[1];
 
     if(!userUuid) {
-        res.status(400).status('Invalid state.'); // The state is wrong...
+        res.status(400).send('Invalid state.'); // The state is wrong...
     } else {
         const existingGithubUser = await userRepo.findOne({githubId: response.data.id});
         if(existingGithubUser){
