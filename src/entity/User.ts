@@ -52,7 +52,7 @@ export class User {
     discordId?: string | null;
 
     @Column({nullable: true, type: 'varchar'})
-    githubId?: string | null;;
+    githubId?: string | null;
 
     @BeforeInsert()
     @BeforeUpdate()

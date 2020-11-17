@@ -65,7 +65,7 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
 
     const userRepo = getManager().getRepository(User);
 
-    let discordUser = await userRepo.findOne({email: response.data.email, discordId: response.data.id});
+    const discordUser = await userRepo.findOne({email: response.data.email, discordId: response.data.id});
     if(discordUser) {
         // User with this ID exists, log them in
         // Generate a new access token and refresh token for them
@@ -74,14 +74,14 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
         res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
     } else {
         // No one has that discord ID, must be signing up
-        let existingUser = await userRepo.findOne({email: response.data.email});
-        let existingdiscordUser = await userRepo.findOne({discordId: response.data.id});
+        const existingUser = await userRepo.findOne({email: response.data.email});
+        const existingdiscordUser = await userRepo.findOne({discordId: response.data.id});
         if(existingUser) {
             res.status(400).send('A user with that email already exists. Please log in with the method used to sign up, and link your Discord account in the settings.');
         } else if(existingdiscordUser) {
             res.status(400).send('This Discord account is already linked to an account. Please log in with that account.');
         } else {
-            let newUser = userRepo.create({
+            const newUser = userRepo.create({
                 uuid: uuidv4(),
                 role: Role.Hacker,
                 email: response.data.email,

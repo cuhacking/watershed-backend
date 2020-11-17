@@ -63,7 +63,7 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
 
     const userRepo = getManager().getRepository(User);
 
-    let githubUser = await userRepo.findOne({email: response.data.email, githubId: response.data.id});
+    const githubUser = await userRepo.findOne({email: response.data.email, githubId: response.data.id});
     if(githubUser) {
         // User with this ID exists, log them in
         // Generate a new access token and refresh token for them
@@ -72,14 +72,14 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
         res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
     } else {
         // No one has that GitHub ID, must be signing up
-        let existingUser = await userRepo.findOne({email: response.data.email});
-        let existingGithubUser = await userRepo.findOne({githubId: response.data.id});
+        const existingUser = await userRepo.findOne({email: response.data.email});
+        const existingGithubUser = await userRepo.findOne({githubId: response.data.id});
         if(existingUser) {
             res.status(400).send('A user with that email already exists. Please log in with the method used to sign up, and link your GitHub account in the settings.');
         } else if(existingGithubUser) {
             res.status(400).send('This GitHub account is already linked to an account. Please log in with that account.');
         } else {
-            let newUser = userRepo.create({
+            const newUser = userRepo.create({
                 uuid: uuidv4(),
                 role: Role.Hacker,
                 email: response.data.email,
