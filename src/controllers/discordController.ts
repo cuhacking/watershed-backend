@@ -108,7 +108,11 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
 
 export const discordLinkCallback = async (req: Request, res: Response): Promise<void> => {
     // Before we do anything, check that the state is valid
-    const state = req.query.state as string | undefined;
+    if(!req.query.state) {
+        res.sendStatus(400);
+        return;
+    }
+    const state = req.query.state as string;
     const stateRepo = getManager().getRepository(State);
     const savedState = await stateRepo.findOne({state: state, type: 'discord'});
 

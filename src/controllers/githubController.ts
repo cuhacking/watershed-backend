@@ -49,7 +49,13 @@ export const linkGithub = async (req: Request, res: Response): Promise<void> => 
 export const githubAuthCallback = async (req: Request, res: Response): Promise<void> => {
     // Before we do anything, check that the state is valid
     const stateRepo = getManager().getRepository(State);
-    const state = req.query.state as string | undefined;
+
+    if(!req.query.state) {
+        res.sendStatus(400);
+        return;
+    }
+
+    const state = req.query.state as string;
     const savedState = await stateRepo.findOne({state: state, type: 'github'});
     if(!savedState) {
         res.sendStatus(400);
