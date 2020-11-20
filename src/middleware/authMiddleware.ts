@@ -183,6 +183,17 @@ export const verifyToken = async (token: string, type: TokenType): Promise<Verif
     }
 }
 
+/**
+ * Grabs user UUID from a token
+ * 
+ * @param token the token
+ * 
+ * @returns the user's UUID 
+ */
+export const getUserFromToken = (token: string): string|undefined => {
+    return decodeJWT(token).session?.id;
+}
+
 // Middleware for verifying if a request is authenticated via a Bearer token in Authentication header
 export const authenticate = (role: Role): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
 

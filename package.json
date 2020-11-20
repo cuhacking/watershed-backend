@@ -42,8 +42,10 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",
+    "client-oauth2": "^4.3.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jwt-simple": "^0.5.6",

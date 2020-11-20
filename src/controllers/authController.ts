@@ -11,7 +11,7 @@ import { PasswordReset } from '../entity/PasswordReset';
 export const login = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
     const user = await userRepository.findOne({email: req.body.email});
-    if(user){
+    if(user && user.password){
         const match = await bcrypt.compare(req.body.password, user.password);
         if(match) {
             // Generate a new access token and refresh token for them
@@ -22,7 +22,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             res.sendStatus(401);
         }
     } else {
-        // User with that email doesn't exist - don't tell them that though for security...
+        // User with that email doesn't exist, or they are not an email/password user - don't tell them that though for security...
         res.sendStatus(401);
     }
 }
@@ -96,7 +96,17 @@ export const performReset = async (req: Request, res: Response): Promise<void> =
 
 // Logs out a user (i.e. invalidates all of their access and refresh tokens) - see /auth/logout
 export const logout = async (req: Request, res: Response): Promise<void> => {
-    const userId = req.body.userId;
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
+
+    const userId = auth.getUserFromToken(token);
+    if(!userId) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
 
     // Invalidate their access and refresh tokens 
     const accessTokenRepo = getManager().getRepository(AccessToken);
