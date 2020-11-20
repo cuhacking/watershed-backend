@@ -17,14 +17,15 @@ const discordAuth = new ClientOAuth2({
     scopes: ['identify', 'email']
 });
 
+const HOSTNAME = process.env.HOSTNAME;
+
 export const authDiscord = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
 
     const stateRepo = getManager().getRepository(State);
     await stateRepo.save(stateRepo.create({state: state, type: 'discord'}));
 
-    const hostname = req.protocol + '://' + req.hostname;
-    res.redirect(discordAuth.code.getUri({redirectUri: hostname + '/api/auth/discord/callback/signin', state: state}));
+    res.redirect(discordAuth.code.getUri({redirectUri: HOSTNAME + '/api/auth/discord/callback/signin', state: state}));
 }
 
 export const linkDiscord = async (req: Request, res: Response): Promise<void> => {
@@ -45,8 +46,7 @@ export const linkDiscord = async (req: Request, res: Response): Promise<void> =>
     const stateRepo = getManager().getRepository(State);
     await stateRepo.save(stateRepo.create({state: state, type: 'discord'}));
 
-    const hostname = req.protocol + '://' + req.hostname;
-    res.redirect(discordAuth.code.getUri({redirectUri: hostname + '/api/auth/discord/callback/link', state: state}));
+    res.redirect(discordAuth.code.getUri({redirectUri: HOSTNAME + '/api/auth/discord/callback/link', state: state}));
 }
 
 export const discordAuthCallback = async (req: Request, res: Response): Promise<void> => {
@@ -61,8 +61,7 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
     await stateRepo.remove(savedState); // We don't need this state anymore
 
     // For some reason Discord needs a redirectUri here
-    const hostname = req.protocol + '://' + req.hostname;
-    const user = await discordAuth.code.getToken(req.originalUrl, {redirectUri: hostname + '/api/auth/discord/callback/signin'});
+    const user = await discordAuth.code.getToken(req.originalUrl, {redirectUri: HOSTNAME + '/api/auth/discord/callback/signin'});
 
     const url = user.sign({method: 'get', url: 'https://discord.com/api/users/@me'}) as AxiosRequestConfig;
     const response = await axios(url);
@@ -127,8 +126,7 @@ export const discordLinkCallback = async (req: Request, res: Response): Promise<
     await stateRepo.remove(savedState); // We don't need this state anymore
     
     // For some reason Discord needs a redirectUri here
-    const hostname = req.protocol + '://' + req.hostname;
-    const discordUser = await discordAuth.code.getToken(req.originalUrl, {redirectUri: hostname + '/api/auth/discord/callback/link'});
+    const discordUser = await discordAuth.code.getToken(req.originalUrl, {redirectUri: HOSTNAME + '/api/auth/discord/callback/link'});
     const url = discordUser.sign({method: 'get', url: 'https://discord.com/api/users/@me'}) as AxiosRequestConfig;
     const response = await axios(url);
 
