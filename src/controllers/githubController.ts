@@ -23,7 +23,9 @@ export const authGithub = async (req: Request, res: Response): Promise<void> => 
 
     const stateRepo = getManager().getRepository(State);
     await stateRepo.save(stateRepo.create({state: state, type: 'github'}));
-    res.redirect(githubAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/github/callback/signin', state: state}));
+
+    const hostname = req.protocol + '://' + req.hostname;
+    res.redirect(githubAuth.code.getUri({redirectUri: hostname+ '/api/auth/github/callback/signin', state: state}));
 }
 
 export const linkGithub = async (req: Request, res: Response): Promise<void> => {
@@ -43,7 +45,9 @@ export const linkGithub = async (req: Request, res: Response): Promise<void> => 
 
     const stateRepo = getManager().getRepository(State);
     await stateRepo.save(stateRepo.create({state: state, type: 'github'}));
-    res.redirect(githubAuth.code.getUri({redirectUri: 'http://localhost:8080/api/auth/github/callback/link', state: state}));
+
+    const hostname = req.protocol + '://' + req.hostname;
+    res.redirect(githubAuth.code.getUri({redirectUri: hostname + '/api/auth/github/callback/link', state: state}));
 }
 
 export const githubAuthCallback = async (req: Request, res: Response): Promise<void> => {
