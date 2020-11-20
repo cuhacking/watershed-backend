@@ -17,7 +17,7 @@ const discordAuth = new ClientOAuth2({
     scopes: ['identify', 'email']
 });
 
-const HOSTNAME = process.env.HOSTNAME;
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 
 export const authDiscord = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');

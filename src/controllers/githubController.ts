@@ -17,7 +17,7 @@ const githubAuth = new ClientOAuth2({
     scopes: ['user']
 });
 
-const HOSTNAME = process.env.HOSTNAME;
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 
 export const authGithub = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
