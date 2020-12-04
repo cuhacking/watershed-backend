@@ -1,5 +1,7 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, OneToMany} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
+import { Team } from './Team';
+import { TeamInvite } from './TeamInvite';
 
 export enum Role {
     Hacker,
@@ -53,6 +55,12 @@ export class User {
 
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
+
+    @ManyToOne(() => Team, team => team.members)
+    team?: Team;
+
+    @OneToMany(() => TeamInvite, invite => invite.user)
+    teamInvites?: TeamInvite[];
 
     @BeforeInsert()
     @BeforeUpdate()
