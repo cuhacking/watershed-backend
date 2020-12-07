@@ -1032,7 +1032,7 @@
 							"formdata": [
 								{
 									"key": "body",
-									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"levelOfStudy\": \"yes\",\n    \"program\": \"yes\",\n    \"shortAnswer1\": \"answer\",\n    \"shortAnswer2\": \"answer\",\n    \"shortAnswer3\": \"answer\",\n    \"numHackathons\": 1,\n    \"siteUrl\": \"no\",\n\"completed\": false\n}",
+									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"levelOfStudy\": \"yes\",\n    \"program\": \"yes\",\n    \"shortAnswer1\": \"answer\",\n    \"shortAnswer2\": \"answer\",\n    \"shortAnswer3\": \"answer\",\n    \"numHackathons\": 1,\n    \"personalSiteUrl\": \"no\",\n\"completed\": false\n}",
 									"type": "text"
 								},
 								{
@@ -1084,7 +1084,7 @@
 									"    \"shortAnswer2\": \"answer\",\r",
 									"    \"shortAnswer3\": \"answer\",\r",
 									"    \"numHackathons\": 1,\r",
-									"    \"siteUrl\": \"no\",\r",
+									"    \"personalSiteUrl\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
 									"\r",
@@ -1204,7 +1204,7 @@
 									"    \"shortAnswer2\": \"answer\",\r",
 									"    \"shortAnswer3\": \"answer\",\r",
 									"    \"numHackathons\": 1,\r",
-									"    \"siteUrl\": \"no\",\r",
+									"    \"personalSiteUrl\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
 									"\r",
@@ -1265,7 +1265,7 @@
 									"    \"shortAnswer2\": \"answer\",\r",
 									"    \"shortAnswer3\": \"answer\",\r",
 									"    \"numHackathons\": 1,\r",
-									"    \"siteUrl\": \"no\",\r",
+									"    \"personalSiteUrl\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
 									"\r",
@@ -1332,7 +1332,7 @@
 							"formdata": [
 								{
 									"key": "body",
-									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"completed\": true\n}",
+									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true\n}",
 									"type": "text"
 								},
 								{
@@ -1363,6 +1363,20 @@
 				},
 				{
 					"name": "4.9 Can't Edit Submitted Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "79eeb29c-4c47-4535-bea9-d75603b97895",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1429,8 +1443,9 @@
 									"    \"shortAnswer2\": \"anotherNewAnswer\",\r",
 									"    \"shortAnswer3\": \"answer\",\r",
 									"    \"numHackathons\": 1,\r",
-									"    \"siteUrl\": \"no\",\r",
-									"    \"completed\": true\r",
+									"    \"personalSiteUrl\": \"no\",\r",
+									"    \"completed\": true,\r",
+									"    \"resumeName\": \"\"\r",
 									"}\r",
 									"\r",
 									"pm.test(\"Data is correct\", function () {\r",

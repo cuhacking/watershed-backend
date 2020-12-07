@@ -10,7 +10,12 @@ import app from '../server';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const RESUME_ROOT = __dirname + '/../../resumes/';
+// Default to a resumes directory in the root of the project
+const RESUME_ROOT = process.env.RESUME_DIR || __dirname + '/../../resumes/';
+
+const isApplicationComplete = (app: Application): app is Required<Application> => {
+    return Object.values(app as Required<Application>).every(val => val !== null);
+}
 
 export const saveApplication = async (req: Request, res: Response) => {
     const appRepo = getManager().getRepository(Application);
@@ -51,9 +56,10 @@ export const saveApplication = async (req: Request, res: Response) => {
     if(req.files?.resume) {        
         let resume = req.files.resume;
         try {
-            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.email + '.pdf';
+            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.id + '.pdf';
             await resume.mv(resumePath);
-            appToSave.resume = resumePath;
+            appToSave.resumePath = resumePath;
+            appToSave.resumeName = req.files.resume.name;
         } catch (err) { 
             res.status(500).send(err);
             return;
@@ -65,6 +71,16 @@ export const saveApplication = async (req: Request, res: Response) => {
     appToSave.user = userToSave
     if(!appToSave.completed) {
         appToSave.completed = false;
+    }
+
+    console.log(appToSave);
+
+    if(appToSave.completed) {
+        // Validate that the application is completed if they are saving
+        if(!isApplicationComplete(appToSave)){
+            res.status(400).send('Application is missing fields.');
+            return;
+        }
     }
 
     const errors = await validate(appToSave);
@@ -95,8 +111,8 @@ export const getApplicationForUser = async (req: Request, res: Response) => {
 
     if(user.application) {
         // Remove the id and resume path
-        let {id, resume, ...app} = user.application;
-        res.status(200).send(user.application);
+        let {id, resumePath, ...app} = user.application;
+        res.status(200).send(app);
     } else {
         res.sendStatus(404);
     }
@@ -113,8 +129,8 @@ export const getApplicationByUserId = async (req: Request, res: Response) => {
 
     if(user.application) {
         // Remove the id and resume path
-        let {id, resume, ...app} = user.application;
-        res.status(200).send(user.application);
+        let {id, resumePath, ...app} = user.application;
+        res.status(200).send(app);
     } else {
         res.sendStatus(404);
     }

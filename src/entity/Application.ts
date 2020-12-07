@@ -43,11 +43,15 @@ export class Application {
     numHackathons?: number;
 
     @Column({nullable: true})
-    siteUrl?: string;
+    personalSiteUrl?: string;
 
     // Stores the path to their resume
     @Column({nullable: true})
-    resume?: string;
+    resumePath?: string;
+
+    // Stores the uploaded name of their resume
+    @Column({nullable: true})
+    resumeName?: string;
 
     @OneToOne(() => User, user => user.application, {cascade: true})
     user!: User;

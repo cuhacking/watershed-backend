@@ -25,9 +25,9 @@ components:
           type: string 
         numHackathons:
           type: integer
-        siteUrl:
+        personalSiteUrl:
           type: string
-        resume:
+        resumeName:
           type: string
       xml:
         name: Application
