@@ -194,6 +194,27 @@ export const getUserFromToken = (token: string): string|undefined => {
     return decodeJWT(token).session?.id;
 }
 
+/**
+ * Grabs user object from a token
+ * 
+ * @param token the token
+ * 
+ * @returns the user object 
+ */
+export const getUserObjectFromToken = async (token: string, relations?: string[]): Promise<User|undefined> => {
+    const userRepo = getManager().getRepository(User);
+    const uuid = getUserFromToken(token);
+    if(!uuid) return undefined;
+
+    // Verify that the user is properly authenticated
+    const valid = await verifyToken(token, 'access');
+    if(valid.result !== AuthTokenStatus.Valid) return undefined;
+
+    const user = await userRepo.findOne({uuid: uuid}, {relations: relations});
+    if(!user) return undefined;
+    return user;
+}
+
 // Middleware for verifying if a request is authenticated via a Bearer token in Authentication header
 export const authenticate = (role: Role): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
 

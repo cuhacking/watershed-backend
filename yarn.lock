@@ -227,6 +227,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-fileupload@npm:^1":
+  version: 1.1.5
+  resolution: "@types/express-fileupload@npm:1.1.5"
+  dependencies:
+    "@types/express": "*"
+  checksum: 7d1da1e5088f3d9a92353f16dcad5239940b7752d5f6fddfc92affa26d654196597472ddb31bb00af38ec86760978383fa8cca86c42d08b8d1a089fa0fd6fda4
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:*":
   version: 4.17.13
   resolution: "@types/express-serve-static-core@npm:4.17.13"
@@ -330,6 +339,13 @@ __metadata:
   version: 13.13.30
   resolution: "@types/node@npm:13.13.30"
   checksum: c5b6c51df0463e08cdf3f4ee0b424d2be26f3668549f9ecb10d70e07dda4db84cb7853e344ff0bbed667b1b1899e199cd9f632441c6e9fd4fb465c51640ce0df
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.14.10":
+  version: 14.14.10
+  resolution: "@types/node@npm:14.14.10"
+  checksum: b793aa15e8c08df50d0f77dc0fe7a93bc2e09bfa5a424841d4dba045d6ae8503b7ffe89b773ffe197c9b637c898bb22e78442e21ff4b33414d35160d9c3f8a9b
   languageName: node
   linkType: hard
 
@@ -1136,6 +1152,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"busboy@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "busboy@npm:0.3.1"
+  dependencies:
+    dicer: 0.3.0
+  checksum: acc5c3d2f806c1f43a7a9a342bb4aaaa1223bac81cf3ba35ae3cc999f4e3a2e1b6db2d3895a228a862efbbc7b6fb39a7252e830bb5943e1b4362caa221c868ea
+  languageName: node
+  linkType: hard
+
 "byte-length@npm:^1.0.2":
   version: 1.0.2
   resolution: "byte-length@npm:1.0.2"
@@ -1884,6 +1909,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dicer@npm:0.3.0":
+  version: 0.3.0
+  resolution: "dicer@npm:0.3.0"
+  dependencies:
+    streamsearch: 0.1.2
+  checksum: eb06a8c283287da1f0034cde3f2bafe8bbd70636d4c9b12783f36d919c88533d6d285e044197853e03c1a2ea5d68f8ebcf59d366bd873a4a91e5d370e9871ad7
+  languageName: node
+  linkType: hard
+
 "diff@npm:4.0.2, diff@npm:^4.0.1":
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
@@ -2265,6 +2299,15 @@ __metadata:
   version: 4.0.7
   resolution: "eventemitter3@npm:4.0.7"
   checksum: 1fc12c7bc3b4194c50975827e72d56ff57c32b75a4c7dbf4d5eebf3c8371f6f1aad6799150b609de1b867c0d8a9885c08b6ca5e7e0dc437d6152f3063b2607dd
+  languageName: node
+  linkType: hard
+
+"express-fileupload@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "express-fileupload@npm:1.2.0"
+  dependencies:
+    busboy: ^0.3.1
+  checksum: 111226a4e3f631edd054ac7327e8f057987e67c3850b9b448470407c0f8f4775495cb5556b7d551a83c00c6f4617b7c923e98d07a0aab3ea4c9baf42e11fd1d3
   languageName: node
   linkType: hard
 
@@ -2823,11 +2866,13 @@ fsevents@~2.1.2:
     "@types/chai": ^4.2.12
     "@types/chai-http": ^4.2.0
     "@types/express": ^4
+    "@types/express-fileupload": ^1
     "@types/jwt-simple": ^0.5.33
     "@types/mime-types": ^2
     "@types/mocha": ^8.0.3
     "@types/morgan": ^1
     "@types/newman": ^5
+    "@types/node": ^14.14.10
     "@types/swagger-ui-express": ^4
     "@types/uuid": ^8
     "@typescript-eslint/eslint-plugin": ^3.6.1
@@ -2842,6 +2887,7 @@ fsevents@~2.1.2:
     dotenv: ^8.2.0
     eslint: ^7.5.0
     express: ^4.17.1
+    express-fileupload: ^1.2.0
     jwt-simple: ^0.5.6
     liquid-json: ^0.3.1
     mime-types: ^2.1.27
@@ -5778,6 +5824,13 @@ fsevents@~2.1.2:
     end-of-stream: ~1.1.0
     stream-to-array: ~2.3.0
   checksum: 1f26f85d571d94a308f9332c79f2652697f9893733e3a2aebca1aaaf4d2a0d0655150b8b0a88105256a50510d9e9b8a0b1e5d9139b464ee1f9285be3647c3b83
+  languageName: node
+  linkType: hard
+
+"streamsearch@npm:0.1.2":
+  version: 0.1.2
+  resolution: "streamsearch@npm:0.1.2"
+  checksum: f72befba95082d49be19cd4318112bc141f6cd7cbb201ee8079887f6f3cbcdf79c311977ce0eaa93d7d8c3e6b9727412f6177a87ced5b98d0fd4075723ad8eaf
   languageName: node
   linkType: hard
 

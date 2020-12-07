@@ -1,0 +1,33 @@
+components:
+  schemas:
+    Application:
+      type: object
+      properties:
+        completed:
+          type: boolean
+        firstName:
+          type: string
+        lastName:
+          type: string
+        pronouns:
+          type: string
+        email:
+          type: string
+        levelOfStudy:
+          type: string
+        program:
+          type: string
+        shortAnswer1:
+          type: string
+        shortAnswer2:
+          type: string
+        shortAnswer3:
+          type: string 
+        numHackathons:
+          type: integer
+        siteUrl:
+          type: string
+        resume:
+          type: string
+      xml:
+        name: Application

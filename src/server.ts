@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
+import fileUpload from 'express-fileupload';
 
 import routes from './routes/routes';
 import {createConnection} from 'typeorm';
@@ -30,6 +31,7 @@ const spec = openapi({cwd: path.join(__dirname,'../src')});
  */
 app.use(express.json({ limit: '50mb' }));
 app.use(morgan('tiny'));
+app.use(fileUpload());
 
 app.use(API_ROOT, routes);
 
