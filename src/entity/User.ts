@@ -1,5 +1,7 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
+
+import {Application} from './Application';
 
 export enum Role {
     Hacker,
@@ -53,6 +55,10 @@ export class User {
 
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
+
+    @OneToOne(() => Application, app => app.user)
+    @JoinColumn()
+    application?: Application | null;
 
     @BeforeInsert()
     @BeforeUpdate()

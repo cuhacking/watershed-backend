@@ -726,6 +726,16 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b812f1b4-1c2f-445d-a255-fec3ad3195c6",
+								"exec": [
+									"setTimeout(function(){}, [1000]);"
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -882,6 +892,591 @@
 							"path": [
 								"api",
 								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "4. Applications",
+			"item": [
+				{
+					"name": "4.1 Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "02517a1a-94f1-4277-ae33-da2f59d0c3dd",
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userId\", pm.response.json().uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Application\",\r\n    \"lastName\": \"Test\",\r\n    \"email\": \"app@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.2 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5e4f561-5954-4856-ad16-d5d7bd83fa17",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"app@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.3 Create Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "50bf589c-ea09-440d-b8ff-f249260f5ffe",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"levelOfStudy\": \"yes\",\n    \"program\": \"yes\",\n    \"shortAnswer1\": \"answer\",\n    \"shortAnswer2\": \"answer\",\n    \"shortAnswer3\": \"answer\",\n    \"numHackathons\": 1,\n    \"personalSiteUrl\": \"no\",\n\"completed\": false\n}",
+									"type": "text"
+								},
+								{
+									"key": "resume",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/application",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.4 Get Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "85b18688-2176-4400-ab56-ccb3072b3466",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const expected = {\r",
+									"    \"firstName\": \"Test\",\r",
+									"    \"lastName\": \"Application\",\r",
+									"    \"pronouns\": \"it\",\r",
+									"    \"email\": \"test@test.com\",\r",
+									"    \"levelOfStudy\": \"yes\",\r",
+									"    \"program\": \"yes\",\r",
+									"    \"shortAnswer1\": \"answer\",\r",
+									"    \"shortAnswer2\": \"answer\",\r",
+									"    \"shortAnswer3\": \"answer\",\r",
+									"    \"numHackathons\": 1,\r",
+									"    \"personalSiteUrl\": \"no\",\r",
+									"    \"completed\": false\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Data is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for(const key in expected) {\r",
+									"        pm.expect(jsonData[key]).to.eql(expected[key]);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/application/my",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.5 Edit Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e7837e52-c84e-43d0-82ec-031372defe02",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "{\n\"shortAnswer1\": \"newAnswer\"\n}",
+									"type": "text"
+								},
+								{
+									"key": "resume",
+									"type": "file",
+									"src": "/C:/Users/Ryan/Documents/Resume/RyanLyResume.pdf",
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/application",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.6 Get Application (2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "27b7e11e-0bde-4d92-99d3-a175f54aa69d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const expected = {\r",
+									"    \"firstName\": \"Test\",\r",
+									"    \"lastName\": \"Application\",\r",
+									"    \"pronouns\": \"it\",\r",
+									"    \"email\": \"test@test.com\",\r",
+									"    \"levelOfStudy\": \"yes\",\r",
+									"    \"program\": \"yes\",\r",
+									"    \"shortAnswer1\": \"newAnswer\",\r",
+									"    \"shortAnswer2\": \"answer\",\r",
+									"    \"shortAnswer3\": \"answer\",\r",
+									"    \"numHackathons\": 1,\r",
+									"    \"personalSiteUrl\": \"no\",\r",
+									"    \"completed\": false\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Data is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for(const key in expected) {\r",
+									"        pm.expect(jsonData[key]).to.eql(expected[key]);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/application/my",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.7 Get All Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4876735d-c161-4d10-be4d-0042e1a6d1b9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const expected = {\r",
+									"    \"firstName\": \"Test\",\r",
+									"    \"lastName\": \"Application\",\r",
+									"    \"pronouns\": \"it\",\r",
+									"    \"email\": \"test@test.com\",\r",
+									"    \"levelOfStudy\": \"yes\",\r",
+									"    \"program\": \"yes\",\r",
+									"    \"shortAnswer1\": \"newAnswer\",\r",
+									"    \"shortAnswer2\": \"answer\",\r",
+									"    \"shortAnswer3\": \"answer\",\r",
+									"    \"numHackathons\": 1,\r",
+									"    \"personalSiteUrl\": \"no\",\r",
+									"    \"completed\": false\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Data is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for(const key in expected) {\r",
+									"        pm.expect(jsonData[0][key]).to.eql(expected[key]);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/application",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.8 Edit Application and Submit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ee8cb8b5-e8ed-4096-bd2f-baf1a25086f6",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true\n}",
+									"type": "text"
+								},
+								{
+									"key": "resume",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/application",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.9 Can't Edit Submitted Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "79eeb29c-4c47-4535-bea9-d75603b97895",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"levelOfStudy\": \"yes\",\n    \"program\": \"yes\",\n    \"shortAnswer1\": \"answer\",\n    \"shortAnswer2\": \"answer\",\n    \"shortAnswer3\": \"answer\",\n    \"numHackathons\": 1,\n    \"siteUrl\": \"no\"\n}",
+									"type": "text"
+								},
+								{
+									"key": "resume",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/application",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.10 Verify Final Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a6f544dc-a152-45c3-9484-8fa03b7805c0",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const expected = {\r",
+									"    \"firstName\": \"Test\",\r",
+									"    \"lastName\": \"Application\",\r",
+									"    \"pronouns\": \"it\",\r",
+									"    \"email\": \"test@test.com\",\r",
+									"    \"levelOfStudy\": \"yes\",\r",
+									"    \"program\": \"yes\",\r",
+									"    \"shortAnswer1\": \"newAnswer\",\r",
+									"    \"shortAnswer2\": \"anotherNewAnswer\",\r",
+									"    \"shortAnswer3\": \"answer\",\r",
+									"    \"numHackathons\": 1,\r",
+									"    \"personalSiteUrl\": \"no\",\r",
+									"    \"completed\": true,\r",
+									"    \"resumeName\": \"\"\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Data is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for(const key in expected) {\r",
+									"        pm.expect(jsonData[key]).to.eql(expected[key]);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/application/my",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"my"
 							]
 						}
 					},
