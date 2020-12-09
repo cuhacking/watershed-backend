@@ -5,6 +5,10 @@ import {Request, Response} from 'express';
 import {validate} from 'class-validator';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import axios from 'axios';
+
+const DISCORD_URL = process.env.DISCORD_URL;
+const DISCORD_ROLES = process.enc.DISCORD_ROLES;
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
@@ -58,5 +62,35 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
         res.sendStatus(200);
     } else {
         res.sendStatus(404);
+    }
+}
+
+export const addRoles = async (req: Request, res: Response): Promise<void> => {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token, ['application']);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    if(!user.discordId) {
+        res.status(400).send('User is not linked with Discord.');
+    } else {
+        // Send the role request
+        const url = { 
+            method: 'post', 
+            url: DISCORD_URL + '/upgrade',
+            data: {
+                roleId: DISCORD_ROLES,
+                user: user.discordId
+            }
+        };
+        const response = await axios(url);
+        res.status(response.status).send(response.data);
     }
 }
