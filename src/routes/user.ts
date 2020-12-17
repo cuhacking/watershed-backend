@@ -46,4 +46,24 @@ router.get('/:userId', user.getUser);
  */
 router.delete('/:userId', auth.authenticate(Role.Organizer), user.deleteUser);
 
+/**
+ * POST /users/confirm
+ * @tag Users
+ * @summary Confirms a user. POST with "token": <confirm token>
+ * @bodyContent {string} application/json - The user's confirm token
+ * @bodyRequired
+ * @response 200 - OK
+ */
+router.post('/confirm', user.confirmEmail);
+
+/**
+ * POST /users/resendConfirmation
+ * @tag Users
+ * @summary Resends a user's confirmation email. POST with user's email
+ * @bodyContent {string} application/json - The user's email
+ * @bodyRequired
+ * @response 200 - OK
+ */
+router.post('/resendConfirmation', user.resendConfirmationEmail);
+
 export = router;

@@ -30,3 +30,17 @@ The package.json provides several useful commands for running the server:
 * `yarn start`: runs `build` and `serve`
 
 * `yarn dev`: sets up the server for development (watches for changes)
+
+## Configuration
+Create a `.env` file in the root of your project with the following entries:
+```
+JWT_KEY=<some random key to be used for generating JWTs>
+githubClientId=<your github client ID>
+githubClientSecret=<your github client secret>
+discordClientId=<your discord client ID>
+discordClientSecret=<your discord client secret>
+EXTERNAL_HOSTNAME=<the external hostname this will run on (e.g. http://localhost:8080, https://cuhacking.com)
+FROM_EMAIL=<mailgun 'from' email>
+MAILGUN_DOMAIN=<mailgun domain>
+MAILGUN_API_KEY=<mailgun api key>
+```

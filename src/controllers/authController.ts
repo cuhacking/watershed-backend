@@ -6,6 +6,10 @@ import {getManager} from 'typeorm';
 import {Request, Response} from 'express';
 import * as bcrypt from 'bcrypt';
 import { PasswordReset } from '../entity/PasswordReset';
+import * as email from '../middleware/email';
+
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
+const PASSWORD_RESET_LINK = '';
 
 // Logs in a user - see /auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {
@@ -45,11 +49,20 @@ export const resetRequest = async (req: Request, res: Response): Promise<void> =
 
     if(user) {
         const token = await auth.generateToken(user.uuid, 'reset');
-        // TODO: Send email here
-        res.sendStatus(200);
+        const mailRes = await email.sendEmail(user.email, 'cuHacking Password Reset', `
+        Hi! A password reset has been requested for your cuHacking account. If you requested it, please click the following link (this link expires in 24 hours):
+        ${HOSTNAME + PASSWORD_RESET_LINK + '?token=' + token.token}
+        If you did not request a password reset, then you can safely ignore this email.
+        `);
+
+        if(mailRes){
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
     } else {
         // Don't want to leak whether a user exists with that email - make it look it might have succeeded
-        await new Promise(resolve => setTimeout(resolve, (Math.random()*1000) + 1500));
+        await new Promise(resolve => setTimeout(resolve, (Math.random()*1000) + 500));
         res.sendStatus(200);
     }
 }
@@ -122,4 +135,23 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
         refreshTokenRepo.remove(element);
     });
     res.sendStatus(200);
-}
+};
+
+// Testing purposes only
+export const getResetTokens = async (req: Request, res: Response): Promise<void> => {
+    const resetTokenRepo = getManager().getRepository(PasswordReset)
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token, ['application']);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const resetTokens = await resetTokenRepo.find({uuid: user.uuid});
+    res.status(200).send(resetTokens);
+};

@@ -177,7 +177,326 @@
 					"response": []
 				},
 				{
-					"name": "1.3 Get All Users",
+					"name": "1.3 Check Confirmation Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9702e9d8-34a7-4699-91a3-d3809c3b4fbb",
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User has a confirmation code\", () => {\r",
+									"    pm.expect(pm.response.json()).not.to.be.empty;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/test/getConfirmTokens",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"getConfirmTokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 Resend Confirmation Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ryanly.rl1@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user/resendConfirmation",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"resendConfirmation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.5 Get Confirmation Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1d24bbf0-8a68-45f5-8c19-ae87b9df62ce",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User has a confirmation code\", () => {\r",
+									"    pm.expect(jsonData).not.to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"confirmationToken\", jsonData[0].token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/test/getConfirmTokens",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"getConfirmTokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6 Confirm Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"{{confirmationToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user/confirm",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.7 Request Password Reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f3ab751f-3ed4-4514-851e-5a9ae4b1c04d",
+								"exec": [
+									"\r",
+									"// Note, we expect this to return a 500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"password@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/reset",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.8 Get Reset Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25cc5ea0-3d33-49f8-896f-26ef8d917ec9",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User has a reset code\", () => {\r",
+									"    pm.expect(jsonData).not.to.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"resetToken\", jsonData[0].token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/test/getResetTokens",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"getResetTokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.9 Change Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"{{resetToken}}\",\r\n    \"password\": \"newPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/performReset",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"performReset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.10 Login with New Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f15efd1a-b809-4b2b-b545-ef8e5f69e99d",
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"newPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.11 Get All Users",
 					"event": [
 						{
 							"listen": "test",
@@ -229,7 +548,7 @@
 					"response": []
 				},
 				{
-					"name": "1.4 Get Created User",
+					"name": "1.12 Get Created User",
 					"event": [
 						{
 							"listen": "test",
@@ -262,7 +581,7 @@
 					"response": []
 				},
 				{
-					"name": "1.5 Delete Created User",
+					"name": "1.13 Delete Created User",
 					"event": [
 						{
 							"listen": "test",
@@ -302,7 +621,7 @@
 					"response": []
 				},
 				{
-					"name": "1.6 Check Deleted User No Longer Exists",
+					"name": "1.14 Check Deleted User No Longer Exists",
 					"event": [
 						{
 							"listen": "test",

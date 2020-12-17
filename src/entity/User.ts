@@ -60,6 +60,10 @@ export class User {
     @JoinColumn()
     application?: Application | null;
 
+    @Column({type: 'boolean', default: false})
+    @IsDefined()
+    confirmed!: boolean;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {
