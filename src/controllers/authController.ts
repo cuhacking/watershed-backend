@@ -9,7 +9,7 @@ import { PasswordReset } from '../entity/PasswordReset';
 import * as email from '../middleware/email';
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
-const PASSWORD_RESET_LINK = '';
+const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK;
 
 // Logs in a user - see /auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {

@@ -43,4 +43,6 @@ EXTERNAL_HOSTNAME=<the external hostname this will run on (e.g. http://localhost
 FROM_EMAIL=<mailgun 'from' email>
 MAILGUN_DOMAIN=<mailgun domain>
 MAILGUN_API_KEY=<mailgun api key>
+PASSWORD_RESET_LINK=<link to be sent in password reset email>
+CONFIRM_LIKN=<link to be sent in confirmation email>
 ```

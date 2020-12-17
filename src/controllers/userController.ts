@@ -9,7 +9,7 @@ import * as email from '../middleware/email';
 import {EmailConfirmToken} from '../entity/EmailConfirmToken';
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
-const CONFIRM_LINK = '';
+const CONFIRM_LINK = process.env.CONFIRM_LINK;
 
 const sendConfirmationEmail = async (user: User) => {
     const confirmToken = await auth.generateToken(user.uuid, 'confirm');
