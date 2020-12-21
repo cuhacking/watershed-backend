@@ -17,7 +17,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             // Generate a new access token and refresh token for them
             const accessToken = await auth.generateToken(user.uuid, 'access');
             const refreshToken = await auth.generateToken(user.uuid, 'refresh');
-            res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+            res.status(200).send({uuid: user.uuid, accessToken: accessToken, refreshToken: refreshToken});
         } else {
             res.sendStatus(401);
         }

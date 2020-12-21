@@ -17,7 +17,7 @@ const router = express.Router();
 router.get('/', auth.authenticate(Role.Organizer), user.getUsers);
 
 /**
- * POST /users
+ * POST /user
  * @tag Users
  * @summary Creates a new user.
  * @bodyContent {User} application/json
@@ -25,6 +25,16 @@ router.get('/', auth.authenticate(Role.Organizer), user.getUsers);
  * @response 201 - Created
  */
 router.post('/', user.createUser);
+
+/**
+ * GET /user/me
+ * @tag Users
+ * @summary Gets the currently logged in user
+ * @response 200 - The user
+ * @responseContent {User} 200.application/json
+ * @response 404 - A user with that ID was not found
+ */
+router.get('/me', user.getCurrentUser);
 
 /**
  * GET /user/{userId}
