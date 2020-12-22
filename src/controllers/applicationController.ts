@@ -1,6 +1,6 @@
 import * as auth from '../middleware/authMiddleware';
 import {User} from '../entity/User';
-import {Application} from '../entity/Application';
+import {Application, isApplicationComplete} from '../entity/Application';
 
 import {getManager} from 'typeorm';
 import {Request, Response} from 'express';
@@ -12,10 +12,6 @@ import * as fs from 'fs';
 
 // Default to a resumes directory in the root of the project
 const RESUME_ROOT = process.env.RESUME_DIR || __dirname + '/../../resumes/';
-
-const isApplicationComplete = (app: Application): app is Required<Application> => {
-    return Object.values(app as Required<Application>).every(val => val !== null);
-}
 
 export const saveApplication = async (req: Request, res: Response) => {
     const appRepo = getManager().getRepository(Application);
@@ -72,8 +68,6 @@ export const saveApplication = async (req: Request, res: Response) => {
     if(!appToSave.completed) {
         appToSave.completed = false;
     }
-
-    console.log(appToSave);
 
     if(appToSave.completed) {
         // Validate that the application is completed if they are saving

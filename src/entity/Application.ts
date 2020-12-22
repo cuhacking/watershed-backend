@@ -3,6 +3,11 @@ import { validateOrReject, IsDefined } from 'class-validator';
 
 import {User} from './User';
 
+const REQUIRED_FIELDS = ['firstName', 'lastName', 'studyLevel', 'school', 'hackathonNumber', 'eventsNumber', 'skills', 'resumePath', 'question1', 'question2', 'question3'];
+
+export const isApplicationComplete = (app: Application): boolean => {
+    return REQUIRED_FIELDS.every(field => app[field as keyof Application] != null);
+}
 @Entity()
 export class Application {
 
@@ -25,26 +30,44 @@ export class Application {
     email?: string;
 
     @Column({nullable: true})
-    levelOfStudy?: string;
+    school?: string;
+    
+    @Column({nullable: true})
+    studyLevel?: string;
 
     @Column({nullable: true})
     program?: string;
 
     @Column({nullable: true})
-    shortAnswer1?: string;
+    question1?: string;
 
     @Column({nullable: true})
-    shortAnswer2?: string;
+    question2?: string;
 
     @Column({nullable: true})
-    shortAnswer3?: string;
+    question3?: string;
 
     @Column({nullable: true})
-    numHackathons?: number;
+    hackathonNumber?: number;
 
     @Column({nullable: true})
-    personalSiteUrl?: string;
+    eventsNumber?: number;
 
+    @Column({nullable: true})
+    website?: string;
+
+    @Column({nullable: true})
+    github?: string;
+
+    @Column({nullable: true})
+    linkedin?: string;
+
+    @Column({nullable: true})
+    skills?: string;
+
+    @Column({nullable: true})
+    other?: string;
+    
     // Stores the path to their resume
     @Column({nullable: true})
     resumePath?: string;

@@ -33,12 +33,6 @@ export class User {
     @IsDefined()
     uuid!: string;
 
-    @Column({nullable: true, type: 'varchar'})
-    firstName?: string | null;
-
-    @Column({nullable: true, type: 'varchar'})
-    lastName?: string | null;
-
     @Column({unique: true})
     @IsDefined()
     email!: string;
