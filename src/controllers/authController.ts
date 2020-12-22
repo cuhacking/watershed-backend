@@ -10,6 +10,7 @@ import * as email from '../middleware/email';
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK || '';
+const PASSWORD_RESET_TEMPLATE = process.env.PASSWORD_RESET_TEMPLATE || ''; // Filename of template
 
 // Logs in a user - see /auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {
@@ -49,11 +50,15 @@ export const resetRequest = async (req: Request, res: Response): Promise<void> =
 
     if(user) {
         const token = await auth.generateToken(user.uuid, 'reset');
-        const mailRes = await email.sendEmail(user.email, 'cuHacking Password Reset', `
-        Hi! A password reset has been requested for your cuHacking account. If you requested it, please click the following link (this link expires in 24 hours):
-        ${HOSTNAME + PASSWORD_RESET_LINK + '?token=' + token.token}
-        If you did not request a password reset, then you can safely ignore this email.
-        `);
+        const textTemplate = await email.createEmailTemplate(PASSWORD_RESET_TEMPLATE);
+
+        if(!textTemplate) {
+            res.sendStatus(500);
+            return;
+        }
+
+        const mailText = textTemplate({link: HOSTNAME + PASSWORD_RESET_LINK + '?token=' + token.token});
+        const mailRes = await email.sendEmail(user.email, 'cuHacking Password Reset', mailText);
 
         if(mailRes){
             res.sendStatus(200);

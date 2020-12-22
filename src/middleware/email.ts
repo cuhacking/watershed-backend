@@ -1,9 +1,27 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import mailgun from 'mailgun-js';
+import { promises as fs } from 'fs';
 
 const FROM_EMAIL = process.env.FROM_EMAIL;
 const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
 const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
+
+const interpolate = (str: string) => {
+    return (props: any) => {
+        return str.replace(/\{(\w+)\}/g, (match, expr) => {
+            return (props)[expr];
+        });
+    }
+};
+
+export const createEmailTemplate = async (filename: string) => {
+    try {
+        const html = await fs.readFile(filename, 'utf-8');
+        return interpolate(html);
+    } catch (err) {
+        return undefined;
+    } 
+}
 
 export const sendEmail = async (recipient: string, subject: string, body: string): Promise<boolean> => {
 

@@ -10,13 +10,19 @@ import {EmailConfirmToken} from '../entity/EmailConfirmToken';
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 const CONFIRM_LINK = process.env.CONFIRM_LINK || '';
+const CONFIRM_TEMPLATE = process.env.CONFIRM_TEMPLATE || '';
 
 const sendConfirmationEmail = async (user: User) => {
     const confirmToken = await auth.generateToken(user.uuid, 'confirm');
-    return (await email.sendEmail(user.email, 'cuHacking Password Reset', `
-    Thanks for registering for a cuHacking account! Please click on the following link to confirm your email address:
-    ${HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token}
-    `));
+    const mailTemplate = await email.createEmailTemplate(CONFIRM_TEMPLATE);
+    
+    if(!mailTemplate) {
+        throw new Error('Email templating failed');
+    }
+
+    const mailText = mailTemplate({link: HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token});
+
+    return (await email.sendEmail(user.email, 'cuHacking Password Reset',mailText));
 }
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
@@ -50,7 +56,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
             const emailRes = await sendConfirmationEmail(newUser);
             res.status(201).send({uuid: newUser.uuid, accessToken: accessToken, refreshToken: refreshToken});
         } catch (error) {
-            res.status(400).send(error);
+            res.status(500).send(error);
         }
     }
 }
@@ -113,10 +119,17 @@ export const resendConfirmationEmail = async (req: Request, res: Response): Prom
             confirmTokenRepo.remove(element);
         });
 
-        const mailRes = await sendConfirmationEmail(user);
-        if(!mailRes) {
-            res.status(500).send('Something went wrong with the email');
+        try { 
+            const mailRes = await sendConfirmationEmail(user);
+            if(!mailRes) {
+                res.status(500).send('Something went wrong with the email');
+                return;
+            }
+        } catch (err) {
+            res.status(500).send(err);
+            return;
         }
+        
     }
     res.status(200).send('If an account with that email exists, you should receive an email shortly.');
 };

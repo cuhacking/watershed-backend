@@ -44,5 +44,7 @@ FROM_EMAIL=<mailgun 'from' email>
 MAILGUN_DOMAIN=<mailgun domain>
 MAILGUN_API_KEY=<mailgun api key>
 PASSWORD_RESET_LINK=<link to be sent in password reset email>
-CONFIRM_LIKN=<link to be sent in confirmation email>
+CONFIRM_LINK=<link to be sent in confirmation email>
+CONFIRM_TEMPLATE=<path to email confirmation template file, relative to root. Should have {link} as a placeholder for the link to send>
+PASSWORD_RESET_TEMPLATE=<path to password reset template file, relative to root. Should have {link} as a placeholder for the link to send>
 ```
