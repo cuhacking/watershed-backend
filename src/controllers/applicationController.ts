@@ -52,7 +52,7 @@ export const saveApplication = async (req: Request, res: Response) => {
     if(req.files?.resume) {        
         let resume = req.files.resume;
         try {
-            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.id + '.pdf';
+            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.email + '.pdf';
             await resume.mv(resumePath);
             appToSave.resumePath = resumePath;
             appToSave.resumeName = req.files.resume.name;
