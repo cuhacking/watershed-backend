@@ -18,6 +18,7 @@ const discordAuth = new ClientOAuth2({
 });
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME || '';
+const AFTER_LOGIN_REDIRECT = process.env.AFTER_LOGIN_REDIRECT || HOSTNAME;
 
 export const authDiscord = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
@@ -74,9 +75,9 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(discordUser.uuid, 'access');
         const refreshToken = await auth.generateToken(discordUser.uuid, 'refresh');
-        res.cookie('refreshToken', refreshToken);
-        res.cookie('accessToken', accessToken);
-        res.redirect(HOSTNAME);
+        res.cookie('refreshToken', refreshToken, {secure: true});
+        res.cookie('accessToken', accessToken, {secure: true});
+        res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that discord ID, must be signing up
         const existingUser = await userRepo.findOne({email: response.data.email});
@@ -103,9 +104,9 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.cookie('refreshToken', refreshToken);
-                    res.cookie('accessToken', accessToken);
-                    res.redirect(HOSTNAME);
+                    res.cookie('refreshToken', refreshToken, {secure: true});
+                    res.cookie('accessToken', accessToken, {secure: true});
+                    res.redirect(AFTER_LOGIN_REDIRECT);
                 } catch (error) {
                     // TODO: Does this need to be handled as a redirect?
                     res.status(400).send(error);

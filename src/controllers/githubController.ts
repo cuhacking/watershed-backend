@@ -17,7 +17,8 @@ const githubAuth = new ClientOAuth2({
     scopes: ['user']
 });
 
-const HOSTNAME = process.env.EXTERNAL_HOSTNAME || 'test';
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME || '';
+const AFTER_LOGIN_REDIRECT = process.env.AFTER_LOGIN_REDIRECT || HOSTNAME;
 
 export const authGithub = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
@@ -78,9 +79,9 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(githubUser.uuid, 'access');
         const refreshToken = await auth.generateToken(githubUser.uuid, 'refresh');
-        res.cookie('refreshToken', refreshToken);
-        res.cookie('accessToken', accessToken);
-        res.redirect(HOSTNAME);
+        res.cookie('refreshToken', refreshToken, {secure: true});
+        res.cookie('accessToken', accessToken, {secure: true});
+        res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that GitHub ID, must be signing up
         const existingUser = await userRepo.findOne({email: response.data.email});
@@ -107,9 +108,9 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.cookie('refreshToken', refreshToken);
-                    res.cookie('accessToken', accessToken);
-                    res.redirect(HOSTNAME);
+                    res.cookie('refreshToken', refreshToken, {secure: true});
+                    res.cookie('accessToken', accessToken, {secure: true});
+                    res.redirect(AFTER_LOGIN_REDIRECT);
                 } catch (error) {
                     res.status(400).send(error);
                 }
@@ -178,7 +179,6 @@ export const unlinkGithub = async (req: Request, res: Response): Promise<void> =
     const userRepo = getManager().getRepository(User);
     const user = await userRepo.findOne({uuid: uuid});
     if(user) { 
-        console.log(user);
         user.githubId = null; 
         await userRepo.save(user);
         res.sendStatus(204);
