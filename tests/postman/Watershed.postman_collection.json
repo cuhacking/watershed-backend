@@ -1394,13 +1394,13 @@
 							"formdata": [
 								{
 									"key": "body",
-									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"studyLevel\": \"yes\",\n    \"program\": \"yes\",\n    \"question1\": \"answer\",\n    \"question2\": \"answer\",\n    \"question3\": \"answer\",\n    \"hackathonNumber\": 1,\n    \"website\": \"no\",\n\"completed\": false\n}",
+									"value": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Application\",\n    \"pronouns\": \"it\",\n    \"email\": \"test@test.com\",\n    \"studyLevel\": \"yes\",\n    \"program\": \"yes\",\n    \"question1\": \"answer\",\n    \"question2\": \"answer\",\n    \"question3\": \"answer\",\n    \"hackathonNumber\": \"6-10\",\n    \"website\": \"no\",\n\"completed\": false\n}",
 									"type": "text"
 								},
 								{
 									"key": "resume",
 									"type": "file",
-									"src": [],
+									"src": "/C:/Users/Ryan/Documents/Resume/RyanLyResume.pdf",
 									"disabled": true
 								}
 							],
@@ -1444,7 +1444,7 @@
 									"    \"question1\": \"answer\",\r",
 									"    \"question2\": \"answer\",\r",
 									"    \"question3\": \"answer\",\r",
-									"    \"hackathonNumber\": 1,\r",
+									"    \"hackathonNumber\": \"6-10\",\r",
 									"    \"website\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
@@ -1556,7 +1556,7 @@
 									"    \"question1\": \"newAnswer\",\r",
 									"    \"question2\": \"answer\",\r",
 									"    \"question3\": \"answer\",\r",
-									"    \"hackathonNumber\": 1,\r",
+									"    \"hackathonNumber\": \"6-10\",\r",
 									"    \"website\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
@@ -1616,7 +1616,7 @@
 									"    \"question1\": \"newAnswer\",\r",
 									"    \"question2\": \"answer\",\r",
 									"    \"question3\": \"answer\",\r",
-									"    \"hackathonNumber\": 1,\r",
+									"    \"hackathonNumber\": \"6-10\",\r",
 									"    \"website\": \"no\",\r",
 									"    \"completed\": false\r",
 									"}\r",
@@ -1741,7 +1741,7 @@
 							"formdata": [
 								{
 									"key": "body",
-									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true,\n\"school\": \"carleton\",\n\"eventsNumber\": 50,\n\"skills\": \"none\",\n\"willingToInterview\": false,\n\"country\": \"Canada\"\n}",
+									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true,\n\"school\": \"carleton\",\n\"eventsNumber\": \"6-10\",\n\"skills\": \"none\",\n\"willingToInterview\": false,\n\"country\": \"Canada\"\n}",
 									"type": "text"
 								},
 								{
@@ -1851,8 +1851,8 @@
 									"    \"question1\": \"newAnswer\",\r",
 									"    \"question2\": \"answer\",\r",
 									"    \"question3\": \"answer\",\r",
-									"    \"hackathonNumber\": 1,\r",
-									"    \"eventsNumber\": 50,\r",
+									"    \"hackathonNumber\": \"6-10\",\r",
+									"    \"eventsNumber\": \"6-10\",\r",
 									"    \"website\": \"no\",\r",
 									"    \"github\": null,\r",
 									"    \"linkedin\": null,\r",
