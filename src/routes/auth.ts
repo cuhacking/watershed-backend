@@ -55,12 +55,20 @@ router.post('/performReset', auth.performReset);
 /**
  * POST /auth/logout
  * @tag Authentication
- * @summary Logs out a user. Note that this is not strictly required - a logout could simply clear the cookies on the frontend
- * @bodyContent {string} userId - the user's uuid
+ * @summary Logs out a user. Invalidates that specific refreshToken
+ * @bodyContent {string} refreshToken - the user's refreshToken
  * @bodyRequired
  * @response 200 - Successful logout
  */
 router.post('/logout', auth.logout);
+
+/**
+ * POST /auth/logout
+ * @tag Authentication
+ * @summary Invalidates all of a user's tokens
+ * @response 200 - Successful logout
+ */
+router.post('/invalidateTokens', auth.invalidateTokens);
 
 /**
  * GET /auth/github
