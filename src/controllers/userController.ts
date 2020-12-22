@@ -14,8 +14,11 @@ const CONFIRM_TEMPLATE = process.env.CONFIRM_TEMPLATE || '';
 
 const sendConfirmationEmail = async (user: User) => {
     const confirmToken = await auth.generateToken(user.uuid, 'confirm');
+    if(!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN) {
+        return false;
+    }
+
     const mailTemplate = await email.createEmailTemplate(CONFIRM_TEMPLATE);
-    
     if(!mailTemplate) {
         throw new Error('Email templating failed');
     }
