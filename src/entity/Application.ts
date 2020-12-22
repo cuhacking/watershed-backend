@@ -3,7 +3,8 @@ import { validateOrReject, IsDefined } from 'class-validator';
 
 import {User} from './User';
 
-const REQUIRED_FIELDS = ['firstName', 'lastName', 'studyLevel', 'school', 'hackathonNumber', 'eventsNumber', 'skills', 'resumePath', 'question1', 'question2', 'question3', 'willingToInterview'];
+const REQUIRED_FIELDS = ['firstName', 'lastName', 'studyLevel', 'school', 'hackathonNumber', 
+                        'eventsNumber', 'skills', 'resumePath', 'question1', 'question2', 'question3', 'willingToInterview', 'country'];
 
 export const isApplicationComplete = (app: Application): boolean => {
     return REQUIRED_FIELDS.every(field => app[field as keyof Application] != null);
