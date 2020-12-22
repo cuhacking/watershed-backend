@@ -49,10 +49,10 @@ export class Application {
     question3?: string;
 
     @Column({nullable: true})
-    hackathonNumber?: number;
+    hackathonNumber?: string;
 
     @Column({nullable: true})
-    eventsNumber?: number;
+    eventsNumber?: string;
 
     @Column({nullable: true})
     website?: string;
