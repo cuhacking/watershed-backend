@@ -55,7 +55,6 @@ jobs:
           TYPEORM_DATABASE: watershed-test
           TYPEORM_SYNCHRONIZE : true
           TYPEORM_CONNECTION: postgres
-          TYPEORM_LOGGING: true
           TYPEORM_ENTITIES: dist/entity/*.js
           JWT_KEY: abc
 

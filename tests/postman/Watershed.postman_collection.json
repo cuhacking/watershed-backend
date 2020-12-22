@@ -135,7 +135,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
 									"});\r",
 									"\r",
 									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
@@ -449,7 +449,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
 									"});\r",
 									"\r",
 									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
@@ -773,7 +773,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
 									"});\r",
 									"\r",
 									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
@@ -987,7 +987,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": \"{{userId}}\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1115,7 +1115,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
 									"});\r",
 									"\r",
 									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
@@ -1254,7 +1254,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"refreshToken\", \"accessToken\");\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
 									"});\r",
 									"\r",
 									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
@@ -1666,7 +1666,7 @@
 							"formdata": [
 								{
 									"key": "body",
-									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true,\n\"school\": \"carleton\",\n\"eventsNumber\": 50,\n\"skills\": \"none\"\n}",
+									"value": "{\n\"shortAnswer2\": \"anotherNewAnswer\",\n\"resumePath\": \"\",\n\"resumeName\":\"\",\n\"completed\": true,\n\"school\": \"carleton\",\n\"eventsNumber\": 50,\n\"skills\": \"none\",\n\"willingToInterview\": false\n}",
 									"type": "text"
 								},
 								{

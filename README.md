@@ -30,3 +30,21 @@ The package.json provides several useful commands for running the server:
 * `yarn start`: runs `build` and `serve`
 
 * `yarn dev`: sets up the server for development (watches for changes)
+
+## Configuration
+Create a `.env` file in the root of your project with the following entries:
+```
+JWT_KEY=<some random key to be used for generating JWTs>
+githubClientId=<your github client ID>
+githubClientSecret=<your github client secret>
+discordClientId=<your discord client ID>
+discordClientSecret=<your discord client secret>
+EXTERNAL_HOSTNAME=<the external hostname this will run on (e.g. http://localhost:8080, https://cuhacking.com)
+FROM_EMAIL=<mailgun 'from' email>
+MAILGUN_DOMAIN=<mailgun domain>
+MAILGUN_API_KEY=<mailgun api key>
+PASSWORD_RESET_LINK=<link to be sent in password reset email>
+CONFIRM_LINK=<link to be sent in confirmation email>
+CONFIRM_TEMPLATE=<path to email confirmation template file, relative to root. Should have {link} as a placeholder for the link to send>
+PASSWORD_RESET_TEMPLATE=<path to password reset template file, relative to root. Should have {link} as a placeholder for the link to send>
+```
