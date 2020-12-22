@@ -17,7 +17,7 @@ const githubAuth = new ClientOAuth2({
     scopes: ['user']
 });
 
-const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME || 'test';
 
 export const authGithub = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
@@ -78,7 +78,9 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(githubUser.uuid, 'access');
         const refreshToken = await auth.generateToken(githubUser.uuid, 'refresh');
-        res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+        res.cookie('refreshToken', refreshToken);
+        res.cookie('accessToken', accessToken);
+        res.redirect(HOSTNAME);
     } else {
         // No one has that GitHub ID, must be signing up
         const existingUser = await userRepo.findOne({email: response.data.email});
@@ -92,7 +94,8 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
                 uuid: uuidv4(),
                 role: Role.Hacker,
                 email: response.data.email,
-                githubId: response.data.id
+                githubId: response.data.id,
+                confirmed: true
             } as User);
 
             const errors = await validate(newUser);
@@ -104,7 +107,9 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+                    res.cookie('refreshToken', refreshToken);
+                    res.cookie('accessToken', accessToken);
+                    res.redirect(HOSTNAME);
                 } catch (error) {
                     res.status(400).send(error);
                 }
