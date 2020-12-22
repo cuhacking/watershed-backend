@@ -48,11 +48,13 @@ export const saveApplication = async (req: Request, res: Response) => {
         appToSave = appRepo.create({...appData as Application});
     }
     
+    await appRepo.save
+
     // Handle the resume. We're saving them to a resumes folder in the root of the project
     if(req.files?.resume) {        
         let resume = req.files.resume;
         try {
-            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.id + '.pdf';
+            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + appToSave.email + '.pdf';
             await resume.mv(resumePath);
             appToSave.resumePath = resumePath;
             appToSave.resumeName = req.files.resume.name;
