@@ -56,6 +56,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         return;
     }
 
+    const existingUser = await userRepository.findOne({email: userData.email});
+    if(existingUser) {
+        res.status(400).send('Email in use');
+        return;
+    }
+
     //eslint-disable-next-line @typescript-eslint/ban-types
     const newUser = userRepository.create({...userData} as User); // This makes TypeORM not return an array...
     const errors = await validate(newUser);
