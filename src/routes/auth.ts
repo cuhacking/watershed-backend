@@ -34,7 +34,7 @@ router.post('/refresh', auth.refresh);
 /**
  * POST /auth/reset
  * @tag Authentication
- * @summary Requests a password reset email for the user - not currently implemented
+ * @summary Requests a password reset email for the user. POST with user's email.
  * @bodyContent {string} email - the user's email
  * @bodyRequired
  * @response 200 - Always returned, whether the email exists or not.
