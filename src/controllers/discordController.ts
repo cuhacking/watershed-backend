@@ -75,8 +75,8 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(discordUser.uuid, 'access');
         const refreshToken = await auth.generateToken(discordUser.uuid, 'refresh');
-        res.cookie('refreshToken', refreshToken, {secure: true});
-        res.cookie('accessToken', accessToken, {secure: true});
+        res.cookie('refreshToken', refreshToken.token, {secure: true});
+        res.cookie('accessToken', accessToken.token, {secure: true});
         res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that discord ID, must be signing up
@@ -104,8 +104,8 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.cookie('refreshToken', refreshToken, {secure: true});
-                    res.cookie('accessToken', accessToken, {secure: true});
+                    res.cookie('refreshToken', refreshToken.token, {secure: true});
+                    res.cookie('accessToken', accessToken.token, {secure: true});
                     res.redirect(AFTER_LOGIN_REDIRECT);
                 } catch (error) {
                     // TODO: Does this need to be handled as a redirect?
