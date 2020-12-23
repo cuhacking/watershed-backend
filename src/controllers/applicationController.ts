@@ -37,7 +37,13 @@ export const saveApplication = async (req: Request, res: Response) => {
     const existingApp = user.application;
     let appData = null;
     if(req.body.body) {
-        appData = JSON.parse(req.body.body);
+        try {
+            appData = JSON.parse(req.body.body);
+        } catch (err) {
+            res.status(400).send(err);
+            return;
+        }
+        
     }
 
     // If there's an existing one, update the fields. Otherwise, create a new one
