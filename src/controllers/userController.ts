@@ -45,10 +45,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     userData.password = password;
     userData.uuid = uuidv4();
     userData.confirmed = false;
-
-    if(!userData.role) {
-        userData.role = Role.Hacker;
-    }
+    userData.role = Role.Hacker; // Force all users to be Hackers
     
     // Validate the email
     if(!EMAIL_REGEX.test(userData.email)) {
