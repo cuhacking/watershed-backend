@@ -79,8 +79,8 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(githubUser.uuid, 'access');
         const refreshToken = await auth.generateToken(githubUser.uuid, 'refresh');
-        res.cookie('refreshToken', refreshToken, {secure: true});
-        res.cookie('accessToken', accessToken, {secure: true});
+        res.cookie('refreshToken', refreshToken.token, {secure: true});
+        res.cookie('accessToken', accessToken.token, {secure: true});
         res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that GitHub ID, must be signing up
@@ -108,8 +108,8 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.cookie('refreshToken', refreshToken, {secure: true});
-                    res.cookie('accessToken', accessToken, {secure: true});
+                    res.cookie('refreshToken', refreshToken.token, {secure: true});
+                    res.cookie('accessToken', accessToken.token, {secure: true});
                     res.redirect(AFTER_LOGIN_REDIRECT);
                 } catch (error) {
                     res.status(400).send(error);
