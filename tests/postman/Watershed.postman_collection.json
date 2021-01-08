@@ -1322,66 +1322,7 @@
 					"response": []
 				},
 				{
-					"name": "4.7 Get All Applications",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"const expected = {\r",
-									"    \"firstName\": \"Test\",\r",
-									"    \"lastName\": \"Application\",\r",
-									"    \"pronouns\": \"it\",\r",
-									"    \"email\": \"test@test.com\",\r",
-									"    \"studyLevel\": \"yes\",\r",
-									"    \"program\": \"yes\",\r",
-									"    \"question1\": \"newAnswer\",\r",
-									"    \"question2\": \"answer\",\r",
-									"    \"question3\": \"answer\",\r",
-									"    \"hackathonNumber\": 1,\r",
-									"    \"website\": \"no\",\r",
-									"    \"completed\": false\r",
-									"}\r",
-									"\r",
-									"pm.test(\"Data is correct\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    for(const key in expected) {\r",
-									"        pm.expect(jsonData[0][key]).to.eql(expected[key]);\r",
-									"    }\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{ACCESS_TOKEN}}"
-							}
-						],
-						"url": {
-							"raw": "{{HOST}}/api/application",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"application"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "4.8 Edit Application and Submit Incomplete",
+					"name": "4.7 Edit Application and Submit Incomplete",
 					"event": [
 						{
 							"listen": "test",
@@ -1439,7 +1380,7 @@
 					"response": []
 				},
 				{
-					"name": "4.9 Edit Application and Submit",
+					"name": "4.8 Edit Application and Submit",
 					"event": [
 						{
 							"listen": "test",
@@ -1497,7 +1438,7 @@
 					"response": []
 				},
 				{
-					"name": "4.10 Can't Edit Submitted Application",
+					"name": "4.9 Can't Edit Submitted Application",
 					"event": [
 						{
 							"listen": "test",
@@ -1555,7 +1496,7 @@
 					"response": []
 				},
 				{
-					"name": "4.11 Verify Final Application",
+					"name": "4.10 Verify Final Application",
 					"event": [
 						{
 							"listen": "test",
