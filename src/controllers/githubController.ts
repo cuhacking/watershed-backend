@@ -71,36 +71,59 @@ export const githubAuthCallback = async (req: Request, res: Response): Promise<v
     const url = token.sign({method: 'get', url: 'https://api.github.com/user'}) as AxiosRequestConfig;
     const response = await axios(url);
 
-    const userRepo = getManager().getRepository(User);
+    let email = response.data.email;
+    const emailUrl = token.sign({method: 'get', url: 'https://api.github.com/user/emails'}) as AxiosRequestConfig;
+    const emailResponse = await axios(emailUrl);
 
-    const githubUser = await userRepo.findOne({email: response.data.email, githubId: response.data.id});
+    if(!email) {
+        for(const possibleEmail of emailResponse.data) {
+            if(possibleEmail.primary) {
+                email = possibleEmail.email;
+                break;
+            }
+        }
+    
+        if(!email) {
+            email = response.data[0].email; // No primary, default to the first one (not sure if this is even possible)
+        }
+    }
+    
+    const userRepo = getManager().getRepository(User);
+   
+    const githubUser = await userRepo.findOne({githubId: response.data.id});
     if(githubUser) {
-        // User with this ID exists, log them in
-        // Generate a new access token and refresh token for them
-        const accessToken = await auth.generateToken(githubUser.uuid, 'access');
-        const refreshToken = await auth.generateToken(githubUser.uuid, 'refresh');
-        res.cookie('refreshToken', refreshToken.token, {secure: true});
-        res.cookie('accessToken', accessToken.token, {secure: true});
-        res.redirect(AFTER_LOGIN_REDIRECT);
+        const hasCorrectEmail = emailResponse.data.some((emailObject: any) => emailObject.email.toLowerCase() === githubUser.email.toLowerCase()); // Check if it matches any of the GitHub user's emails
+        if(hasCorrectEmail) {
+            // User with this ID exists, log them in
+            // Generate a new access token and refresh token for them
+            const accessToken = await auth.generateToken(githubUser.uuid, 'access');
+            const refreshToken = await auth.generateToken(githubUser.uuid, 'refresh');
+            res.cookie('refreshToken', refreshToken.token, {secure: true});
+            res.cookie('accessToken', accessToken.token, {secure: true});
+            res.redirect(AFTER_LOGIN_REDIRECT);
+        } else {
+            res.status(400).send('This GitHub account is already linked to an account. Please log in with that account.');
+        }
+        
     } else {
         // No one has that GitHub ID, must be signing up
-        const existingUser = await userRepo.findOne({email: response.data.email});
-        const existingGithubUser = await userRepo.findOne({githubId: response.data.id});
+        const existingUser = await userRepo.createQueryBuilder()
+                                            .where('LOWER(email) = LOWER(:email)', { email: email })
+                                            .getOne();
         if(existingUser) {
             res.status(400).send('A user with that email already exists. Please log in with the method used to sign up, and link your GitHub account in the settings.');
-        } else if(existingGithubUser) {
-            res.status(400).send('This GitHub account is already linked to an account. Please log in with that account.');
         } else {
             const newUser = userRepo.create({
                 uuid: uuidv4(),
                 role: Role.Hacker,
-                email: response.data.email,
+                email: email,
                 githubId: response.data.id,
                 confirmed: true
             } as User);
 
             const errors = await validate(newUser);
             if(errors.length > 0) {
+                console.log(errors);
                 res.sendStatus(400);
             } else {
                 try {
