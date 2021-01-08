@@ -15,7 +15,9 @@ const PASSWORD_RESET_TEMPLATE = process.env.PASSWORD_RESET_TEMPLATE || ''; // Fi
 // Logs in a user - see /auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
-    const user = await userRepository.findOne({email: req.body.email});
+    const user = await userRepository.createQueryBuilder()
+                                            .where('LOWER(email) = LOWER(:email)', { email: req.body.email })
+                                            .getOne();
     if(user && user.password){
         const match = await bcrypt.compare(req.body.password, user.password);
         if(match) {
@@ -46,7 +48,9 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
 // Handles a password reset request. Responsible for taking their email and sending the reset email - see /auth/reset
 export const resetRequest = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
-    const user = await userRepository.findOne({email: req.body.email});
+    const user = await userRepository.createQueryBuilder()
+                                            .where('LOWER(email) = LOWER(:email)', { email: req.body.email })
+                                            .getOne();
 
     if(user) {
         const token = await auth.generateToken(user.uuid, 'reset');

@@ -80,7 +80,9 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
         res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that discord ID, must be signing up
-        const existingUser = await userRepo.findOne({email: response.data.email});
+        const existingUser = await userRepo.createQueryBuilder()
+                                            .where('LOWER(email) = LOWER(:email)', { email: response.data.email })
+                                            .getOne();
         const existingdiscordUser = await userRepo.findOne({discordId: response.data.id});
         if(existingUser) {
             res.status(400).send('A user with that email already exists. Please log in with the method used to sign up, and link your Discord account in the settings.');

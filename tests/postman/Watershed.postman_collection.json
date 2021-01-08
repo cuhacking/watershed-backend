@@ -486,58 +486,7 @@
 					"response": []
 				},
 				{
-					"name": "1.11 Get All Users",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const jsonData = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Status code is 201\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Array should be returned\", () => {\r",
-									"    pm.expect(jsonData).to.be.an(\"array\");\r",
-									"    pm.expect(jsonData).to.not.be.empty;\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{ACCESS_TOKEN}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1.12 Get Created User",
+					"name": "1.11 Get Created User",
 					"event": [
 						{
 							"listen": "test",
@@ -545,77 +494,6 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{HOST}}/api/user/{{userId}}",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user",
-								"{{userId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1.13 Delete Created User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.environment.get(\"variable_key\");"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{ACCESS_TOKEN}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{HOST}}/api/user/{{userId}}",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user",
-								"{{userId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1.14 Check Deleted User No Longer Exists",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 404\", () => {\r",
-									"    pm.response.to.have.status(404);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -666,7 +544,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 2\r\n}",
+							"raw": "{\r\n    \"email\": \"auth@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -687,38 +565,7 @@
 					"response": []
 				},
 				{
-					"name": "2.2 Protected Enpoint Not Logged In",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 401\", () => {\r",
-									"    pm.response.to.have.status(401);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2.3 Invalid Token",
+					"name": "2.2 Invalid Token",
 					"event": [
 						{
 							"listen": "test",
@@ -755,7 +602,7 @@
 					"response": []
 				},
 				{
-					"name": "2.4 Login",
+					"name": "2.3 Login",
 					"event": [
 						{
 							"listen": "test",
@@ -788,7 +635,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"password@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"email\": \"auth@test.com\",\r\n    \"password\": \"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -810,44 +657,7 @@
 					"response": []
 				},
 				{
-					"name": "2.5 Protected Enpoint Logged In",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 401\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{ACCESS_TOKEN}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2.6 Refresh Token Can't Be Used For Auth",
+					"name": "2.4 Refresh Token Can't Be Used For Auth",
 					"event": [
 						{
 							"listen": "test",
@@ -884,7 +694,7 @@
 					"response": []
 				},
 				{
-					"name": "2.7 Refresh Access Token",
+					"name": "2.5 Refresh Access Token",
 					"event": [
 						{
 							"listen": "test",
@@ -938,44 +748,7 @@
 					"response": []
 				},
 				{
-					"name": "2.8 Protected Enpoint New Access Token",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 401\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
-							}
-						],
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2.9 Logout",
+					"name": "2.6 Logout",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1050,7 +823,7 @@
 					"response": []
 				},
 				{
-					"name": "2.9 Invalidate Tokens",
+					"name": "2.8 Invalidate Tokens",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1084,53 +857,7 @@
 					"response": []
 				},
 				{
-					"name": "2.10 Protected Enpoint After Logout fails",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 401\", () => {\r",
-									"    pm.response.to.have.status(401);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"setTimeout(function(){}, [1000]);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{NEW_ACCESS_TOKEN}}"
-							}
-						],
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2.11 Create Hacker User",
+					"name": "2.9 Create Hacker User",
 					"event": [
 						{
 							"listen": "test",
@@ -1151,7 +878,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"hacker@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 0\r\n}",
+							"raw": "{\r\n    \"email\": \"HaCKer@test.com\",\r\n    \"password\": \"password\",\r\n    \"role\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1172,7 +899,7 @@
 					"response": []
 				},
 				{
-					"name": "2.12 Login",
+					"name": "2.10 Login",
 					"event": [
 						{
 							"listen": "test",
@@ -1227,7 +954,7 @@
 					"response": []
 				},
 				{
-					"name": "2.13 Protected Enpoint Unauthorized",
+					"name": "2.11 Protected Enpoint Unauthorized",
 					"event": [
 						{
 							"listen": "test",
