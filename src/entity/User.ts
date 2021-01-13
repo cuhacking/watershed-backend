@@ -50,6 +50,9 @@ export class User {
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
 
+    @Column({nullable: true, type: 'varchar'})
+    discordUsername?: string | null;
+
     @OneToOne(() => Application, app => app.user)
     @JoinColumn()
     application?: Application | null;
