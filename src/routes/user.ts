@@ -76,4 +76,12 @@ router.post('/confirm', user.confirmEmail);
  */
 router.post('/resendConfirmation', user.resendConfirmationEmail);
 
+/**
+ * GET /users/addRoles
+ * @tag Users
+ * @summary Assigns specific roles (specified in .env) to the logged in user
+ * @response 200 - OK
+ */
+router.get('/addRoles', user.addRoles);
+
 export = router;
