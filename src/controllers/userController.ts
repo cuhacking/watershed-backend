@@ -7,10 +7,14 @@ import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import * as email from '../middleware/email';
 import {EmailConfirmToken} from '../entity/EmailConfirmToken';
+import axios, {Method, AxiosResponse} from 'axios';
 
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 const CONFIRM_LINK = process.env.CONFIRM_LINK || '';
 const CONFIRM_TEMPLATE = process.env.CONFIRM_TEMPLATE || '';
+
+const DISCORD_URL = process.env.DISCORD_URL;
+const DISCORD_ROLE = process.env.DISCORD_ROLE;
 
 const sendConfirmationEmail = async (user: User) => {
     const confirmToken = await auth.generateToken(user.uuid, 'confirm');
@@ -26,6 +30,27 @@ const sendConfirmationEmail = async (user: User) => {
     const mailText = mailTemplate({link: HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token});
 
     return (await email.sendEmail(user.email, 'cuHacking Password Reset',mailText));
+}
+
+export const assignDiscordRole = async (discordId: string): Promise<AxiosResponse|undefined> => {
+    if(!discordId) {
+        return undefined;
+    } else {
+        console.log('assigning');
+        // Send the role request
+        const method: Method = 'post';
+        const url = { 
+            method: method, 
+            url: DISCORD_URL + '/upgrade',
+            data: {
+                roleId: DISCORD_ROLE,
+                id: discordId
+            }
+        };
+
+        const response = await axios(url);
+        return response;
+    }
 }
 
 const EMAIL_REGEX = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
@@ -192,4 +217,32 @@ export const getConfirmationTokens = async (req: Request, res: Response): Promis
 
     const confirmationTokens = await confirmTokenRepo.find({uuid: user.uuid});
     res.status(200).send(confirmationTokens);
+};
+
+export const checkIn = async (req: Request, res: Response): Promise<void> => {
+    const userRepo = getManager().getRepository(User);
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    if(!user.discordId) {
+        res.status(400).send('User is not linked with Discord.');
+    } else {
+        user.checkedIn = true;
+        await userRepo.save(user);
+        const response = await assignDiscordRole(user.discordId);
+        if(response) {
+            res.status(response.status).send(response.data);
+        } else {
+            res.sendStatus(500);
+        }
+    }
 };
