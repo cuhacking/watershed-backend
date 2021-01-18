@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {validate} from 'class-validator';
 import * as crypto from 'crypto';
 import {State} from '../entity/State';
+import {assignDiscordRole} from './userController';
 
 const discordAuth = new ClientOAuth2({
     clientId: process.env.discordClientId,

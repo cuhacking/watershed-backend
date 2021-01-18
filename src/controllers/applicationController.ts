@@ -9,6 +9,8 @@ import app from '../server';
 
 import * as path from 'path';
 import * as fs from 'fs';
+import { discordAuthCallback } from './discordController';
+import { assignDiscordRole } from './userController';
 
 // Default to a resumes directory in the root of the project
 const RESUME_ROOT = process.env.RESUME_DIR || __dirname + '/../../resumes/';

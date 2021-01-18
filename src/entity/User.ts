@@ -58,6 +58,10 @@ export class User {
     @IsDefined()
     confirmed!: boolean;
 
+    // Note: to avoid dealing with big schema changes, I'm allowing null to be the same as false
+    @Column({nullable: true, type: 'boolean'})
+    checkedIn?: boolean | null;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {

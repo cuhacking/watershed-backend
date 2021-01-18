@@ -37,6 +37,14 @@ router.post('/', user.createUser);
 router.get('/me', user.getCurrentUser);
 
 /**
+ * GET /user/checkin
+ * @tag Users
+ * @summary Checks a user into the event (assigns their roles, etc.)
+ * @response 200 - OK
+ */
+router.get('/checkin', user.checkIn);
+
+/**
  * GET /user/{userId}
  * @tag Users
  * @summary Gets a user by user uuid
@@ -57,7 +65,7 @@ router.get('/:userId', user.getUser);
 router.delete('/:userId', auth.authenticate(Role.Organizer), user.deleteUser);
 
 /**
- * POST /users/confirm
+ * POST /user/confirm
  * @tag Users
  * @summary Confirms a user. POST with "token": <confirm token>
  * @bodyContent {string} application/json - The user's confirm token
@@ -67,7 +75,7 @@ router.delete('/:userId', auth.authenticate(Role.Organizer), user.deleteUser);
 router.post('/confirm', user.confirmEmail);
 
 /**
- * POST /users/resendConfirmation
+ * POST /user/resendConfirmation
  * @tag Users
  * @summary Resends a user's confirmation email. POST with user's email
  * @bodyContent {string} application/json - The user's email
@@ -75,13 +83,5 @@ router.post('/confirm', user.confirmEmail);
  * @response 200 - OK
  */
 router.post('/resendConfirmation', user.resendConfirmationEmail);
-
-/**
- * GET /users/addRoles
- * @tag Users
- * @summary Assigns specific roles (specified in .env) to the logged in user
- * @response 200 - OK
- */
-router.get('/addRoles', user.addRoles);
 
 export = router;
