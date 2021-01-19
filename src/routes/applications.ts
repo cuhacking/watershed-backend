@@ -47,4 +47,13 @@ router.get('/my', application.getApplicationForUser);
  */
 router.get(':userId', auth.authenticate(Role.Organizer), application.getApplicationByUserId);
 
+/**
+ * PUT /application/modifyResume
+ * @tag Applications
+ * @summary Modifies the user's resume
+ * @response 200 - Resume updated
+ * @responseContent {Application} 200.application/json
+ */
+router.put('/modifyResume', application.modifyResume);
+
 export = router;
