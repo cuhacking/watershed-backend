@@ -27,9 +27,9 @@ const sendConfirmationEmail = async (user: User) => {
         throw new Error('Email templating failed');
     }
 
-    const mailText = mailTemplate({link: HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token});
+    const mailText = mailTemplate({URL: HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token, EMAIL: user.email});
 
-    return (await email.sendEmail(user.email, 'cuHacking Password Reset',mailText));
+    return (await email.sendEmail(user.email, 'cuHacking Password Reset', mailText));
 }
 
 export const assignDiscordRole = async (discordId: string): Promise<AxiosResponse|undefined> => {
@@ -96,7 +96,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
             // Login the new user
             const accessToken = await auth.generateToken(newUser.uuid, 'access');
             const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-            const emailRes = await sendConfirmationEmail(newUser);
+
             res.status(201).send({uuid: newUser.uuid, accessToken: accessToken, refreshToken: refreshToken});
         } catch (error) {
             res.status(500).send(error);
