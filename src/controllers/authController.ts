@@ -61,7 +61,7 @@ export const resetRequest = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
-        const mailText = textTemplate({link: HOSTNAME + PASSWORD_RESET_LINK + '?token=' + token.token});
+        const mailText = textTemplate({URL: HOSTNAME + PASSWORD_RESET_LINK + '?token=' + token.token, EMAIL: user.email});
         const mailRes = await email.sendEmail(user.email, 'cuHacking Password Reset', mailText);
 
         if(mailRes){

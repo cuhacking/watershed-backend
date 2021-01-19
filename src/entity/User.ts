@@ -51,6 +51,9 @@ export class User {
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
 
+    @Column({nullable: true, type: 'varchar'})
+    discordUsername?: string | null;
+
     @OneToOne(() => Application, app => app.user)
     @JoinColumn()
     application?: Application | null;
@@ -62,6 +65,10 @@ export class User {
     @Column({type: 'boolean', default: false})
     @IsDefined()
     confirmed!: boolean;
+
+    // Note: to avoid dealing with big schema changes, I'm allowing null to be the same as false
+    @Column({nullable: true, type: 'boolean'})
+    checkedIn?: boolean | null;
 
     @BeforeInsert()
     @BeforeUpdate()

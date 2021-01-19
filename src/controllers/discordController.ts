@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {validate} from 'class-validator';
 import * as crypto from 'crypto';
 import {State} from '../entity/State';
+import {assignDiscordRole} from './userController';
 
 const discordAuth = new ClientOAuth2({
     clientId: process.env.discordClientId,
@@ -71,6 +72,10 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
 
     const discordUser = await userRepo.findOne({email: response.data.email, discordId: response.data.id});
     if(discordUser) {
+        if(!discordUser.discordUsername) {
+            discordUser.discordUsername = response.data.username + '#' + response.data.discriminator;
+            await userRepo.save(discordUser);
+        }
         // User with this ID exists, log them in
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(discordUser.uuid, 'access');
@@ -94,6 +99,7 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
                 role: Role.Hacker,
                 email: response.data.email,
                 discordId: response.data.id,
+                discordUsername: response.data.username + '#' + response.data.discriminator,
                 confirmed: true // OAuth users automatically have a confirmed email (do we want this?)
             } as User);
 
@@ -159,6 +165,7 @@ export const discordLinkCallback = async (req: Request, res: Response): Promise<
                 res.status(400).send('This user already has a Discord account linked. Please unlink first, then try again.'); // Do we want this?
             } else {
                 user.discordId = response.data.id;
+                user.discordUsername = response.data.username + '#' + response.data.discriminator;
                 await userRepo.save(user);
                 res.sendStatus(200);
             }
@@ -184,6 +191,7 @@ export const unlinkDiscord = async (req: Request, res: Response): Promise<void> 
     const user = await userRepo.findOne({uuid: uuid});
     if(user) { 
         user.discordId = null; 
+        user.discordUsername = null;
         await userRepo.save(user);
         res.sendStatus(204);
     } else {

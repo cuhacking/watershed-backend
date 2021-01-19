@@ -34,7 +34,7 @@ export const sendEmail = async (recipient: string, subject: string, body: string
         from: FROM_EMAIL,
         to: recipient,
         subject: subject,
-        text: body,
+        html: body,
     };
 
     try {
