@@ -53,6 +53,7 @@ router.post('/submit', ravensQuest.submitAnswer);
  * GET /ravensQuest/question
  * @tag Raven's Quest
  * @summary Gets the answer for the user's current question
+ * @pathParam {string} userId - the Discord ID of the user
  * @response 200 - Success
  * @response 400 - User has not yet started the Raven's Quest
  * @response 404 - User with that Discord ID not found
@@ -63,6 +64,7 @@ router.get('/question/:userId', ravensQuest.getQuestion);
  * GET /ravensQuest/progress
  * @tag Raven's Quest
  * @summary Gets the user's current progress
+ * @pathParam {string} userId - the Discord ID of the user
  * @response 200 - Success
  * @response 404 - User with that Discord ID not found
  */
