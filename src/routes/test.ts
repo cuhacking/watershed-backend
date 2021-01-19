@@ -19,5 +19,6 @@ router.get('/getConfirmTokens', user.getConfirmationTokens);
 
 router.get('/getResetTokens', auth.getResetTokens);
 
+router.post('/adminUser', user.createAdminUser);
 
 export = router;

@@ -9,12 +9,12 @@ export class RavensQuest {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
-    @IsDefined()
-    uuid!: string;
-
     @OneToOne(() => User, user => user.ravensQuestProgress, {cascade: true})
     user!: User;
+
+    @Column()
+    @IsDefined()
+    track0Progress!: number;
 
     @Column()
     @IsDefined()
@@ -30,11 +30,9 @@ export class RavensQuest {
 
     @Column()
     @IsDefined()
-    track4Progress!: number;
-
-    @Column()
-    @IsDefined()
     currentTrack!: number;
+
+    [index: string]: any;
 
     @BeforeInsert()
     @BeforeUpdate()

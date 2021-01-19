@@ -29,13 +29,13 @@ router.post('/start', ravensQuest.startQuest);
 router.post('/switchTracks', ravensQuest.switchTracks);
 
 /**
- * GET /ravensQuest/refreshQuestions
+ * POST /ravensQuest/refreshQuestions
  * @tag Raven's Quest
- * @summary Reloads questions and answers from file
+ * @summary If a body is provided, load those as the questions and answers. Otherwise, try to load from the file set in the .env
  * @response 200 - Success
  * @response 500 - Load failed
  */
-router.get('/refreshQuestions', ravensQuest.refreshQuestionsAndAnswers);
+router.post('/refreshQuestions', ravensQuest.refreshQuestionsAndAnswers);
 
 /**
  * POST /ravensQuest/submit
@@ -57,7 +57,7 @@ router.post('/submit', ravensQuest.submitAnswer);
  * @response 400 - User has not yet started the Raven's Quest
  * @response 404 - User with that Discord ID not found
  */
-router.get('/question', ravensQuest.getQuestion);
+router.get('/question/:userId', ravensQuest.getQuestion);
 
 /**
  * GET /ravensQuest/progress
@@ -66,6 +66,6 @@ router.get('/question', ravensQuest.getQuestion);
  * @response 200 - Success
  * @response 404 - User with that Discord ID not found
  */
-router.get('/progress', ravensQuest.getProgress);
+router.get('/progress/:userId', ravensQuest.getProgress);
 
 export = router;
