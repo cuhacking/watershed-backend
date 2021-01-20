@@ -1,7 +1,8 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 
 import {Application} from './Application';
+import {Event} from './Event';
 
 export enum Role {
     Hacker,
@@ -64,6 +65,10 @@ export class User {
     // Note: to avoid dealing with big schema changes, I'm allowing null to be the same as false
     @Column({nullable: true, type: 'boolean'})
     checkedIn?: boolean | null;
+
+    @ManyToMany(() => Event)
+    @JoinTable()
+    favouriteEvents?: Event[];
 
     @BeforeInsert()
     @BeforeUpdate()
