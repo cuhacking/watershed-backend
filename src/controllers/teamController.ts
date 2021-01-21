@@ -224,7 +224,7 @@ export const leaveTeam = async (req: Request, res: Response): Promise<void> => {
 }
 
 
-// Takes email
+// Takes email or discord username
 export const createInvite = async (req: Request, res: Response): Promise<void> => {
     const invitesRepo = getManager().getRepository(TeamInvite);
     const userRepo = getManager().getRepository(User);
@@ -248,13 +248,20 @@ export const createInvite = async (req: Request, res: Response): Promise<void> =
         return;
     }
 
-    const email = req.body.email;
-    if(!email) {
+    const username = req.body.username;
+
+    if(!username) {
         res.sendStatus(400);
         return;
     }
 
-    const invitedUser = await userRepo.findOne({email: email});
+    let invitedUser;
+    if(username.includes("@") && username.includes(".")) {
+        invitedUser = await userRepo.findOne({email: username});
+    } else {
+        invitedUser = await userRepo.findOne({discordUsername: username});
+    }
+    
     if(!invitedUser) {
         res.status(404).send('User not found.');
         return;
@@ -265,7 +272,7 @@ export const createInvite = async (req: Request, res: Response): Promise<void> =
         team: team,
         user: invitedUser
     });
-
+    
     await invitesRepo.save(newInvite);
     res.status(200).send({uuid: newInvite.uuid});
 }
