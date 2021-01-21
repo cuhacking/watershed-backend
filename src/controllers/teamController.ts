@@ -156,6 +156,7 @@ export const joinTeam = async (req: Request, res: Response): Promise<void> => {
     const invite = user.teamInvites?.find(inv => inv.uuid === inviteId);
     if(!invite) {
         res.status(403).send('You are not invited to this team.');
+        return;
     }
 
     const team = await teamRepository.findOne({uuid: teamId});

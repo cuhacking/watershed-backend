@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, OneToMany} from 'typeorm';
-=======
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn} from 'typeorm';
->>>>>>> master
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, OneToMany, OneToOne, JoinColumn} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 import { Team } from './Team';
 import { TeamInvite } from './TeamInvite';
@@ -61,6 +57,7 @@ export class User {
 
     @OneToMany(() => TeamInvite, invite => invite.user)
     teamInvites?: TeamInvite[];
+
     @Column({nullable: true, type: 'varchar'})
     discordUsername?: string | null;
 
