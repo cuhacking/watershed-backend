@@ -16,8 +16,8 @@ export class Event {
     @IsDefined()
     type!: string;
 
-    @Column()
-    @IsDefined({type: 'timestamp'})
+    @Column({type: 'timestamp'})
+    @IsDefined()
     startTime!: Date;
 
     @Column({nullable: true, type: 'timestamp'})
@@ -39,9 +39,9 @@ export class Event {
     @IsDefined()
     description!: string;
 
-    @ManyToMany(() => Resource)
+    @ManyToMany(() => Resource, {cascade: true})
     @JoinTable()
-    resource!: Resource[];
+    resources!: Resource[];
 
     @BeforeInsert()
     @BeforeUpdate()

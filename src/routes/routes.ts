@@ -9,6 +9,7 @@ import user from './user';
 import auth from './auth';
 import applications from './applications';
 import test from './test';
+import event from './event';
 
 const ENV = process.env.NODE_ENV || 'development';
 
@@ -23,6 +24,7 @@ router.use('/status', status);
 router.use('/user', user);
 router.use('/auth', auth);
 router.use('/application', applications);
+router.use('/event', event);
 
 // Only mount these routes for testing
 if(ENV === 'development') {

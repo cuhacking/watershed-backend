@@ -66,7 +66,7 @@ export class User {
     @Column({nullable: true, type: 'boolean'})
     checkedIn?: boolean | null;
 
-    @ManyToMany(() => Event)
+    @ManyToMany(() => Event, {cascade: true})
     @JoinTable()
     favouriteEvents?: Event[];
 
