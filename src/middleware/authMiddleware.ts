@@ -3,6 +3,7 @@ import {Request, Response, NextFunction} from 'express';
 import {AccessToken} from '../entity/AccessToken';
 import {RefreshToken} from '../entity/RefreshToken';
 import {PasswordReset} from '../entity/PasswordReset';
+import {EmailConfirmToken} from '../entity/EmailConfirmToken';
 import {getManager} from 'typeorm';
 import { User, Role } from '../entity/User';
 
@@ -41,7 +42,7 @@ export interface VerifyResult {
     uid: string | undefined;
 }
 
-type TokenType = 'access' | 'refresh' | 'reset';
+type TokenType = 'access' | 'refresh' | 'reset' | 'confirm';
 
 /**
  * Generates a JWT to be used as a token
@@ -118,6 +119,9 @@ export const generateToken = async (uid: string, type: TokenType): Promise<Encod
     } else if(type === 'reset') {
         const resetRepo = getManager().getRepository(PasswordReset);
         await resetRepo.save(resetRepo.create({token: result.token, uuid: uid}));
+    } else if(type === 'confirm') {
+        const confirmRepo = getManager().getRepository(EmailConfirmToken);
+        await confirmRepo.save(confirmRepo.create({token: result.token, uuid: uid}));
     }
     
     return result;
@@ -175,6 +179,15 @@ export const verifyToken = async (token: string, type: TokenType): Promise<Verif
                 uid: undefined
             }
         }
+    } else if(type === 'confirm') {
+        const confirmRepo = getManager().getRepository(EmailConfirmToken);
+        const savedToken = await confirmRepo.findOne({token: token});
+        if(!savedToken) {
+            return {
+                result: AuthTokenStatus.Invalid, 
+                uid: undefined
+            }
+        }
     }
 
     return {
@@ -194,10 +207,21 @@ export const getUserFromToken = (token: string): string|undefined => {
     return decodeJWT(token).session?.id;
 }
 
+/**
+ * Grabs user object from a token
+ * 
+ * @param token the token
+ * 
+ * @returns the user object 
+ */
 export const getUserObjectFromToken = async (token: string, relations?: string[]): Promise<User|undefined> => {
     const userRepo = getManager().getRepository(User);
     const uuid = getUserFromToken(token);
     if(!uuid) return undefined;
+
+    // Verify that the user is properly authenticated
+    const valid = await verifyToken(token, 'access');
+    if(valid.result !== AuthTokenStatus.Valid) return undefined;
 
     const user = await userRepo.findOne({uuid: uuid}, {relations: relations});
     if(!user) return undefined;
@@ -206,7 +230,6 @@ export const getUserObjectFromToken = async (token: string, relations?: string[]
 
 // Middleware for verifying if a request is authenticated via a Bearer token in Authentication header
 export const authenticate = (role: Role): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
-
     return async (req: Request, res: Response, next: NextFunction) => {
         const header = req.header('Authorization')?.split(' ')[1];
         if(!header) {
@@ -225,6 +248,22 @@ export const authenticate = (role: Role): (req: Request, res: Response, next: Ne
                 } else {
                     res.sendStatus(403);
                 }
+            }
+        }
+    }
+};
+
+export const userIsConfirmed = (): (req: Request, res: Response, next: NextFunction) => Promise<void> => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const header = req.header('Authorization')?.split(' ')[1];
+        if(!header) {
+            res.status(401).send('Authorization header not provided');
+        } else {
+            const user = await getUserObjectFromToken(header);
+            if(user?.confirmed) {
+                next();
+            } else {
+                res.status(403).send('User\'s email is not confirmed.');
             }
         }
     }

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {validate} from 'class-validator';
 import * as crypto from 'crypto';
 import {State} from '../entity/State';
+import {assignDiscordRole} from './userController';
 
 const discordAuth = new ClientOAuth2({
     clientId: process.env.discordClientId,
@@ -17,7 +18,8 @@ const discordAuth = new ClientOAuth2({
     scopes: ['identify', 'email']
 });
 
-const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
+const HOSTNAME = process.env.EXTERNAL_HOSTNAME || '';
+const AFTER_LOGIN_REDIRECT = process.env.AFTER_LOGIN_REDIRECT || HOSTNAME;
 
 export const authDiscord = async (req: Request, res: Response): Promise<void> => {
     const state = crypto.randomBytes(16).toString('hex');
@@ -55,7 +57,7 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
     const state = req.query.state as string | undefined;
     const savedState = await stateRepo.findOne({state: state, type: 'discord'});
     if(!savedState) {
-        res.sendStatus(400);
+        res.status(400).send('Bad state');
         return;
     }
     await stateRepo.remove(savedState); // We don't need this state anymore
@@ -70,14 +72,22 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
 
     const discordUser = await userRepo.findOne({email: response.data.email, discordId: response.data.id});
     if(discordUser) {
+        if(!discordUser.discordUsername) {
+            discordUser.discordUsername = response.data.username + '#' + response.data.discriminator;
+            await userRepo.save(discordUser);
+        }
         // User with this ID exists, log them in
         // Generate a new access token and refresh token for them
         const accessToken = await auth.generateToken(discordUser.uuid, 'access');
         const refreshToken = await auth.generateToken(discordUser.uuid, 'refresh');
-        res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+        res.cookie('refreshToken', refreshToken.token, {secure: true});
+        res.cookie('accessToken', accessToken.token, {secure: true});
+        res.redirect(AFTER_LOGIN_REDIRECT);
     } else {
         // No one has that discord ID, must be signing up
-        const existingUser = await userRepo.findOne({email: response.data.email});
+        const existingUser = await userRepo.createQueryBuilder()
+                                            .where('LOWER(email) = LOWER(:email)', { email: response.data.email })
+                                            .getOne();
         const existingdiscordUser = await userRepo.findOne({discordId: response.data.id});
         if(existingUser) {
             res.status(400).send('A user with that email already exists. Please log in with the method used to sign up, and link your Discord account in the settings.');
@@ -88,20 +98,25 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
                 uuid: uuidv4(),
                 role: Role.Hacker,
                 email: response.data.email,
-                discordId: response.data.id
+                discordId: response.data.id,
+                discordUsername: response.data.username + '#' + response.data.discriminator,
+                confirmed: true // OAuth users automatically have a confirmed email (do we want this?)
             } as User);
 
             const errors = await validate(newUser);
             if(errors.length > 0) {
-                res.sendStatus(400);
+                res.status(400).send(errors);
             } else {
                 try {
                     await userRepo.save(newUser);
                     // Login the new user
                     const accessToken = await auth.generateToken(newUser.uuid, 'access');
                     const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
-                    res.status(200).send({accessToken: accessToken, refreshToken: refreshToken});
+                    res.cookie('refreshToken', refreshToken.token, {secure: true});
+                    res.cookie('accessToken', accessToken.token, {secure: true});
+                    res.redirect(AFTER_LOGIN_REDIRECT);
                 } catch (error) {
+                    // TODO: Does this need to be handled as a redirect?
                     res.status(400).send(error);
                 }
             }
@@ -112,7 +127,7 @@ export const discordAuthCallback = async (req: Request, res: Response): Promise<
 export const discordLinkCallback = async (req: Request, res: Response): Promise<void> => {
     // Before we do anything, check that the state is valid
     if(!req.query.state) {
-        res.sendStatus(400);
+        res.status(400).send('No state');
         return;
     }
     const state = req.query.state as string;
@@ -120,7 +135,7 @@ export const discordLinkCallback = async (req: Request, res: Response): Promise<
     const savedState = await stateRepo.findOne({state: state, type: 'discord'});
 
     if(!savedState) {
-        res.sendStatus(400);
+        res.status(400).send('Bad state');
         return;
     }
     await stateRepo.remove(savedState); // We don't need this state anymore
@@ -150,6 +165,7 @@ export const discordLinkCallback = async (req: Request, res: Response): Promise<
                 res.status(400).send('This user already has a Discord account linked. Please unlink first, then try again.'); // Do we want this?
             } else {
                 user.discordId = response.data.id;
+                user.discordUsername = response.data.username + '#' + response.data.discriminator;
                 await userRepo.save(user);
                 res.sendStatus(200);
             }
@@ -175,6 +191,7 @@ export const unlinkDiscord = async (req: Request, res: Response): Promise<void> 
     const user = await userRepo.findOne({uuid: uuid});
     if(user) { 
         user.discordId = null; 
+        user.discordUsername = null;
         await userRepo.save(user);
         res.sendStatus(204);
     } else {

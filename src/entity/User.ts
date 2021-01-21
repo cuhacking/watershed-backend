@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, OneToMany} from 'typeorm';
+=======
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn} from 'typeorm';
+>>>>>>> master
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 import { Team } from './Team';
 import { TeamInvite } from './TeamInvite';
+
+import {Application} from './Application';
 
 export enum Role {
     Hacker,
@@ -33,12 +39,6 @@ export class User {
     @IsDefined()
     uuid!: string;
 
-    @Column({nullable: true, type: 'varchar'})
-    firstName?: string | null;
-
-    @Column({nullable: true, type: 'varchar'})
-    lastName?: string | null;
-
     @Column({unique: true})
     @IsDefined()
     email!: string;
@@ -61,6 +61,20 @@ export class User {
 
     @OneToMany(() => TeamInvite, invite => invite.user)
     teamInvites?: TeamInvite[];
+    @Column({nullable: true, type: 'varchar'})
+    discordUsername?: string | null;
+
+    @OneToOne(() => Application, app => app.user)
+    @JoinColumn()
+    application?: Application | null;
+
+    @Column({type: 'boolean', default: false})
+    @IsDefined()
+    confirmed!: boolean;
+
+    // Note: to avoid dealing with big schema changes, I'm allowing null to be the same as false
+    @Column({nullable: true, type: 'boolean'})
+    checkedIn?: boolean | null;
 
     @BeforeInsert()
     @BeforeUpdate()

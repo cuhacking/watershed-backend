@@ -17,7 +17,7 @@ const router = express.Router();
 router.get('/', auth.authenticate(Role.Organizer), user.getUsers);
 
 /**
- * POST /users
+ * POST /user
  * @tag Users
  * @summary Creates a new user.
  * @bodyContent {User} application/json
@@ -25,6 +25,24 @@ router.get('/', auth.authenticate(Role.Organizer), user.getUsers);
  * @response 201 - Created
  */
 router.post('/', user.createUser);
+
+/**
+ * GET /user/me
+ * @tag Users
+ * @summary Gets the currently logged in user
+ * @response 200 - The user
+ * @responseContent {User} 200.application/json
+ * @response 404 - A user with that ID was not found
+ */
+router.get('/me', user.getCurrentUser);
+
+/**
+ * GET /user/checkin
+ * @tag Users
+ * @summary Checks a user into the event (assigns their roles, etc.)
+ * @response 200 - OK
+ */
+router.get('/checkin', user.checkIn);
 
 /**
  * GET /user/{userId}
@@ -45,5 +63,25 @@ router.get('/:userId', user.getUser);
  * @response 200 - The user was sucessfully deleted.
  */
 router.delete('/:userId', auth.authenticate(Role.Organizer), user.deleteUser);
+
+/**
+ * POST /user/confirm
+ * @tag Users
+ * @summary Confirms a user. POST with "token": <confirm token>
+ * @bodyContent {string} application/json - The user's confirm token
+ * @bodyRequired
+ * @response 200 - OK
+ */
+router.post('/confirm', user.confirmEmail);
+
+/**
+ * POST /user/resendConfirmation
+ * @tag Users
+ * @summary Resends a user's confirmation email. POST with user's email
+ * @bodyContent {string} application/json - The user's email
+ * @bodyRequired
+ * @response 200 - OK
+ */
+router.post('/resendConfirmation', user.resendConfirmationEmail);
 
 export = router;
