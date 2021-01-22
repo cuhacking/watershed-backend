@@ -48,6 +48,7 @@ jobs:
           yarn start > run.log &
           sleep 30
         env:
+          NODE_ENV: development
           TYPEORM_HOST: postgres
           TYPEORM_PORT: 5432
           TYPEORM_USERNAME: test
