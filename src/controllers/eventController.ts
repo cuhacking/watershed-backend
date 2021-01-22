@@ -35,7 +35,7 @@ export const createEvent = async (req: Request, res: Response): Promise<void> =>
         res.status(400).send(errors);
     } else {
         try {
-            console.log(newEvent);
+
             await eventRepository.save(newEvent);
             res.status(201).send(newEvent);
         } catch (error) {
@@ -87,7 +87,7 @@ export const editEvent = async (req: Request, res: Response): Promise<void> => {
     
     try {
         let modifiedEvent;
-        let event = await eventRepository.findOne({id: eventId});
+        let event = await eventRepository.findOne({id: eventId}, {relations: ['resources']});
         if(!event) {
             res.sendStatus(404);
             return;

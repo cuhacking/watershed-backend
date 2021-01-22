@@ -161,7 +161,7 @@ export const getQuestion = async (req: Request, res: Response): Promise<void> =>
         res.status(400).send("User has not started the Raven's Quest yet");
         return;
     }
-    console.log(user.ravensQuestProgress);
+
     const currentTrack = user.ravensQuestProgress.currentTrack.toString();
     const currentQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString(); // This is probably bad but I'm too lazy to do 4 if statements
 
