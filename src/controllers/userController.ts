@@ -219,6 +219,50 @@ export const getConfirmationTokens = async (req: Request, res: Response): Promis
     res.status(200).send(confirmationTokens);
 };
 
+// Testing purposes only
+export const createAdminUser = async (req: Request, res: Response): Promise<void> => {
+    const userRepository = getManager().getRepository(User);
+
+    const userData = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(userData.password, salt);
+    userData.password = password;
+    userData.uuid = uuidv4();
+    userData.confirmed = false;
+    userData.role = Role.Organizer;
+    userData.email = userData.email?.toLowerCase();
+    
+    // Validate the email
+    if(!EMAIL_REGEX.test(userData.email)) {
+        res.status(400).send('Invalid email');
+        return;
+    }
+
+    const existingUser = await userRepository.findOne({email: userData.email});
+    if(existingUser) {
+        res.status(400).send('Email in use');
+        return;
+    }
+
+    //eslint-disable-next-line @typescript-eslint/ban-types
+    const newUser = userRepository.create({...userData} as User); // This makes TypeORM not return an array...
+    const errors = await validate(newUser);
+    if(errors.length > 0) {
+        res.status(400).send(errors);
+    } else {
+        try {
+            await userRepository.save(newUser);
+            // Login the new user
+            const accessToken = await auth.generateToken(newUser.uuid, 'access');
+            const refreshToken = await auth.generateToken(newUser.uuid, 'refresh');
+            const emailRes = await sendConfirmationEmail(newUser);
+            res.status(201).send({uuid: newUser.uuid, accessToken: accessToken, refreshToken: refreshToken});
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    }
+}
+
 export const checkIn = async (req: Request, res: Response): Promise<void> => {
     const userRepo = getManager().getRepository(User);
     const token = req.header('Authorization')?.split(' ')[1];

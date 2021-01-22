@@ -10,8 +10,10 @@ import auth from './auth';
 import applications from './applications';
 import test from './test';
 import event from './event';
+import ravensQuest from './ravensQuest';
+import stats from './stats';
 
-const ENV = process.env.NODE_ENV || 'development';
+const ENV = process.env.NODE_ENV || 'production';
 
 const router = express.Router();
 
@@ -25,6 +27,8 @@ router.use('/user', user);
 router.use('/auth', auth);
 router.use('/application', applications);
 router.use('/event', event);
+router.use('/ravensQuest', ravensQuest);
+router.use('/stats', stats);
 
 // Only mount these routes for testing
 if(ENV === 'development') {

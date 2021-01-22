@@ -3,6 +3,7 @@ import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } f
 
 import {Application} from './Application';
 import {Event} from './Event';
+import {RavensQuest} from './RavensQuest';
 
 export enum Role {
     Hacker,
@@ -57,6 +58,10 @@ export class User {
     @OneToOne(() => Application, app => app.user)
     @JoinColumn()
     application?: Application | null;
+
+    @OneToOne(() => RavensQuest, rq => rq.user)
+    @JoinColumn()
+    ravensQuestProgress?: RavensQuest | null;
 
     @Column({type: 'boolean', default: false})
     @IsDefined()

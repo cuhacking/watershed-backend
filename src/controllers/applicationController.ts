@@ -143,3 +143,41 @@ export const getAllApplications = async (req: Request, res: Response) => {
     const applications = await appRepo.find();
     res.status(200).send(applications);
 }
+
+export const modifyResume = async (req: Request, res: Response) => {
+    const appRepo = getManager().getRepository(Application);
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token, ['application']);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    if(!user.application) {
+        res.status(400).send('User does not have an application yet.');
+        return;
+    } 
+
+    // Handle the resume. We're saving them to a resumes folder in the root of the project
+    if(req.files?.resume) {        
+        let resume = req.files.resume;
+        try {
+            const resumePath = await fs.promises.realpath(RESUME_ROOT) + '/' + user.application.email + '.pdf';
+            await resume.mv(resumePath);
+            user.application.resumePath = resumePath;
+            user.application.resumeName = req.files.resume.name;
+            await appRepo.save(user.application);
+            res.sendStatus(200);
+        } catch (err) { 
+            res.status(500).send(err);
+            return;
+        }
+    } else {
+        res.status(400).send('Resume not provided.');
+    }
+}
