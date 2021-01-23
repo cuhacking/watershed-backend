@@ -1,9 +1,10 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, OneToMany, OneToOne, JoinColumn} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, ManyToOne, OneToMany, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 import { Team } from './Team';
 import { TeamInvite } from './TeamInvite';
 
 import {Application} from './Application';
+import {Event} from './Event';
 import {RavensQuest} from './RavensQuest';
 
 export enum Role {
@@ -77,6 +78,10 @@ export class User {
     // Note: to avoid dealing with big schema changes, I'm allowing null to be the same as false
     @Column({nullable: true, type: 'boolean'})
     checkedIn?: boolean | null;
+
+    @ManyToMany(() => Event, {cascade: true})
+    @JoinTable()
+    favouriteEvents?: Event[];
 
     @BeforeInsert()
     @BeforeUpdate()

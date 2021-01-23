@@ -10,6 +10,7 @@ import auth from './auth';
 import team from './team';
 import applications from './applications';
 import test from './test';
+import event from './event';
 import ravensQuest from './ravensQuest';
 import stats from './stats';
 
@@ -27,6 +28,7 @@ router.use('/user', user);
 router.use('/auth', auth);
 router.use('/team', team);
 router.use('/application', applications);
+router.use('/event', event);
 router.use('/ravensQuest', ravensQuest);
 router.use('/stats', stats);
 
