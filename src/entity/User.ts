@@ -1,5 +1,7 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, ManyToOne, OneToMany, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
+import { Team } from './Team';
+import { TeamInvite } from './TeamInvite';
 
 import {Application} from './Application';
 import {Event} from './Event';
@@ -51,6 +53,12 @@ export class User {
 
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
+
+    @ManyToOne(() => Team, team => team.members)
+    team?: Team;
+
+    @OneToMany(() => TeamInvite, invite => invite.user)
+    teamInvites?: TeamInvite[];
 
     @Column({nullable: true, type: 'varchar'})
     discordUsername?: string | null;
