@@ -37,7 +37,7 @@ export const createTeam = async (req: Request, res: Response): Promise<void> => 
     teamData.uuid = nanoid(8);
 
     const newTeam = teamRepository.create({...teamData} as Team); // This makes TypeORM not return an array...
-    console.log(newTeam);
+
     const errors = await validate(newTeam);
     if(errors.length > 0) {
         res.sendStatus(400);

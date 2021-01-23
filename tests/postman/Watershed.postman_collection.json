@@ -957,6 +957,59 @@
 					"response": []
 				},
 				{
+					"name": "3.3 Create User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"USER_3_ACCESS_TOKEN\", jsonData.accessToken.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"team3@test.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/user",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "3.2 Create User 4",
 					"event": [
 						{
@@ -2059,59 +2112,6 @@
 								"team",
 								"{{TEAM_ID}}",
 								"join"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "3.3 Create User 3",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const jsonData = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Status code is 201\", () => {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Object should be returned\", () => {\r",
-									"    pm.expect(jsonData).to.be.an(\"object\");\r",
-									"    pm.expect(jsonData).to.not.be.empty;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
-									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
-									"});\r",
-									"\r",
-									"pm.environment.set(\"USER_3_ACCESS_TOKEN\", jsonData.accessToken.token);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"team3@test.com\",\r\n    \"password\": \"password\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}/api/user",
-							"host": [
-								"{{HOST}}"
-							],
-							"path": [
-								"api",
-								"user"
 							]
 						}
 					},
