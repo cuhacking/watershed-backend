@@ -86,13 +86,12 @@ export const editEvent = async (req: Request, res: Response): Promise<void> => {
     const eventData = req.body;
     
     try {
-        let modifiedEvent;
         let event = await eventRepository.findOne({id: eventId}, {relations: ['resources']});
         if(!event) {
             res.sendStatus(404);
             return;
         }
-        modifiedEvent = Object.assign(event, eventData);
+        const modifiedEvent = Object.assign(event, eventData);
         await eventRepository.save(modifiedEvent);
         res.status(200).send(modifiedEvent);
     } catch (err) {
