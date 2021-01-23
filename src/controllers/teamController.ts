@@ -32,7 +32,7 @@ export const createTeam = async (req: Request, res: Response): Promise<void> => 
         return;
     }
 
-    delete teamData.user;
+    delete user.team;
     teamData.members = [user];
     teamData.uuid = nanoid(8);
 
@@ -151,7 +151,6 @@ export const joinTeam = async (req: Request, res: Response): Promise<void> => {
        res.status(400).send('This user is already on a team.');
        return;
     }
-
 
     const invite = user.teamInvites?.find(inv => inv.uuid === inviteId);
     if(!invite) {
