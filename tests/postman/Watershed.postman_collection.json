@@ -3711,6 +3711,1026 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "5. Raven's Quest",
+			"item": [
+				{
+					"name": "5.0 Create Organizer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ravensQuest@test.com\",\r\n    \"password\": \"password\",\r\n    \"discordId\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/test/adminUser",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"adminUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.1 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Object should be returned\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access and Refresh Tokens are returned\", () => {\r",
+									"        pm.expect(jsonData).to.have.all.keys(\"uuid\", \"refreshToken\", \"accessToken\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", jsonData.accessToken.token);\r",
+									"pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken.token);\r",
+									"pm.environment.set(\"DISCORD_ID\", \"1\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ravensQuest@test.com\",\r\n    \"password\": \"password\",\r\n    \"discordId\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/auth/login",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.2 Load Questions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"0\": {\r\n        \"0\": {\r\n            \"question\": \"track 0 question 0\",\r\n            \"answer\": \"answer 0-0\"\r\n        },\r\n        \"1\": {\r\n            \"question\": \"track 0 question 1\",\r\n            \"answer\": \"answer 0-1\"\r\n        },\r\n        \"2\": {\r\n            \"question\": \"track 0 question 2\",\r\n            \"answer\": \"answer 0-2\"\r\n        },\r\n        \"3\": {\r\n            \"question\": \"track 0 question 3\",\r\n            \"answer\": \"answer 0-3\"\r\n        },\r\n        \"snowmanName\": \"name0\"\r\n    },\r\n    \"1\": {\r\n        \"0\": {\r\n            \"question\": \"track 1 question 0\",\r\n            \"answer\": \"answer 1-0\"\r\n        },\r\n        \"1\": {\r\n            \"question\": \"track 1 question 1\",\r\n            \"answer\": \"answer 1-1\"\r\n        },\r\n        \"2\": {\r\n            \"question\": \"track 1 question 2\",\r\n            \"answer\": \"answer 1-2\"\r\n        },\r\n        \"3\": {\r\n            \"question\": \"track 1 question 3\",\r\n            \"answer\": \"answer 1-3\"\r\n        },\r\n        \"snowmanName\": \"name1\"\r\n    },\r\n    \"2\": {\r\n        \"0\": {\r\n            \"question\": \"track 2 question 0\",\r\n            \"answer\": \"answer 2-0\"\r\n        },\r\n        \"1\": {\r\n            \"question\": \"track 2 question 1\",\r\n            \"answer\": \"answer 2-1\"\r\n        },\r\n        \"2\": {\r\n            \"question\": \"track 2 question 2\",\r\n            \"answer\": \"answer 2-2\"\r\n        },\r\n        \"3\": {\r\n            \"question\": \"track 2 question 3\",\r\n            \"answer\": \"answer 2-3\"\r\n        },\r\n        \"snowmanName\": \"name2\"\r\n    },\r\n    \"3\": {\r\n        \"0\": {\r\n            \"question\": \"track 3 question 0\",\r\n            \"answer\": \"answer 3-0\"\r\n        },\r\n        \"1\": {\r\n            \"question\": \"track 3 question 1\",\r\n            \"answer\": \"answer 3-1\"\r\n        },\r\n        \"2\": {\r\n            \"question\": \"track 3 question 2\",\r\n            \"answer\": \"answer 3-2\"\r\n        },\r\n        \"3\": {\r\n            \"question\": \"track 3 question 3\",\r\n            \"answer\": \"answer 3-3\"\r\n        },\r\n        \"snowmanName\": \"name3\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/refreshQuestions",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"refreshQuestions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.3 Get Question Before Start",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.4 Start Raven's Quest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/start",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.5 Get Question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"track 0 question 0\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.6 Switch Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"1\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"track\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/switchTracks",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"switchTracks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.7 Get Question From New Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"track 1 question 0\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.8 Submit Wrong Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.9 Submit Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track).to.eql(\"1\");\r",
+									"    pm.expect(jsonData.nextQuestion).to.eql(\"track 1 question 1\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 1-0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.10 Get Question After Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"track 1 question 1\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.11 Switch Back To Original Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"0\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"track\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/switchTracks",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"switchTracks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.12 Get Question After Switching",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"track 0 question 0\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.13 Submit Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track).to.eql(\"0\");\r",
+									"    pm.expect(jsonData.nextQuestion).to.eql(\"track 0 question 1\");\r",
+									"    pm.expect(jsonData.progress).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.14 Get Progress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check progress is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track0).to.eql(1);\r",
+									"    pm.expect(jsonData.track1).to.eql(1);\r",
+									"    pm.expect(jsonData.track2).to.eql(0);\r",
+									"    pm.expect(jsonData.track3).to.eql(0);\r",
+									"    pm.expect(jsonData.currentTrack).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/progress/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"progress",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.15 Submit Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track).to.eql(\"0\");\r",
+									"    pm.expect(jsonData.progress).to.eql(2);\r",
+									"    pm.expect(jsonData.nextQuestion).to.eql(\"track 0 question 2\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.16 Submit Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track).to.eql(\"0\");\r",
+									"    pm.expect(jsonData.progress).to.eql(3);\r",
+									"    pm.expect(jsonData.nextQuestion).to.eql(\"track 0 question 3\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.17 Submit Correct Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track).to.eql(\"0\");\r",
+									"    pm.expect(jsonData.progress).to.eql(\"completed\");\r",
+									"    pm.expect(jsonData.snowmanName).to.eql(\"name0\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.18 Check Progress After Completing Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check progress is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.track0).to.eql(\"Completed\");\r",
+									"    pm.expect(jsonData.track1).to.eql(1);\r",
+									"    pm.expect(jsonData.track2).to.eql(0);\r",
+									"    pm.expect(jsonData.track3).to.eql(0);\r",
+									"    pm.expect(jsonData.currentTrack).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/progress/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"progress",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.19 Get Question After Completing Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"Track completed!\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/question/{{DISCORD_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"question",
+								"{{DISCORD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.20 Submit After Completed Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"Track is already complete! Please switch to a different track.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{DISCORD_ID}}\",\r\n    \"answer\": \"answer 0-3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/ravensQuest/submit",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"ravensQuest",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

@@ -4,6 +4,7 @@ import { Team } from './Team';
 import { TeamInvite } from './TeamInvite';
 
 import {Application} from './Application';
+import {RavensQuest} from './RavensQuest';
 
 export enum Role {
     Hacker,
@@ -64,6 +65,10 @@ export class User {
     @OneToOne(() => Application, app => app.user)
     @JoinColumn()
     application?: Application | null;
+
+    @OneToOne(() => RavensQuest, rq => rq.user)
+    @JoinColumn()
+    ravensQuestProgress?: RavensQuest | null;
 
     @Column({type: 'boolean', default: false})
     @IsDefined()

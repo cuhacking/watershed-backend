@@ -5,7 +5,7 @@
   "scripts": {
     "build": "yarn lint && yarn compile",
     "compile": "yarn tsc",
-    "dev": "nodemon -L -e ts --watch src --exec 'yarn compile && yarn serve'",
+    "dev": "NODE_ENV=development; nodemon -L -e ts --watch src --exec 'yarn compile && yarn serve'",
     "serve": "yarn node dist/server.js",
     "lint": "yarn tsc --noEmit && yarn eslint . --ext .ts,.js --fix",
     "start": "yarn build && yarn serve",
