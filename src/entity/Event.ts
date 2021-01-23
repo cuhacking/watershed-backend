@@ -23,17 +23,14 @@ export class Event {
     @Column({nullable: true, type: 'timestamp'})
     endTime?: Date;
 
-    @Column()
-    @IsDefined()
-    location!: string;
+    @Column({nullable: true, type: 'varchar'})
+    location?: string;
 
-    @Column()
-    @IsDefined()
-    locationName!: string;
+    @Column({nullable: true, type: 'varchar'})
+    locationName?: string;
 
-    @Column()
-    @IsDefined()
-    host!: string;
+    @Column({nullable: true, type: 'varchar'})
+    host?: string;
 
     @Column()
     @IsDefined()
