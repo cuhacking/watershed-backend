@@ -4381,10 +4381,10 @@
 			]
 		},
 		{
-			"name": "5. Submissions",
+			"name": "7. Submissions",
 			"item": [
 				{
-					"name": "5.1 Get Repo Preview",
+					"name": "7.1 Get Repo Preview",
 					"event": [
 						{
 							"listen": "test",
@@ -4400,7 +4400,13 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
 						"url": {
 							"raw": "{{HOST}}/api/submission/preview/https%3A%2F%2Fgithub.com%2Fcuhacking%2Fwatershed-frontend",
 							"host": [
