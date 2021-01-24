@@ -26,10 +26,6 @@ export class RavensQuest {
 
     @Column()
     @IsDefined()
-    track3Progress!: number;
-
-    @Column()
-    @IsDefined()
     currentTrack!: number;
 
     [index: string]: any;
