@@ -126,14 +126,20 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
     if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
         res.status(405).send('Track is already complete! Please switch to a different track.') // Should this send a different status from incorrect? Or should I return an object with a status?
     }
-    if(questionsAndAnswers[currentTrack][currentQuestion]?.answer == answer) {
+    if(questionsAndAnswers[currentTrack][currentQuestion]?.answer.toLowerCase() == answer.toLowerCase()) {
         user.ravensQuestProgress[`track${currentTrack}Progress`]++;
         await rqRepo.save(user.ravensQuestProgress);
+
+        const allComplete = user.ravensQuestProgress[`track0Progress`] == NUM_QUESTIONS &&
+                            user.ravensQuestProgress[`track1Progress`] == NUM_QUESTIONS &&
+                            user.ravensQuestProgress[`track2Progress`] == NUM_QUESTIONS;
+
         res.status(200).send({
-            "track": currentTrack,
-            "progress": user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS ? "completed" : user.ravensQuestProgress[`track${currentTrack}Progress`],
-            "snowmanUrl": questionsAndAnswers[currentTrack][currentQuestion]?.snowmanUrl,
-            "snowmanName": questionsAndAnswers[currentTrack][currentQuestion]?.snowmanName
+            track: currentTrack,
+            progress: user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS ? "completed" : user.ravensQuestProgress[`track${currentTrack}Progress`],
+            snowmanUrl: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanUrl,
+            snowmanName: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanName,
+            allComplete: allComplete
         });
         
     } else {
