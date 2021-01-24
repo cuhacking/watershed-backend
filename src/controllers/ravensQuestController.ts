@@ -123,11 +123,7 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
     const currentTrack = user.ravensQuestProgress.currentTrack.toString();
     const currentQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString(); // This is probably bad but I'm too lazy to do 4 if statements
 
-<<<<<<< HEAD
     if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
-=======
-    if(currentQuestion == 4) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
->>>>>>> master
         res.status(405).send('Track is already complete! Please switch to a different track.') // Should this send a different status from incorrect? Or should I return an object with a status?
     }
     if(questionsAndAnswers[currentTrack][currentQuestion]?.answer == answer) {
@@ -161,11 +157,7 @@ export const getQuestion = async (req: Request, res: Response): Promise<void> =>
     const currentTrack = user.ravensQuestProgress.currentTrack.toString();
     const currentQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString(); // This is probably bad but I'm too lazy to do 4 if statements
 
-<<<<<<< HEAD
     if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
-=======
-    if(currentQuestion == 4) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
->>>>>>> master
         res.status(405).send('Track completed!')
     } else {
         res.status(200).send({
