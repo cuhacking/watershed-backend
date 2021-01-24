@@ -76,6 +76,7 @@ export const getRepoPreview = async (
   }
 
   const repoUrl = decodeURIComponent(req.params.repo);
+  console.log(repoUrl);
 
   const cloneResult = await cloneSubmission(repoUrl);
   if (cloneResult == 'no-repo') {
