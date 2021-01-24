@@ -79,9 +79,10 @@ export const getRepoPreview = async (
   console.log(repoUrl);
 
   const cloneResult = await cloneSubmission(repoUrl);
-  if (cloneResult == 'no-repo') {
+  console.log(cloneResult);
+  if (cloneResult === 'no-repo') {
     res.status(404).send('Repo does not exist');
-  } else if (cloneResult == 'no-readme') {
+  } else if (cloneResult === 'no-readme') {
     res.status(404).send('README.md does not exist in repo');
   }
 
