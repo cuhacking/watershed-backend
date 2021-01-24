@@ -47,7 +47,6 @@ const cloneSubmission = async (repo: string): Promise<GitResult> => {
         '--filter': 'blob:none',
       });
     } catch (e) {
-      console.log(e);
       return 'no-repo';
     }
   }
@@ -90,10 +89,8 @@ export const getRepoPreview = async (
   }
 
   const repoUrl = decodeURIComponent(req.params.repo);
-  console.log(repoUrl);
 
   const cloneResult = await cloneSubmission(repoUrl);
-  console.log(cloneResult);
   if (cloneResult === 'no-repo') {
     res.status(404).send('Repo does not exist');
     return;
