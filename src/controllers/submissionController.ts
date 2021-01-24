@@ -75,14 +75,16 @@ export const getRepoPreview = async (
     return;
   }
 
-  const cloneResult = await cloneSubmission(req.params.repo);
+  const repoUrl = decodeURIComponent(req.params.repo);
+
+  const cloneResult = await cloneSubmission(repoUrl);
   if (cloneResult == 'no-repo') {
     res.status(404).send('Repo does not exist');
   } else if (cloneResult == 'no-readme') {
     res.status(404).send('README.md does not exist in repo');
   }
 
-  const readme = await extractReadme(req.params.repo);
+  const readme = await extractReadme(repoUrl);
   res.status(200).send(readme);
 };
 
