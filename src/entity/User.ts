@@ -83,6 +83,10 @@ export class User {
     @JoinTable()
     favouriteEvents?: Event[];
 
+    @Column({type: 'integer', default: 0})
+    @IsDefined()
+    points!: number;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {

@@ -1,6 +1,6 @@
 import {Event} from '../entity/Event'
 import * as auth from '../middleware/authMiddleware';
-import {getManager} from 'typeorm';
+import {getManager, MoreThan} from 'typeorm';
 import {Request, Response} from 'express';
 import {validate} from 'class-validator';
 import { Resource } from '../entity/Resource';
@@ -70,12 +70,14 @@ export const getUpcomingEvents = async (req: Request, res: Response): Promise<vo
         numToGet = parseInt(req.query.num as string);
     }
 
-    const events = await eventRepository
-        .createQueryBuilder()
-        .where('startTime > :now', {now: currentTime})
-        .leftJoinAndSelect('resources', 'resource')
-        .orderBy('startTime')
-        .limit(numToGet);
+    const events = await eventRepository.find({
+        where: {startTime: MoreThan(currentTime.toISOString())},
+        relations: ['resources'],
+        take: numToGet,
+        order: {
+            startTime: "ASC"
+        }
+    });
 
     res.status(200).send(events);
 }
