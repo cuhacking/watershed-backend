@@ -9,7 +9,7 @@ const SUBMISSION_ROOT =
 const git = simpleGit(SUBMISSION_ROOT);
 
 // Result of a git-related action
-export type GitResult = 'no-repo' | 'no-readme' | 'success';
+export type GitResult = 'no-repo' | 'no-readme' | 'success' | 'error';
 
 export interface Submission {
   readonly name: string;
@@ -29,19 +29,32 @@ const stripRepoUrl = (repo: string): string => {
 
 const cloneSubmission = async (repo: string): Promise<GitResult> => {
   const name = stripRepoUrl(repo);
+
+  // Check if repo already exists
+  let exists: boolean;
   try {
-    await git.clone(repo, name, {
-      '--no-checkout': null,
-      '--depth': 1,
-    });
-  } catch (e) {
-    console.log(e);
-    return 'no-repo';
+    await fs.access(SUBMISSION_ROOT + name);
+    exists = true;
+  } catch (_) {
+    exists = false;
+  }
+
+  if (!exists) {
+    try {
+      await git.clone(repo, name, {
+        '--no-checkout': null,
+        '--depth': 1,
+        '--filter': 'blob:none',
+      });
+    } catch (e) {
+      console.log(e);
+      return 'no-repo';
+    }
   }
 
   try {
     const localGit = simpleGit(SUBMISSION_ROOT + name);
-    await localGit.checkout('HEAD', { '--': 'README.md' });
+    await localGit.checkout('origin', ['--', 'README.md']);
   } catch (_) {
     return 'no-readme';
   }
@@ -83,8 +96,13 @@ export const getRepoPreview = async (
   console.log(cloneResult);
   if (cloneResult === 'no-repo') {
     res.status(404).send('Repo does not exist');
+    return;
   } else if (cloneResult === 'no-readme') {
     res.status(404).send('README.md does not exist in repo');
+    return;
+  } else if (cloneResult === 'error') {
+    res.status(500).send('Unspecified error');
+    return;
   }
 
   const readme = await extractReadme(repoUrl);
@@ -127,8 +145,13 @@ export const submitProject = async (
   const cloneResult = await cloneSubmission(submissionData.repoUrl);
   if (cloneResult == 'no-repo') {
     res.status(404).send('No repo');
+    return;
   } else if (cloneResult == 'no-readme') {
     res.status(404).send('No README.md');
+    return;
+  } else if (cloneResult === 'error') {
+    res.status(500).send('Unspecified error');
+    return;
   }
 
   const readme = await extractReadme(submissionData.repoUrl);
@@ -153,4 +176,4 @@ export const clearImages = async (
   const repo = req.params.repo;
 
   // TODO: Delete images from project submission
-}
+};
