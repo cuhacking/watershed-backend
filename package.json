@@ -59,6 +59,7 @@
     "openapi-comment-parser": "^1.0.0",
     "pg": "^8.3.3",
     "reflect-metadata": "^0.1.13",
+    "simple-git": "^2.31.0",
     "swagger-ui-express": "^4.1.4",
     "ts-node": "^8.10.2",
     "typeorm": "^0.2.25",

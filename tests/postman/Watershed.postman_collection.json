@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1005e352-6c74-44c3-8031-a8916a06f580",
+		"_postman_id": "89de609b-c6c1-49d2-801f-bd85ce9509de",
 		"name": "Watershed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -4373,6 +4373,44 @@
 								"api",
 								"event",
 								"favourites"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Submissions",
+			"item": [
+				{
+					"name": "5.1 Get Repo Preview",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/api/submission/preview/https%3A%2F%2Fgithub.com%2Fcuhacking%2Fwatershed-frontend",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"submission",
+								"preview",
+								"https%3A%2F%2Fgithub.com%2Fcuhacking%2Fwatershed-frontend"
 							]
 						}
 					},
