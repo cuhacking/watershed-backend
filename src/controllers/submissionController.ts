@@ -35,7 +35,7 @@ const cloneSubmission = async (repo: string): Promise<GitResult> => {
       '--depth': 1,
     });
   } catch (e) {
-    console.error(e);
+    console.log(e);
     return 'no-repo';
   }
 
