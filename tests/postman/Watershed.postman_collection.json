@@ -2833,8 +2833,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3612,7 +3612,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.status(405);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Body is correct\", function () {\r",
@@ -3666,8 +3666,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 405\", function () {\r",
+									"    pm.response.to.have.status(405);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Body is correct\", function () {\r",
