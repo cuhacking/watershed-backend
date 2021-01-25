@@ -9,21 +9,28 @@ let ENDTIME: Date = new Date('2021-01-31T12:00:00.000Z');
 let STARTTIME = new Date('2021-01-30T12:00:00.000Z');
 const CONFIG_FILE = process.env.CONFIG_FILE;
 
-export const updateStartEndTime = async (): Promise<void> => {
+export const updateStartEndTime = async (): Promise<boolean> => {
     if(CONFIG_FILE) {
         try {
             const fileInput = await fs.readFile(CONFIG_FILE, 'utf-8');
             const inputJson = JSON.parse(fileInput);
             STARTTIME = inputJson.startTime;
             ENDTIME = inputJson.endTime;
+            return true;
         } catch (err) {
             console.log(`Error reading file: ${err}`);
+            return false;
         }
     }
 }
 
 export const triggerUpdateTime = async (req: Request, res: Response): Promise<void> => {
-
+    const result = await updateStartEndTime();
+    if(result) {
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(500);
+    }
 }
 
 export const getDashboardInfo = async (req: Request, res: Response): Promise<void> => {
