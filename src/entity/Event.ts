@@ -2,7 +2,7 @@ import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, Many
 import { validateOrReject, IsDefined } from 'class-validator';
 import {Resource} from '../entity/Resource';
 
-export type EventType = "sponsor" | "key-times" | "workshops" | "activities" | "social-events";
+export type EventType = "sponsor" | "key-times" | "workshops" | "social-events";
 @Entity()
 export class Event {
 

@@ -12,12 +12,17 @@ const router = express.Router();
  * @tag Dashboard
  * @summary Get dashboard info
  * @description Gets user, team, schedule, end time info
- * @bodyContent {Event} application/json
- * @bodyRequired
  * @response 200 - OK
  */
 router.get('/', dashboard.getDashboardInfo);
 
-router.get('/updateEndtime', auth.authenticate(Role.Organizer), dashboard.triggerUpdateTime);
+/**
+ * GET /updateEndtime
+ * @tag Dashboard
+ * @summary Get start/end time
+ * @description Updates start and end time from config.json
+ * @response 200 - OK
+ */
+router.get('/updateStartEndtime', auth.authenticate(Role.Organizer), dashboard.triggerUpdateTime);
 
 export = router;

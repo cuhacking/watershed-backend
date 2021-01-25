@@ -84,7 +84,6 @@ export class User {
     favouriteEvents?: Event[];
 
     @Column({type: 'integer', default: 0})
-    @IsDefined()
     points!: number;
 
     @BeforeInsert()
