@@ -13,6 +13,7 @@ import test from './test';
 import event from './event';
 import ravensQuest from './ravensQuest';
 import stats from './stats';
+import dashboard from './dashboard';
 
 const ENV = process.env.NODE_ENV || 'production';
 
@@ -31,6 +32,7 @@ router.use('/application', applications);
 router.use('/event', event);
 router.use('/ravensQuest', ravensQuest);
 router.use('/stats', stats);
+router.use('/dashboard', dashboard);
 
 // Only mount these routes for testing
 if(ENV === 'development') {

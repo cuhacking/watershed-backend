@@ -10,15 +10,17 @@ import {EmailConfirmToken} from '../entity/EmailConfirmToken';
 import { RavensQuest } from '../entity/RavensQuest';
 import { promises as fs } from 'fs';
 
+const CONFIG_FILE = process.env.CONFIG_FILE;
 const NUM_QUESTIONS = 4;
-const QUESTIONS_FILE = process.env.QUESTIONS_FILE;
+
 let questionsAndAnswers: any = null;
 
-const loadQuestionsAndAnswers = async (): Promise<boolean> => {
-    if(QUESTIONS_FILE) {
+export const loadQuestionsAndAnswers = async (): Promise<boolean> => {
+    if(CONFIG_FILE) {
         try {
-            questionsAndAnswers = await fs.readFile(QUESTIONS_FILE, 'utf-8');
-            return true;
+            const fileInput = await fs.readFile(CONFIG_FILE, 'utf-8');
+            const questionsAndAnswers = JSON.parse(fileInput).ravensQuest
+            return !!questionsAndAnswers; // Convert to boolean
         } catch (err) {
             console.log(`Error reading file: ${err}`);
             return false;
