@@ -11,37 +11,53 @@ export const createEvent = async (req: Request, res: Response): Promise<void> =>
     const resourceRepository = getManager().getRepository(Resource);
 
     let eventData = req.body;
-    if(!eventData.startTime) {
-        res.status(400).send("Missing start time");
-    }
-    eventData.startTime = new Date(eventData.startTime);
-    if(eventData.endTime) {
-        eventData.endTime = new Date(eventData.endTime);
+
+    if(!Array.isArray(eventData)) {
+        eventData = [eventData];
     }
 
-    //eslint-disable-next-line @typescript-eslint/ban-types
-    const newEvent = eventRepository.create({...eventData} as Event); // This makes TypeORM not return an array...
-    const errors = await validate(newEvent);
-    if(eventData.resources) {
-        let resourcesToAdd = [];
-        for(let resource of eventData.resources) {
-            const newResource = resourceRepository.create({...resource} as Resource);
-            await resourceRepository.save(newResource);
-            resourcesToAdd.push(newResource);
+    let addErrors: any[] = [];
+    let successfulAdds: any[] = [];
+    for(let event of eventData) {
+        if(!event.startTime) {
+            res.status(400).send("Missing start time");
+            return;
         }
-        newEvent.resources = resourcesToAdd;
+        event.startTime = new Date(event.startTime);
+        if(event.endTime) {
+            event.endTime = new Date(event.endTime);
+        }
+    
+        //eslint-disable-next-line @typescript-eslint/ban-types
+        const newEvent = eventRepository.create({...event} as Event); // This makes TypeORM not return an array...
+        const errors = await validate(newEvent);
+        if(event.resources) {
+            let resourcesToAdd = [];
+            for(let resource of event.resources) {
+                const newResource = resourceRepository.create({...resource} as Resource);
+                await resourceRepository.save(newResource);
+                resourcesToAdd.push(newResource);
+            }
+            newEvent.resources = resourcesToAdd;
+        }
+        if(errors.length > 0) {
+            addErrors.push({event: newEvent, error: errors});
+        } else {
+            try {
+                await eventRepository.save(newEvent);
+                successfulAdds.push(newEvent);
+            } catch (error) {
+                addErrors.push({event: newEvent, error: error});
+            }
+        }
     }
-    if(errors.length > 0) {
-        res.status(400).send(errors);
+
+    if(addErrors.length > 0) {
+        res.status(400).send(addErrors);
     } else {
-        try {
-
-            await eventRepository.save(newEvent);
-            res.status(201).send(newEvent);
-        } catch (error) {
-            res.status(500).send(error);
-        }
+        res.status(201).send(successfulAdds);
     }
+    
 }
 
 export const getEvent = async (req: Request, res: Response): Promise<void> => {

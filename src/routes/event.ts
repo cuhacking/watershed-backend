@@ -61,6 +61,15 @@ router.get('/favourites', event.getFavourites);
 router.get('/:eventId', event.getEvent);
 
 /**
+ * DELETE /event/{eventId}
+ * @tag Event
+ * @summary Deletes an event
+ * @response 200 - Event
+ * @responseContent {Event} 200.application/json
+ */
+router.delete('/:eventId', event.deleteEvent);
+
+/**
  * POST /event/favourite
  * @tag Event
  * @summary Favourites an event
