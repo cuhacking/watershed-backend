@@ -22,6 +22,7 @@ export const updateStartEndTime = async (): Promise<boolean> => {
             return false;
         }
     }
+    return true;
 }
 
 export const triggerUpdateTime = async (req: Request, res: Response): Promise<void> => {
