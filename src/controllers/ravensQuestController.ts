@@ -125,6 +125,7 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
 
     if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
         res.status(405).send('Track is already complete! Please switch to a different track.') // Should this send a different status from incorrect? Or should I return an object with a status?
+        return;
     }
     if(questionsAndAnswers[currentTrack][currentQuestion]?.answer.toLowerCase() == answer.toLowerCase()) {
         user.ravensQuestProgress[`track${currentTrack}Progress`]++;
