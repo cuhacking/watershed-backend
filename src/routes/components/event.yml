@@ -1,0 +1,36 @@
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        location:
+          type: string
+        locationName:
+          type: string
+        host:
+          type: string
+        description:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        resources:
+          type: array
+          items:
+            Resource
+      xml:
+        name: Event
+    Resource:
+      type: object
+      properties:
+        title:
+          type: string
+        link:
+          type: string
+      xml:
+        name: Resource

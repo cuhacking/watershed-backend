@@ -11,6 +11,9 @@ import {createConnection} from 'typeorm';
 
 import openapi from 'openapi-comment-parser';
 import swaggerUi from 'swagger-ui-express';
+
+import {loadQuestionsAndAnswers} from './controllers/ravensQuestController';
+import {updateStartEndTime} from './controllers/dashboardController';
 /**
  * Constants
  */
@@ -40,7 +43,9 @@ if(ENV === 'development') {
     app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec));
 }
 
-createConnection().then(() => {
+createConnection().then(async () => {
+    await loadQuestionsAndAnswers();
+    await updateStartEndTime();
     app.listen(PORT);
     console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
 });

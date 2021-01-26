@@ -10,14 +10,17 @@ import {EmailConfirmToken} from '../entity/EmailConfirmToken';
 import { RavensQuest } from '../entity/RavensQuest';
 import { promises as fs } from 'fs';
 
-const QUESTIONS_FILE = process.env.QUESTIONS_FILE;
+const CONFIG_FILE = process.env.CONFIG_FILE;
+const NUM_QUESTIONS = 4;
+
 let questionsAndAnswers: any = null;
 
-const loadQuestionsAndAnswers = async (): Promise<boolean> => {
-    if(QUESTIONS_FILE) {
+export const loadQuestionsAndAnswers = async (): Promise<boolean> => {
+    if(CONFIG_FILE) {
         try {
-            questionsAndAnswers = await fs.readFile(QUESTIONS_FILE, 'utf-8');
-            return true;
+            const fileInput = await fs.readFile(CONFIG_FILE, 'utf-8');
+            const questionsAndAnswers = JSON.parse(fileInput).ravensQuest
+            return !!questionsAndAnswers; // Convert to boolean
         } catch (err) {
             console.log(`Error reading file: ${err}`);
             return false;
@@ -38,7 +41,7 @@ export const startQuest = async (req: Request, res: Response): Promise<void> => 
     }
 
     if(user.ravensQuestProgress) {
-        res.status(400).send("User has already started the Raven's Quest");
+        res.status(403).send("User has already started the Raven's Quest");
         return;
     }
 
@@ -48,7 +51,6 @@ export const startQuest = async (req: Request, res: Response): Promise<void> => 
         track0Progress: 0,
         track1Progress: 0,
         track2Progress: 0,
-        track3Progress: 0,
         currentTrack: 0
     });
 
@@ -72,10 +74,10 @@ export const switchTracks = async (req: Request, res: Response): Promise<void> =
         return;
     }
     if(!user.ravensQuestProgress) {
-        res.status(400).send("User has not started the Raven's Quest yet");
+        res.status(403).send("User has not started the Raven's Quest yet");
         return;
     }
-    if(track < 0 || track > 3) {
+    if(track < 0 || track > 2) {
         res.status(400).send('Invalid track');
     }    
     user.ravensQuestProgress.currentTrack = track;
@@ -117,32 +119,31 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
         return;
     }
     if(!user.ravensQuestProgress) {
-        res.status(400).send("User has not started the Raven's Quest yet");
+        res.status(403).send("User has not started the Raven's Quest yet");
         return;
     }
     const currentTrack = user.ravensQuestProgress.currentTrack.toString();
     const currentQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString(); // This is probably bad but I'm too lazy to do 4 if statements
 
-    if(currentQuestion == 4) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
-        res.status(400).send('Track is already complete! Please switch to a different track.') // Should this send a different status from incorrect? Or should I return an object with a status?
+    if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
+        res.status(405).send('Track is already complete! Please switch to a different track.') // Should this send a different status from incorrect? Or should I return an object with a status?
+        return;
     }
-    if(questionsAndAnswers[currentTrack][currentQuestion]?.answer == answer) {
+    if(questionsAndAnswers[currentTrack][currentQuestion]?.answer.toLowerCase() == answer.toLowerCase()) {
         user.ravensQuestProgress[`track${currentTrack}Progress`]++;
         await rqRepo.save(user.ravensQuestProgress);
-        if(user.ravensQuestProgress[`track${currentTrack}Progress`] == 4) {
-            res.status(200).send({
-                "track": currentTrack,
-                "progress": "completed",
-                "snowmanName": questionsAndAnswers[currentTrack].snowmanName
-            });
-        } else {
-            const nextQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString();
-            res.status(200).send({
-                "track": currentTrack,
-                "progress": user.ravensQuestProgress[`track${currentTrack}Progress`],
-                "nextQuestion": questionsAndAnswers[currentTrack][nextQuestion]?.question
-            });
-        }
+
+        const allComplete = user.ravensQuestProgress[`track0Progress`] == NUM_QUESTIONS &&
+                            user.ravensQuestProgress[`track1Progress`] == NUM_QUESTIONS &&
+                            user.ravensQuestProgress[`track2Progress`] == NUM_QUESTIONS;
+
+        res.status(200).send({
+            track: currentTrack,
+            progress: user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS ? "completed" : user.ravensQuestProgress[`track${currentTrack}Progress`],
+            snowmanUrl: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanUrl,
+            snowmanName: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanName,
+            allComplete: allComplete
+        });
         
     } else {
         res.status(400).send('Incorrect answer.');
@@ -158,17 +159,20 @@ export const getQuestion = async (req: Request, res: Response): Promise<void> =>
         return;
     }
     if(!user.ravensQuestProgress) {
-        res.status(400).send("User has not started the Raven's Quest yet");
+        res.status(403).send("User has not started the Raven's Quest yet");
         return;
     }
 
     const currentTrack = user.ravensQuestProgress.currentTrack.toString();
     const currentQuestion = user.ravensQuestProgress[`track${currentTrack}Progress`].toString(); // This is probably bad but I'm too lazy to do 4 if statements
 
-    if(currentQuestion == 4) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
-        res.status(200).send('Track completed!') // Should this send a different status from incorrect? Or should I return an object with a status?
+    if(currentQuestion == NUM_QUESTIONS) { // Assign 4 if they are done the questions in the track (assuming 4 questions per track)
+        res.status(405).send('Track completed!')
     } else {
-        res.status(200).send(questionsAndAnswers[currentTrack][currentQuestion]?.question);
+        res.status(200).send({
+            question: questionsAndAnswers[currentTrack][currentQuestion]?.question,
+            questionUrl: questionsAndAnswers[currentTrack][currentQuestion]?.questionUrl
+        });
     }
 };
 
@@ -185,10 +189,9 @@ export const getProgress = async (req: Request, res: Response): Promise<void> =>
         return;
     }
     res.status(200).send({
-        "track0": user.ravensQuestProgress.track0Progress === 4 ? 'Completed' : user.ravensQuestProgress.track0Progress,
-        "track1": user.ravensQuestProgress.track1Progress === 4 ? 'Completed' : user.ravensQuestProgress.track1Progress,
-        "track2": user.ravensQuestProgress.track2Progress === 4 ? 'Completed' : user.ravensQuestProgress.track2Progress,
-        "track3": user.ravensQuestProgress.track3Progress === 4 ? 'Completed' : user.ravensQuestProgress.track3Progress,
+        "track0": user.ravensQuestProgress.track0Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track0Progress,
+        "track1": user.ravensQuestProgress.track1Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track1Progress,
+        "track2": user.ravensQuestProgress.track2Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track2Progress,
         "currentTrack": user.ravensQuestProgress.currentTrack
     });
 };
