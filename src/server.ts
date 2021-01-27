@@ -14,6 +14,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import {loadQuestionsAndAnswers} from './controllers/ravensQuestController';
 import {updateStartEndTime} from './controllers/dashboardController';
+import {updateEndtime} from './controllers/submissionController';
 /**
  * Constants
  */
@@ -46,6 +47,7 @@ if(ENV === 'development') {
 createConnection().then(async () => {
     await loadQuestionsAndAnswers();
     await updateStartEndTime();
+    await updateEndtime();
     app.listen(PORT);
     console.log(`Server listening | PORT: ${PORT} | MODE: ${ENV}`);
 });

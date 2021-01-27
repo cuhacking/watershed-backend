@@ -12,6 +12,10 @@ const SUBMISSION_ROOT =
 
 const git = simpleGit(SUBMISSION_ROOT);
 
+const CONFIG_FILE = process.env.CONFIG_FILE;
+let ENDTIME: Date = new Date('2020-01-31T12:30:00.000Z');
+let GRACE_PERIOD = process.env.GRACE_PERIOD ? parseInt(process.env.GRACE_PERIOD) : 30;
+
 // Result of a git-related action
 export type GitResult = 'no-repo' | 'no-readme' | 'success' | 'error';
 
@@ -20,6 +24,22 @@ export interface SubmissionInput {
   readonly repoUrl: string;
   readonly videoLink: string;
   readonly challenges: string[];
+}
+
+export const updateEndtime = async (): Promise<boolean> => {
+  if(CONFIG_FILE) {
+      try {
+          const fileInput = await fs.readFile(CONFIG_FILE, 'utf-8');
+          const inputJson = JSON.parse(fileInput);
+          ENDTIME = new Date(inputJson.endTime);
+          ENDTIME.setMinutes(ENDTIME.getMinutes() + GRACE_PERIOD);
+          return true;
+      } catch (err) {
+          console.log(`Error reading file: ${err}`);
+          return false;
+      }
+  }
+  return true;
 }
 
 // Converts a repo url to a name based on that url
@@ -135,6 +155,11 @@ export const submitProject = async (
     return;
   }
 
+  if(new Date() > ENDTIME) {
+    res.status(403).send("Submissions have closed");
+    return;
+  }
+
   const userTeam = await teamRepo.findOne({id: user.team.id}, {relations: ['submission']});
   
   let submissionData = null;
@@ -210,7 +235,7 @@ export const submitProject = async (
   if (req.files?.cover) {
     submissionToSave.imageCover = req.files.cover.data;
   }
-  console.log(submissionToSave.challenges);
+
   try {
     await submissionRepo.save(submissionToSave);
     res.sendStatus(200);
@@ -234,6 +259,21 @@ export const getSubmission = async (
     res.sendStatus(404);
   }
 
+}
+
+export const getSubmissionPreviews = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const repo = decodeURIComponent(req.params.repo);
+  const submissionRepo = getManager().getRepository(Submission);
+
+  const submission = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover']});
+  if(submission) {
+    res.status(200).send(submission);
+  } else {
+    res.sendStatus(404);
+  }
 }
 
 export const clearImages = async (

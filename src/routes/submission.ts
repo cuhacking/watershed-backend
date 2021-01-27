@@ -17,6 +17,14 @@ const router = express.Router();
 router.get('/preview/:repo', submission.getRepoPreview);
 
 /**
+ * GET /submission
+ * @tag Submissions
+ * @summary Gets a preview (no readme, no video) of all submissions
+ * @response 200 - An array of submissions
+ */
+router.get('/', submission.getSubmissionPreviews);
+
+/**
  * POST /submission
  * @tag Submissions
  * @summary Submit a project
