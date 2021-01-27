@@ -368,10 +368,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.10":
-  version: 14.14.10
-  resolution: "@types/node@npm:14.14.10"
-  checksum: b793aa15e8c08df50d0f77dc0fe7a93bc2e09bfa5a424841d4dba045d6ae8503b7ffe89b773ffe197c9b637c898bb22e78442e21ff4b33414d35160d9c3f8a9b
+"@types/node@npm:^14.14.22":
+  version: 14.14.22
+  resolution: "@types/node@npm:14.14.22"
+  checksum: e46e32685b4d0261779c13c10ba3ff220cfa714b5c12f8f571fd52cc309546bdbc8ffc86cbad20559ad88e7b17e66fc51c98b067d8c3766597092c05df157b9b
   languageName: node
   linkType: hard
 
@@ -3050,7 +3050,7 @@ fsevents@~2.1.2:
     "@types/mocha": ^8.0.3
     "@types/morgan": ^1
     "@types/newman": ^5
-    "@types/node": ^14.14.10
+    "@types/node": ^14.14.22
     "@types/swagger-ui-express": ^4
     "@types/uuid": ^8
     "@typescript-eslint/eslint-plugin": ^3.6.1

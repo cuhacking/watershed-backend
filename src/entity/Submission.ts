@@ -1,6 +1,8 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn, ManyToMany} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToOne, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
-
+import {Team} from './Team';
+import { Challenge } from './Challenge';
+import { joinTeam } from '../controllers/teamController';
 @Entity()
 export class Submission {
 
@@ -13,25 +15,27 @@ export class Submission {
     @Column()
     repo!: string;
 
-    @Column()
-    imageLogo!: string;
+    @Column({nullable: true, type: 'bytea'})
+    imageLogo?: Buffer;
 
-    @Column()
-    imageCover!: string;
+    @Column({nullable: true, type: 'bytea'})
+    imageCover?: Buffer;
 
     @Column()
     readmePath!: string;
 
     @Column()
+    readmeText!: string;
+
+    @Column()
     demoVideo!: string;
 
-    // TODO: Many-to-many relation with Challenges
-    //@ManyToMany()
-    //???
+    @OneToOne(() => Team, team => team.submission, {cascade: true})
+    team!: Team;
 
-    // TODO: One-to-one relation to Team
-    //@OneToOne(() => createEmailTemplate, team => team.submission, {cascade: true})
-    //team!: Team;
+    @ManyToMany(() => Challenge)
+    @JoinTable()
+    challenges?: Challenge[];
 
     @BeforeInsert()
     @BeforeUpdate()

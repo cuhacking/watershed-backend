@@ -44,7 +44,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@types/node": "^14.14.10",
+    "@types/node": "^14.14.22",
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",

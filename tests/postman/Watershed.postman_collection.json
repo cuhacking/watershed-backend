@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "89de609b-c6c1-49d2-801f-bd85ce9509de",
+		"_postman_id": "1005e352-6c74-44c3-8031-a8916a06f580",
 		"name": "Watershed",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -4065,7 +4065,13 @@
 					],
 					"request": {
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"title\": \"newTitle\"\r\n}",
@@ -4371,6 +4377,202 @@
 								"api",
 								"event",
 								"favourites"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Prizes & Challenges",
+			"item": [
+				{
+					"name": "7.1 Create Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"CHALLENGE_ID\", jsonData[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"challenge\",\r\n    \"type\": \"sponsor\",\r\n    \"description\": \"none\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/challenge",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"challenge"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 Get Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(pm.environment.get(\"CHALLENGE_ID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/api/challenge",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"challenge"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.3 Create Prize",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"some prize\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/prize",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"prize"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.4 Edit Challenge",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"new name\",\r\n    \"prizes\": [\"some prize\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/challenge/{{CHALLENGE_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"challenge",
+								"{{CHALLENGE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 Get Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"CHALLENGE_ID\"));\r",
+									"    pm.expect(jsonData.name).to.eql(\"new name\");\r",
+									"    pm.expect(jsonData.prizes.length).not.to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/api/challenge/{{CHALLENGE_ID}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"challenge",
+								"{{CHALLENGE_ID}}"
 							]
 						}
 					},
