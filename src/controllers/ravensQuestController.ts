@@ -138,10 +138,14 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
                             user.ravensQuestProgress[`track2Progress`] == NUM_QUESTIONS;
 
         let nextQuestion;
-        if(currentQuestion + 1 == NUM_QUESTIONS) {
+        let nextQuestionUrl;
+
+        if(user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS) {
             nextQuestion = null;
+            nextQuestionUrl = null;
         } else {
-            nextQuestion = questionsAndAnswers[currentTrack][currentQuestion + 1]?.question;
+            nextQuestion = questionsAndAnswers[currentTrack][user.ravensQuestProgress[`track${currentTrack}Progress`]]?.question;
+            nextQuestionUrl = questionsAndAnswers[currentTrack][user.ravensQuestProgress[`track${currentTrack}Progress`]]?.questionUrl;
         }
 
         res.status(200).send({
@@ -150,7 +154,8 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
             snowmanUrl: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanUrl,
             snowmanName: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanName,
             allComplete: allComplete,
-            nextQuestion: nextQuestion
+            nextQuestion: nextQuestion,
+            nextQuestionUrl: nextQuestionUrl
         });
         
     } else {
