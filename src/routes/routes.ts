@@ -17,6 +17,8 @@ import submission from './submission';
 import dashboard from './dashboard';
 import challenge from './challenge';
 import prize from './prize';
+import announcement from './announcement';
+import image from './image';
 
 const ENV = process.env.NODE_ENV || 'production';
 
@@ -39,6 +41,8 @@ router.use('/submission', submission)
 router.use('/dashboard', dashboard);
 router.use('/challenge', challenge);
 router.use('/prize', prize);
+router.use('/announcement', announcement);
+router.use('/images', image);
 
 // Only mount these routes for testing
 if(ENV === 'development') {

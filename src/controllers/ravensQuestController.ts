@@ -93,11 +93,7 @@ export const switchTracks = async (req: Request, res: Response): Promise<void> =
 };
 
 export const refreshQuestionsAndAnswers = async (req: Request, res: Response): Promise<void> => {
-    if(req.body) {
-        console.log('Using questions provided in request body...');
-        questionsAndAnswers = req.body;
-        res.sendStatus(200);
-    } else {
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
         console.log('Attempting to load questions from file...');
         const result = await loadQuestionsAndAnswers();
         if(result) {
@@ -105,6 +101,10 @@ export const refreshQuestionsAndAnswers = async (req: Request, res: Response): P
         } else {
             res.sendStatus(500);
         }
+    } else {
+        console.log('Using questions provided in request body...');
+        questionsAndAnswers = req.body;
+        res.sendStatus(200);
     }
 };
 
@@ -137,12 +137,25 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
                             user.ravensQuestProgress[`track1Progress`] == NUM_QUESTIONS &&
                             user.ravensQuestProgress[`track2Progress`] == NUM_QUESTIONS;
 
+        let nextQuestion;
+        let nextQuestionUrl;
+
+        if(user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS) {
+            nextQuestion = null;
+            nextQuestionUrl = null;
+        } else {
+            nextQuestion = questionsAndAnswers[currentTrack][user.ravensQuestProgress[`track${currentTrack}Progress`]]?.question;
+            nextQuestionUrl = questionsAndAnswers[currentTrack][user.ravensQuestProgress[`track${currentTrack}Progress`]]?.questionUrl;
+        }
+
         res.status(200).send({
             track: currentTrack,
             progress: user.ravensQuestProgress[`track${currentTrack}Progress`] == NUM_QUESTIONS ? "completed" : user.ravensQuestProgress[`track${currentTrack}Progress`],
             snowmanUrl: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanUrl,
             snowmanName: questionsAndAnswers[currentTrack][currentQuestion]?.snowmanName,
-            allComplete: allComplete
+            allComplete: allComplete,
+            nextQuestion: nextQuestion,
+            nextQuestionUrl: nextQuestionUrl
         });
         
     } else {

@@ -49,4 +49,8 @@ CONFIRM_TEMPLATE=<path to email confirmation template file, relative to root. Sh
 PASSWORD_RESET_TEMPLATE=<path to password reset template file, relative to root. Should have {link} as a placeholder for the link to send>
 RESUME_DIR=<path to store resume files>
 SUBMISSION_DIR=<path to store submission repos>
+ANOUNCEMENT_CHANNEL=<ID of discord channel to send announcements to>
+CONFIG_FILE=<path to a config.json>
+DISCORD_ROLE=<ID of role to assign on checkin>
+DISCORD_URL=<url of discord bot endpoints>
 ```
