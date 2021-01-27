@@ -47,4 +47,5 @@ PASSWORD_RESET_LINK=<link to be sent in password reset email>
 CONFIRM_LINK=<link to be sent in confirmation email>
 CONFIRM_TEMPLATE=<path to email confirmation template file, relative to root. Should have {link} as a placeholder for the link to send>
 PASSWORD_RESET_TEMPLATE=<path to password reset template file, relative to root. Should have {link} as a placeholder for the link to send>
+ANOUNCEMENT_CHANNEL=<ID of discord channel to send announcements to>
 ```

@@ -5,6 +5,10 @@ import {Request, Response} from 'express';
 import {validate} from 'class-validator';
 import { Resource } from '../entity/Resource';
 import {User} from '../entity/User';
+import axios, {Method, AxiosResponse} from 'axios';
+
+const DISCORD_URL = process.env.DISCORD_URL;
+const ANNOUNCEMENT_CHANNEL = process.env.ANNOUNCEMENT_CHANNEL;
 
 export const createAnnouncement = async (req: Request, res: Response): Promise<void> => {
     const announcementRepository = getManager().getRepository(Announcement);
@@ -30,6 +34,21 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
             try {
                 await announcementRepository.save(newAnnouncement);
                 successfulAdds.push(newAnnouncement);
+                // Send the announcement request
+                const method: Method = 'post';
+                const url = { 
+                    method: method, 
+                    url: DISCORD_URL + '/upgrade',
+                    data: {
+                        message: newAnnouncement.description,
+                        id: ANNOUNCEMENT_CHANNEL
+                    }
+                };
+
+                const response = await axios(url);
+                if(response.status !== 200) {
+                    console.log('Error sending announcement: ' + response.data);
+                }
             } catch (error) {
                 addErrors.push({announcement: newAnnouncement, error: error});
             }
