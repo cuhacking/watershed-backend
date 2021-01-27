@@ -36,7 +36,7 @@ export const assignDiscordRole = async (discordId: string): Promise<AxiosRespons
     if(!discordId) {
         return undefined;
     } else {
-        console.log('assigning');
+
         // Send the role request
         const method: Method = 'post';
         const url = { 
