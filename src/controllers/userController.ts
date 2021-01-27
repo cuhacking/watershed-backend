@@ -315,3 +315,32 @@ export const getLeaderboard = async (req: Request, res: Response): Promise<void>
     
     res.status(200).send(mapped);
 }
+
+export const checkDiscordServerMembership = async (req: Request, res: Response): Promise<void> => {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    if(!user.discordId) {
+        res.sendStatus(404);
+        return;
+    }
+
+    // Send the role request
+    const method: Method = 'get';
+    const url = { 
+        method: method, 
+        url: DISCORD_URL + '/user/' + user.discordId
+    };
+
+    const response = await axios(url);
+    res.status(response.status).send(response.data);
+}

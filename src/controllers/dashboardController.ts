@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import * as auth from '../middleware/authMiddleware';
 import {User, Role} from '../entity/User';
 import {Event} from '../entity/Event';
+import {Application} from '../entity/Application'
 import {getManager, MoreThan} from 'typeorm';
 import { promises as fs } from 'fs';
 
@@ -45,12 +46,16 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         return;
     }
 
-    const user = await auth.getUserObjectFromToken(token, ['team']);
+    const user = await auth.getUserObjectFromToken(token, ['team', 'application']);
     if(!user) {
         res.sendStatus(401);
         return;
     }
 
+    if(!user.application) {
+        res.status(403).send("User does not have an application");
+        return;
+    }
     
     let numToGet = 5; // Default to 5
     if(req.query.num) {
@@ -65,11 +70,15 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         }
     });
 
+    const {password, id, application, ...userToBeSent} = user;
+
     res.status(200).send({
-        user: user,
+        user: userToBeSent,
         schedule: events,
         startTime: STARTTIME,
-        endTime: ENDTIME
+        endTime: ENDTIME,
+        firstName: user.application.firstName,
+        lastName: user.application.lastName
     });
 
 };
