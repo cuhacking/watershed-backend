@@ -53,6 +53,14 @@ router.get('/checkin', user.checkIn);
 router.get('/leaderboard', user.getLeaderboard);
 
 /**
+ * GET /user/checkUserDiscord
+ * @tag Users
+ * @summary Checks that the logged in user is in the Discord server
+ * @response 200 - OK
+ */
+router.get('/checkUserDiscord', user.getLeaderboard);
+
+/**
  * GET /user/{userId}
  * @tag Users
  * @summary Gets a user by user uuid
