@@ -290,3 +290,28 @@ export const checkIn = async (req: Request, res: Response): Promise<void> => {
         }
     }
 };
+
+export const getLeaderboard = async (req: Request, res: Response): Promise<void> => {
+    const userRepository = getManager().getRepository(User);
+    const users = await userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.application', 'application')
+        .where('user.discordUsername IS NOT NULL')
+        .orderBy('user.points', 'DESC')
+        .limit(10)
+        .getMany()
+
+    if (!users) {
+        res.sendStatus(500);
+        return;
+    }
+
+    const mapped = users.map(user => ({
+        uuid: user.uuid,
+        name: user.application?.firstName,
+        discordUsername: user.discordUsername,
+        points: user.points
+    }));
+    
+    res.status(200).send(mapped);
+}

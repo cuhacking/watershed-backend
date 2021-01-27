@@ -45,6 +45,14 @@ router.get('/me', user.getCurrentUser);
 router.get('/checkin', user.checkIn);
 
 /**
+ * GET /user/leaderboard
+ * @tag Users
+ * @summary Gets the top 10 users by points in descending order. Only includes uuid, name, discordUsername, and points in response.
+ * @response 200 - OK
+ */
+router.get('/leaderboard', user.getLeaderboard);
+
+/**
  * GET /user/{userId}
  * @tag Users
  * @summary Gets a user by user uuid
