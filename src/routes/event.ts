@@ -67,7 +67,7 @@ router.get('/:eventId', event.getEvent);
  * @response 200 - Event
  * @responseContent {Event} 200.application/json
  */
-router.delete('/:eventId', event.deleteEvent);
+router.delete('/:eventId', auth.authenticate(Role.Organizer), event.deleteEvent);
 
 /**
  * POST /event/favourite
@@ -94,6 +94,6 @@ router.patch('/favourites', event.removeFavourite);
  * @description Modifies event with eventId in body
  * @response 200 - OK
  */
-router.patch('/:eventId', event.editEvent);
+router.patch('/:eventId', auth.authenticate(Role.Organizer), event.editEvent);
 
 export = router;

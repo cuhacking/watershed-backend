@@ -46,7 +46,7 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         return;
     }
 
-    const user = await auth.getUserObjectFromToken(token, ['team', 'application']);
+    const user = await auth.getUserObjectFromToken(token, ['team', 'application', 'submission']);
     if(!user) {
         res.sendStatus(401);
         return;

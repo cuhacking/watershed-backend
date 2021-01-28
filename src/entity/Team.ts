@@ -1,7 +1,8 @@
-import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToMany} from 'typeorm';
+import {Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, OneToMany, OneToOne, JoinColumn} from 'typeorm';
 import { validateOrReject, IsDefined, registerDecorator, ValidationArguments } from 'class-validator';
 import {User} from './User';
 import {TeamInvite} from './TeamInvite';
+import {Submission} from './Submission';
 
 @Entity()
 export class Team {
@@ -22,6 +23,10 @@ export class Team {
 
     @OneToMany(() => TeamInvite, invite => invite.team)
     invites!: TeamInvite[];
+
+    @OneToOne(() => Submission, submission => submission.team)
+    @JoinColumn()
+    submission?: Submission;
 
     @BeforeInsert()
     @BeforeUpdate()

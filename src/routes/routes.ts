@@ -13,7 +13,10 @@ import test from './test';
 import event from './event';
 import ravensQuest from './ravensQuest';
 import stats from './stats';
+import submission from './submission';
 import dashboard from './dashboard';
+import challenge from './challenge';
+import prize from './prize';
 import announcement from './announcement';
 import image from './image';
 
@@ -34,7 +37,10 @@ router.use('/application', applications);
 router.use('/event', event);
 router.use('/ravensQuest', ravensQuest);
 router.use('/stats', stats);
+router.use('/submission', submission)
 router.use('/dashboard', dashboard);
+router.use('/challenge', challenge);
+router.use('/prize', prize);
 router.use('/announcement', announcement);
 router.use('/images', image);
 

@@ -43,6 +43,9 @@ jobs:
           yarn set version berry
           yarn
 
+      - name: Create submission dir
+        run: mkdir submissions
+
       - name: Start server
         run: |
           yarn start > run.log &
@@ -57,6 +60,7 @@ jobs:
           TYPEORM_SYNCHRONIZE : true
           TYPEORM_CONNECTION: postgres
           TYPEORM_ENTITIES: dist/entity/*.js
+          SUBMISSION_DIR: ./submissions/
           JWT_KEY: abc
 
       - name: Run tests
