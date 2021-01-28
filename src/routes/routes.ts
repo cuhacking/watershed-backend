@@ -19,6 +19,7 @@ import challenge from './challenge';
 import prize from './prize';
 import announcement from './announcement';
 import image from './image';
+import points from './points';
 
 const ENV = process.env.NODE_ENV || 'production';
 
@@ -43,6 +44,7 @@ router.use('/challenge', challenge);
 router.use('/prize', prize);
 router.use('/announcement', announcement);
 router.use('/images', image);
+router.use('/points', points);
 
 // Only mount these routes for testing
 if(ENV === 'development') {

@@ -12,6 +12,7 @@ import axios, {Method, AxiosResponse} from 'axios';
 const HOSTNAME = process.env.EXTERNAL_HOSTNAME;
 const CONFIRM_LINK = process.env.CONFIRM_LINK || '';
 const CONFIRM_TEMPLATE = process.env.CONFIRM_TEMPLATE || '';
+const ACCEPT_TEMPLATE = process.env.ACCEPT_TEMPLATE || '';
 
 const DISCORD_URL = process.env.DISCORD_URL;
 const DISCORD_ROLE = process.env.DISCORD_ROLE;
@@ -30,6 +31,21 @@ const sendConfirmationEmail = async (user: User) => {
     const mailText = mailTemplate({URL: HOSTNAME + CONFIRM_LINK + '?token=' + confirmToken.token, EMAIL: user.email});
 
     return (await email.sendEmail(user.email, 'cuHacking Password Reset', mailText));
+}
+
+const sendAcceptEmail = async (recipient: string) => {
+    if(!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN) {
+        return false;
+    }
+
+    const mailTemplate = await email.createEmailTemplate(CONFIRM_TEMPLATE);
+    if(!mailTemplate) {
+        throw new Error('Email templating failed');
+    }
+
+    const mailText = mailTemplate({});
+
+    return (await email.sendEmail(recipient, 'cuHacking starts soon!', mailText));
 }
 
 export const assignDiscordRole = async (discordId: string): Promise<AxiosResponse|undefined> => {
@@ -106,7 +122,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
-    const user = await userRepository.findOne({uuid: req.params.userId}, {select: ['uuid', 'email', 'role', 'githubId', 'discordId']});
+    const user = await userRepository.findOne({uuid: req.params.userId}, {select: ['uuid', 'email', 'role', 'githubId', 'discordId', 'points']});
     if(user){
         res.status(200).send(user);
     } else {
@@ -133,7 +149,8 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
         email: user.email,
         role: user.role,
         githubId: user.githubId,
-        discordId: user.discordId
+        discordId: user.discordId,
+        points: user.points
     });
 }
 
@@ -373,4 +390,13 @@ export const checkDiscordServerMembership = async (req: Request, res: Response):
 
     const response = await axios(url);
     res.status(response.status).send(response.data);
+}
+
+export const sendAcceptEmails = async (req: Request, res: Response): Promise<void> => {
+    try {
+        await sendAcceptEmail("development@sandbox5686bc1cbd0b40579fcb4f94db423206.mailgun.org");
+        res.sendStatus(200);
+    } catch (e) {
+        res.sendStatus(500);
+    }
 }
