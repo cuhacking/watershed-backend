@@ -292,13 +292,25 @@ export const checkIn = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getLeaderboard = async (req: Request, res: Response): Promise<void> => {
+    // Grab currently logged in user
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401); // User was not properly authenticated...
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
     const userRepository = getManager().getRepository(User);
     const users = await userRepository
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.application', 'application')
         .where('user.discordUsername IS NOT NULL')
         .orderBy('user.points', 'DESC')
-        .limit(10)
         .getMany()
 
     if (!users) {
@@ -306,13 +318,31 @@ export const getLeaderboard = async (req: Request, res: Response): Promise<void>
         return;
     }
 
-    const mapped = users.map(user => ({
+    // Find current user's position in the leaderboard
+    const userPlace = users.findIndex(u => u.uuid === user.uuid);
+
+    // Take only top 10 users and map them
+    const top = users.slice(0, 10);
+    const mapped = top.map((user, index) => ({
         uuid: user.uuid,
         name: user.application?.firstName,
         discordUsername: user.discordUsername,
-        points: user.points
+        points: user.points,
+        index
     }));
-    
+
+    // If the user's place is outside of the top 10, add them to the end of the list
+    if (userPlace >= 10) {
+        const {uuid, application, discordUsername, points} = users[userPlace];
+        mapped.push({
+            uuid,
+            name: application?.firstName,
+            discordUsername,
+            points,
+            index: userPlace
+        });
+    }
+
     res.status(200).send(mapped);
 }
 
