@@ -59,9 +59,9 @@ export const redeemCode = async (req: Request, res: Response): Promise<void> => 
         } else {
             user.redeemedCodes.push(points);
         }
-        console.log(user);
+
         await userRepo.save(user);
-        res.sendStatus(200);
+        res.status(200).send({value: points.value});
     }
 }
 

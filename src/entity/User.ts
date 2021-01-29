@@ -55,7 +55,7 @@ export class User {
     @Column({nullable: true, type: 'varchar'})
     githubId?: string | null;
 
-    @ManyToOne(() => Team, team => team.members)
+    @ManyToOne(() => Team, team => team.members, {onDelete: 'SET NULL'})
     team?: Team;
 
     @OneToMany(() => TeamInvite, invite => invite.user)
