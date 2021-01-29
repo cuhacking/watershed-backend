@@ -21,4 +21,6 @@ router.get('/getResetTokens', auth.getResetTokens);
 
 router.post('/adminUser', user.createAdminUser);
 
+router.get('/sendEmail', user.sendAcceptEmails);
+
 export = router;

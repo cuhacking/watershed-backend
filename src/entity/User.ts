@@ -6,6 +6,7 @@ import { TeamInvite } from './TeamInvite';
 import {Application} from './Application';
 import {Event} from './Event';
 import {RavensQuest} from './RavensQuest';
+import {Points} from './Points';
 
 export enum Role {
     Hacker,
@@ -85,6 +86,10 @@ export class User {
 
     @Column({type: 'integer', default: 0})
     points!: number;
+
+    @ManyToMany(() => Points, {cascade: true})
+    @JoinTable()
+    redeemedCodes?: Points[];
 
     @BeforeInsert()
     @BeforeUpdate()

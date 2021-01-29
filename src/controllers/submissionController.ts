@@ -265,12 +265,20 @@ export const getSubmissionPreviews = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const repo = decodeURIComponent(req.params.repo);
   const submissionRepo = getManager().getRepository(Submission);
+  const teamRepo = getManager().getRepository(Team);
 
-  const submission = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover']});
-  if(submission) {
-    res.status(200).send(submission);
+  const output = [];
+  const submissions = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover']});
+
+  for(const submission of submissions) {
+    const team = await teamRepo.createQueryBuilder("team").leftJoinAndSelect("team.submission", "submission").getOne();
+    output.push({...submission, team: team?.name});
+  }
+ 
+
+  if(output) {
+    res.status(200).send(output);
   } else {
     res.sendStatus(404);
   }
