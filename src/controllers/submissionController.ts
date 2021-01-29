@@ -71,6 +71,7 @@ const cloneSubmission = async (repo: string): Promise<GitResult> => {
         '--filter': 'blob:none',
       });
     } catch (e) {
+      console.error(e);
       return 'no-repo';
     }
   }
@@ -78,7 +79,8 @@ const cloneSubmission = async (repo: string): Promise<GitResult> => {
   try {
     const localGit = simpleGit(SUBMISSION_ROOT + name);
     await localGit.checkout('origin', ['--', 'README.md']);
-  } catch (_) {
+  } catch (e) {
+    console.error(e);
     return 'no-readme';
   }
 
@@ -91,7 +93,8 @@ const extractReadme = async (repo: string): Promise<string | null> => {
     return await fs.readFile(SUBMISSION_ROOT + name + '/README.md', {
       encoding: 'utf-8',
     });
-  } catch (_) {
+  } catch (e) {
+    console.error(e);
     return null;
   }
 };
