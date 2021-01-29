@@ -122,9 +122,18 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
     const userRepository = getManager().getRepository(User);
-    const user = await userRepository.findOne({uuid: req.params.userId}, {select: ['uuid', 'email', 'role', 'githubId', 'discordId', 'points']});
+    const user = await userRepository.findOne({uuid: req.params.userId});
     if(user){
-        res.status(200).send(user);
+        res.status(200).send({
+            uuid: user.uuid,
+            email: user.email,
+            role: user.role,
+            githubId: user.githubId,
+            discordId: user.discordId,
+            points: user.points,
+            firstName: user.application?.firstName,
+            lastName: user.application?.lastName
+        });
     } else {
         res.sendStatus(404);
     }
@@ -138,7 +147,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
         return;
     }
 
-    const user = await auth.getUserObjectFromToken(token);
+    const user = await auth.getUserObjectFromToken(token, ['application']);
     if(!user) {
         res.sendStatus(401);
         return;
@@ -150,7 +159,9 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
         role: user.role,
         githubId: user.githubId,
         discordId: user.discordId,
-        points: user.points
+        points: user.points,
+        firstName: user.application?.firstName,
+        lastName: user.application?.lastName
     });
 }
 

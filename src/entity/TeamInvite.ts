@@ -13,13 +13,13 @@ export class TeamInvite {
     @IsDefined()
     uuid!: string;
 
-    @ManyToOne(() => Team, team => team.invites, {cascade: true})
+    @ManyToOne(() => Team, team => team.invites)
     @IsDefined()
     team!: Team;
 
     @ManyToOne(() => User, user => user.teamInvites, {cascade: true})
     @IsDefined()
-    user!: Team;
+    user!: User;
 
     @BeforeInsert()
     @BeforeUpdate()
