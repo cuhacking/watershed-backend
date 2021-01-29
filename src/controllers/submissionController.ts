@@ -29,6 +29,7 @@ export interface SubmissionInput {
 export const updateEndtime = async (): Promise<boolean> => {
   if(CONFIG_FILE) {
       try {
+        console.log(GRACE_PERIOD)
           const fileInput = await fs.readFile(CONFIG_FILE, 'utf-8');
           const inputJson = JSON.parse(fileInput);
           ENDTIME = new Date(inputJson.endTime);

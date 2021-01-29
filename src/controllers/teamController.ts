@@ -309,6 +309,7 @@ export const revokeInvite = async (req: Request, res: Response): Promise<void> =
 }
 
 export const getInvitesForUser = async (req: Request, res: Response): Promise<void> => {
+    const inviteRepo = getManager().getRepository(TeamInvite);
     const token = req.header('Authorization')?.split(' ')[1];
     if(!token) {
         res.sendStatus(401); // User was not properly authenticated...
@@ -320,9 +321,26 @@ export const getInvitesForUser = async (req: Request, res: Response): Promise<vo
         res.sendStatus(401);
         return;
     }
+    
+    const invites = await inviteRepo
+                    .createQueryBuilder('invite')
+                    .leftJoinAndSelect('invite.user', 'user', 'user.id = invite.userId')
+                    .leftJoinAndSelect('user.application', 'application', 'user.applicationId = application.id')
+                    .where('user.id = :userId', {userId: user.id})
+                    .getMany();
 
-    if(user.teamInvites) {
-        res.status(200).send(user.teamInvites);
+    const output = [];
+    for(let invite of invites) {
+        output.push({
+            uuid: invite.uuid,
+            firstName: invite.user?.application?.firstName,
+            lastName: invite.user?.application?.lastName,
+            discordUsername: invite.user?.discordUsername       
+        });
+    }
+
+    if(output) {
+        res.status(200).send(output);
     } else {
         res.sendStatus(404);
     }
@@ -350,11 +368,28 @@ export const getInvitesForTeam = async (req: Request, res: Response): Promise<vo
         return;
     }
 
-    const team = await teamRepo.findOne({uuid: teamId}, {relations: ['invites']});
-    if(!team) {
+    const invites = await invitesRepo
+                    .createQueryBuilder('invite')
+                    .leftJoinAndSelect('invite.team', 'team', 'team.id = invite.teamId')
+                    .leftJoinAndSelect('invite.user', 'user', 'user.id = invite.userId')
+                    .leftJoinAndSelect('user.application', 'application', 'user.applicationId = application.id')
+                    .where('team.uuid = :teamId', {teamId: teamId})
+                    .getMany();
+
+    const output = [];
+    for(let invite of invites) {
+        output.push({
+            uuid: invite.uuid,
+            firstName: invite.user?.application?.firstName,
+            lastName: invite.user?.application?.lastName,
+            discordUsername: invite.user?.discordUsername       
+        });
+    }
+
+    if(!output) {
         res.sendStatus(404);
     } else {
-        res.status(200).send(team.invites);
+        res.status(200).send(output);
     }
 
 }
