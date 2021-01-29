@@ -167,7 +167,7 @@ export const discordLinkCallback = async (req: Request, res: Response): Promise<
                 user.discordId = response.data.id;
                 user.discordUsername = response.data.username + '#' + response.data.discriminator;
                 await userRepo.save(user);
-                res.sendStatus(200);
+                res.status(200).send('OK! You can close this tab now.');
             }
             
         }
