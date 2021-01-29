@@ -104,6 +104,6 @@ router.patch('/:teamId', team.changeName);
  * @description Joins team with teamId, with invite ID in the body
  * @response 200 - OK
  */
-router.post('/:teamId/join', team.joinTeam);
+router.post('/join', team.joinTeam);
 
 export = router;
