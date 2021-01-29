@@ -21,7 +21,7 @@ export class Team {
     @OneToMany(() => User, user => user.team, {cascade: true, eager: true, onDelete: 'SET NULL'})
     members!: User[];
 
-    @OneToMany(() => TeamInvite, invite => invite.team, {cascade: true})
+    @OneToMany(() => TeamInvite, invite => invite.team, {cascade: true, onDelete: 'SET NULL'})
     invites!: TeamInvite[];
 
     @OneToOne(() => Submission, submission => submission.team)

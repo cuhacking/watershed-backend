@@ -13,7 +13,7 @@ export class TeamInvite {
     @IsDefined()
     uuid!: string;
 
-    @ManyToOne(() => Team, team => team.invites)
+    @ManyToOne(() => Team, team => team.invites, {onDelete: 'SET NULL'})
     @IsDefined()
     team!: Team;
 
