@@ -58,7 +58,7 @@ router.get('/leaderboard', user.getLeaderboard);
  * @summary Checks that the logged in user is in the Discord server
  * @response 200 - OK
  */
-router.get('/checkUserDiscord', user.getLeaderboard);
+router.get('/checkUserDiscord', user.checkDiscordServerMembership);
 
 /**
  * GET /user/{userId}
