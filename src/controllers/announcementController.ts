@@ -31,6 +31,10 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
         if(errors.length > 0) {
             addErrors.push({announcement: newAnnouncement, error: errors});
         } else {
+            let message = newAnnouncement.description;
+            if (newAnnouncement.url != null) {
+                message = message + ' ' + newAnnouncement.url;
+            }
             try {
                 await announcementRepository.save(newAnnouncement);
                 successfulAdds.push(newAnnouncement);
@@ -40,7 +44,7 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
                     method: method, 
                     url: DISCORD_URL + '/announce',
                     data: {
-                        message: newAnnouncement.description,
+                        message,
                         id: ANNOUNCEMENT_CHANNEL
                     }
                 };
