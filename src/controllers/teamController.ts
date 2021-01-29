@@ -133,7 +133,6 @@ export const joinTeam = async (req: Request, res: Response): Promise<void> => {
     const teamRepository = getManager().getRepository(Team);
     const inviteRepo = getManager().getRepository(TeamInvite);
 
-    const teamId = req.params.teamId;
     const inviteId = req.body.inviteId;
     const token = req.header('Authorization')?.split(' ')[1];
     if(!token) {
@@ -158,7 +157,8 @@ export const joinTeam = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const team = await teamRepository.findOne({uuid: teamId});
+    const inviteObj = await inviteRepo.findOne({id: invite.id}, {relations: ['team']});
+    const team = inviteObj?.team;
     if(!team){
         res.status(404).send('That team does not exist.');
         return;
@@ -195,7 +195,7 @@ export const leaveTeam = async (req: Request, res: Response): Promise<void> => {
         res.sendStatus(401);
         return;
     }
-    
+
     if(!user.team) {
        res.status(400).send('This user is not on a team.');
        return;
