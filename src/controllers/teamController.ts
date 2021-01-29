@@ -324,6 +324,7 @@ export const getInvitesForUser = async (req: Request, res: Response): Promise<vo
     
     const invites = await inviteRepo
                     .createQueryBuilder('invite')
+                    .leftJoinAndSelect('invite.team', 'team', 'team.id = invite.teamId')
                     .leftJoinAndSelect('invite.user', 'user', 'user.id = invite.userId')
                     .leftJoinAndSelect('user.application', 'application', 'user.applicationId = application.id')
                     .where('user.id = :userId', {userId: user.id})
@@ -335,7 +336,9 @@ export const getInvitesForUser = async (req: Request, res: Response): Promise<vo
             uuid: invite.uuid,
             firstName: invite.user?.application?.firstName,
             lastName: invite.user?.application?.lastName,
-            discordUsername: invite.user?.discordUsername       
+            discordUsername: invite.user?.discordUsername,
+            teamId: invite.team?.uuid,
+            teamName: invite.team?.name 
         });
     }
 
@@ -382,7 +385,9 @@ export const getInvitesForTeam = async (req: Request, res: Response): Promise<vo
             uuid: invite.uuid,
             firstName: invite.user?.application?.firstName,
             lastName: invite.user?.application?.lastName,
-            discordUsername: invite.user?.discordUsername       
+            discordUsername: invite.user?.discordUsername,
+            teamId: invite.team?.uuid,
+            teamName: invite.team?.name
         });
     }
 
