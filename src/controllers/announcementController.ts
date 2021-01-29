@@ -38,7 +38,7 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
                 const method: Method = 'post';
                 const url = { 
                     method: method, 
-                    url: DISCORD_URL + '/upgrade',
+                    url: DISCORD_URL + '/announce',
                     data: {
                         message: newAnnouncement.description,
                         id: ANNOUNCEMENT_CHANNEL
