@@ -38,6 +38,7 @@ export const triggerUpdateTime = async (req: Request, res: Response): Promise<vo
 export const getDashboardInfo = async (req: Request, res: Response): Promise<void> => {
     // Grab currently logged in user
     const eventRepository = getManager().getRepository(Event);
+    const userRepo = getManager().getRepository(User);
     const currentTime = new Date();
 
     const token = req.header('Authorization')?.split(' ')[1];
@@ -50,6 +51,18 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
     if(!user) {
         res.sendStatus(401);
         return;
+    }
+
+    let teamMembers = [];
+    if(user.team) {
+        for(const member of user.team.members) {
+            const memberUser = await userRepo.findOne({id: member.id}, {relations: ['application']});
+            teamMembers.push({
+                firstName: memberUser?.application?.firstName,
+                lastName: memberUser?.application?.lastName,
+                discordUsername: memberUser?.discordUsername
+            });
+        }
     }
 
     if(!user.application) {
@@ -78,7 +91,8 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         startTime: STARTTIME,
         endTime: ENDTIME,
         firstName: user.application.firstName,
-        lastName: user.application.lastName
+        lastName: user.application.lastName,
+        teamMembers: teamMembers
     });
 
 };

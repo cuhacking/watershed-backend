@@ -18,10 +18,10 @@ export class Team {
     @IsDefined()
     name?: string;
 
-    @OneToMany(() => User, user => user.team, {cascade: true, eager: true, onDelete: 'SET NULL'})
+    @OneToMany(() => User, user => user.team, {cascade: true, eager: true})
     members!: User[];
 
-    @OneToMany(() => TeamInvite, invite => invite.team, {cascade: true, onDelete: 'SET NULL'})
+    @OneToMany(() => TeamInvite, invite => invite.team, {cascade: true})
     invites!: TeamInvite[];
 
     @OneToOne(() => Submission, submission => submission.team)
