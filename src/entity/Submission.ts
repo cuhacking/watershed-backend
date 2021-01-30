@@ -18,14 +18,23 @@ export class Submission {
     @Column({nullable: true, type: 'bytea'})
     imageLogo?: Buffer;
 
+    @Column({nullable: true, type: 'varchar'})
+    logoMimeType?: string;
+
     @Column({nullable: true, type: 'bytea'})
     imageCover?: Buffer;
 
-    @Column()
-    readmePath!: string;
+    @Column({nullable: true, type: 'varchar'})
+    coverMimeType?: string;
 
-    @Column()
-    readmeText!: string;
+    @Column({nullable: true, type: 'varchar'})
+    readmePath?: string;
+
+    @Column({nullable: true, type: 'varchar'})
+    readmeText?: string;
+
+    @Column({nullable: true, type: 'varchar'})
+    cloneError?: string;
 
     @Column()
     demoVideo!: string;
