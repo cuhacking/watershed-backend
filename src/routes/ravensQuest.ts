@@ -61,7 +61,7 @@ router.post('/submit', ravensQuest.submitAnswer);
 router.get('/question/:userId', ravensQuest.getQuestion);
 
 /**
- * GET /ravensQuest/progress
+ * GET /ravensQuest/progress/{userId}
  * @tag Raven's Quest
  * @summary Gets the user's current progress
  * @pathParam {string} userId - the Discord ID of the user
@@ -78,6 +78,6 @@ router.get('/progress/:userId', ravensQuest.getProgress);
  * @response 200 - Success
  * @response 404 - User with that Discord ID not found
  */
-router.get('/progress', ravensQuest.getProgress);
+router.get('/progress', ravensQuest.getCurrentUserProgress);
 
 export = router;
