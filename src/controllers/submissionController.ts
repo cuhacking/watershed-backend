@@ -308,8 +308,8 @@ export const getSubmissionPreviews = async (
       name: submission.projectName,
       repo: submission.repo, 
       team: team?.name,
-      logo: submission.imageLogo ? 'data:'+logoMimeType+';base64, ' + submission.imageLogo.toString('base64') : undefined,
-      cover: submission.imageCover ? 'data:'+coverMimeType+';base64, ' + submission.imageCover.toString('base64') : undefined
+      logo: submission.imageLogo ? 'data:'+logoMimeType+';base64,' + submission.imageLogo.toString('base64') : undefined,
+      cover: submission.imageCover ? 'data:'+coverMimeType+';base64,' + submission.imageCover.toString('base64') : undefined
     });
   }
  
