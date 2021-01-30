@@ -424,13 +424,16 @@ export const updateUsernames = async (req: Request, res: Response): Promise<void
             url: DISCORD_URL + '/user/' + user.discordId
         };
 
-        const response = await axios(url);
-        if(response.status == 200 && response.data?.username) {
-            user.discordUsername = response.data.username;
-            await userRepo.save(user);
+        try {
+            const response = await axios(url);
+            if(response.status == 200 && response.data?.username) {
+                user.discordUsername = response.data.username;
+                await userRepo.save(user);
+            }
+        } catch (e) {
+            console.log('Failed to update user with discord ID: ' + user.discordId);
         }
     }
-
     res.sendStatus(200);
 
 }
