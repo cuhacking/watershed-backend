@@ -271,7 +271,7 @@ export const getSubmission = async (
   const repo = decodeURIComponent(req.params.repo);
   const submissionRepo = getManager().getRepository(Submission);
 
-  const submission = await submissionRepo.findOne({repo: repo}, {relations: ['challenges']});
+  const submission = await submissionRepo.findOne({repo: repo}, {relations: ['challenges', 'team']});
   if(submission) {
     const logoMimeType = submission.logoMimeType ?? 'image/png';
     const coverMimeType = submission.coverMimeType ?? 'image/png';
