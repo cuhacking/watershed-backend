@@ -58,6 +58,7 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         for(const member of user.team.members) {
             const memberUser = await userRepo.findOne({id: member.id}, {relations: ['application']});
             teamMembers.push({
+                ...member,
                 firstName: memberUser?.application?.firstName,
                 lastName: memberUser?.application?.lastName,
                 discordUsername: memberUser?.discordUsername
