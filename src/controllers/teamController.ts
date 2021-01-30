@@ -213,12 +213,7 @@ export const leaveTeam = async (req: Request, res: Response): Promise<void> => {
         if(item.uuid == user.uuid) team.members.splice(index, 1);
     });
 
-    // Team is empty, delete it
-    if(team.members.length == 0) {
-        await teamRepository.remove(team);
-    } else {
-        await teamRepository.save(team);
-    }
+    await teamRepository.save(team);
 
     res.sendStatus(200);
 }
