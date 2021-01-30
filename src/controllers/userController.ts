@@ -1,6 +1,6 @@
 import {User, Role} from '../entity/User';
 import * as auth from '../middleware/authMiddleware';
-import {getManager} from 'typeorm';
+import {getManager, Not, IsNull} from 'typeorm';
 import {Request, Response} from 'express';
 import {validate} from 'class-validator';
 import { v4 as uuidv4 } from 'uuid';
@@ -410,4 +410,27 @@ export const sendAcceptEmails = async (req: Request, res: Response): Promise<voi
     } catch (e) {
         res.sendStatus(500);
     }
+}
+
+export const updateUsernames = async (req: Request, res: Response): Promise<void> => {
+    const userRepo = getManager().getRepository(User); 
+    const users = await userRepo.find({discordId: Not(IsNull()), discordUsername: IsNull()});
+
+    for(let user of users) {
+        // Send the role request
+        const method: Method = 'get';
+        const url = { 
+            method: method, 
+            url: DISCORD_URL + '/user/' + user.discordId
+        };
+
+        const response = await axios(url);
+        if(response.status == 200 && response.data?.username) {
+            user.discordUsername = response.data.username;
+            await userRepo.save(user);
+        }
+    }
+
+    res.sendStatus(200);
+
 }
