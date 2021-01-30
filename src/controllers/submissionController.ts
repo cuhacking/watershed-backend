@@ -276,11 +276,14 @@ export const getSubmission = async (
     const logoMimeType = submission.logoMimeType ?? 'image/png';
     const coverMimeType = submission.coverMimeType ?? 'image/png';
 
+    const team = {name: submission.team.name};
+
     const logoBase64 = submission.imageLogo ? 'data:'+logoMimeType+';base64, ' + submission.imageLogo.toString('base64') : undefined;
     const coverBase64 = submission.imageCover ? 'data:'+coverMimeType+';base64, ' + submission.imageCover.toString('base64') : undefined;
     const {imageLogo, imageCover, ...restOfSubmission} = submission;
     res.status(200).send({
       submission: restOfSubmission,
+      team,
       logo: logoBase64,
       cover: coverBase64
     });
