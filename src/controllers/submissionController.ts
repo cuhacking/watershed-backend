@@ -52,13 +52,8 @@ const stripRepoUrl = (repo: string): string => {
 };
 
 const cloneSubmission = async (repo: string): Promise<GitResult> => {
-  try {
-    const name = stripRepoUrl(repo);
-  } catch (_) {
-    return 'no-repo';
-  }
+  const name = stripRepoUrl(repo);
   
-
   // Check if repo already exists
   let exists: boolean;
   try {
@@ -276,7 +271,7 @@ export const getSubmission = async (
     const logoMimeType = submission.logoMimeType ?? 'image/png';
     const coverMimeType = submission.coverMimeType ?? 'image/png';
 
-    const teamData = {name: submission.team.name};
+    const teamData = {name: submission.team?.name};
 
     const logoBase64 = submission.imageLogo ? 'data:'+logoMimeType+';base64, ' + submission.imageLogo.toString('base64') : undefined;
     const coverBase64 = submission.imageCover ? 'data:'+coverMimeType+';base64, ' + submission.imageCover.toString('base64') : undefined;
