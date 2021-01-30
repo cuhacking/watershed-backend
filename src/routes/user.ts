@@ -60,6 +60,9 @@ router.get('/leaderboard', user.getLeaderboard);
  */
 router.get('/checkUserDiscord', user.checkDiscordServerMembership);
 
+
+router.get('/fixUsernames', auth.authenticate(Role.Organizer), user.updateUsernames);
+
 /**
  * GET /user/{userId}
  * @tag Users
