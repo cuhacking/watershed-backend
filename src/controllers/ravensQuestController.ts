@@ -208,3 +208,30 @@ export const getProgress = async (req: Request, res: Response): Promise<void> =>
         "currentTrack": user.ravensQuestProgress.currentTrack
     });
 };
+
+
+export const getCurrentUserProgress = async (req: Request, res: Response): Promise<void> => {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if(!token) {
+        res.sendStatus(401);
+        return;
+    }
+
+    const user = await auth.getUserObjectFromToken(token, ['ravensQuestProgress']);
+    if(!user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    if(!user.ravensQuestProgress) {
+        res.status(200).send({});
+        return;
+    }
+    
+    res.status(200).send({
+        "track0": user.ravensQuestProgress.track0Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track0Progress,
+        "track1": user.ravensQuestProgress.track1Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track1Progress,
+        "track2": user.ravensQuestProgress.track2Progress === NUM_QUESTIONS ? 'Completed' : user.ravensQuestProgress.track2Progress,
+        "currentTrack": user.ravensQuestProgress.currentTrack
+    });
+};
