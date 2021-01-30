@@ -257,7 +257,14 @@ export const getSubmission = async (
 
   const submission = await submissionRepo.findOne({repo: repo}, {relations: ['challenges']});
   if(submission) {
-    res.status(200).send(submission);
+    const logoBase64 = submission.imageLogo ? 'data:image/png;base64, ' + submission.imageLogo.toString('base64') : undefined;
+    const coverBase64 = submission.imageCover ? 'data:image/png;base64, ' + submission.imageCover.toString('base64') : undefined;
+    const {imageLogo, imageCover, ...restOfSubmission} = submission;
+    res.status(200).send({
+      submission: restOfSubmission,
+      logo: logoBase64,
+      cover: coverBase64
+    });
   } else {
     res.sendStatus(404);
   }
@@ -276,7 +283,13 @@ export const getSubmissionPreviews = async (
 
   for(const submission of submissions) {
     const team = await teamRepo.createQueryBuilder("team").leftJoinAndSelect("team.submission", "submission").getOne();
-    output.push({...submission, team: team?.name});
+    output.push({
+      name: submission.projectName,
+      repo: submission.repo, 
+      team: team?.name,
+      logo: submission.imageLogo ? 'data:image/png;base64, ' + submission.imageLogo.toString('base64') : undefined,
+      cover: submission.imageCover ? 'data:image/png;base64, ' + submission.imageCover.toString('base64') : undefined
+    });
   }
  
 
