@@ -22,8 +22,11 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
     let addErrors: any[] = [];
     let successfulAdds: any[] = [];
     for(let announcement of announcementData) {
+        // Extract the id from the announcement (not to be inserted to the DB)
+        const {id, ...a} = announcement;
+        
         //eslint-disable-next-line @typescript-eslint/ban-types
-        const newAnnouncement = announcementRepository.create({...announcement} as Announcement); // This makes TypeORM not return an array...
+        const newAnnouncement = announcementRepository.create({...a} as Announcement); // This makes TypeORM not return an array...
         if(!newAnnouncement.time) {
             newAnnouncement.time = new Date();
         }
@@ -45,7 +48,7 @@ export const createAnnouncement = async (req: Request, res: Response): Promise<v
                     url: DISCORD_URL + '/announce',
                     data: {
                         message,
-                        id: ANNOUNCEMENT_CHANNEL
+                        id: id ?? ANNOUNCEMENT_CHANNEL
                     }
                 };
 
