@@ -52,7 +52,12 @@ const stripRepoUrl = (repo: string): string => {
 };
 
 const cloneSubmission = async (repo: string): Promise<GitResult> => {
-  const name = stripRepoUrl(repo);
+  try {
+    const name = stripRepoUrl(repo);
+  } catch (_) {
+    return 'no-repo';
+  }
+  
 
   // Check if repo already exists
   let exists: boolean;
@@ -180,24 +185,6 @@ export const submitProject = async (
     return;
   }
 
-  const cloneResult = await cloneSubmission(submissionData.repoUrl);
-  if (cloneResult == 'no-repo') {
-    res.status(404).send('No repo');
-    return;
-  } else if (cloneResult == 'no-readme') {
-    res.status(404).send('No README.md');
-    return;
-  } else if (cloneResult === 'error') {
-    res.status(500).send('Unspecified error');
-    return;
-  }
-
-  const readme = await extractReadme(submissionData.repoUrl);
-  if (readme == null) {
-    res.sendStatus(500);
-    return;
-  }
-
   let submissionToSave;
   if(userTeam?.submission) {
     let renamedFields = {
@@ -227,16 +214,15 @@ export const submitProject = async (
 
     submissionToSave.challenges = challengesToAdd;
   }
-  
-  submissionToSave.readmeText = readme;
-  submissionToSave.readmePath = SUBMISSION_ROOT + submissionData.name + '/README.md';
 
   if (req.files?.logo) {
     submissionToSave.imageLogo = req.files.logo.data;
+    submissionToSave.logoMimeType = req.files.logo.mimetype;
   }
 
   if (req.files?.cover) {
     submissionToSave.imageCover = req.files.cover.data;
+    submissionToSave.coverMimeType = req.files.cover.mimetype;
   }
 
   try {
@@ -244,6 +230,36 @@ export const submitProject = async (
     res.sendStatus(200);
   } catch (e) {
     res.status(500).send(e);
+  }
+
+  const cloneResult = await cloneSubmission(submissionData.repoUrl);
+  let shouldExtractReadme = true;
+  if (cloneResult == 'no-repo') {
+    submissionToSave.cloneError = 'no-repo';
+    shouldExtractReadme = false;
+  } else if (cloneResult == 'no-readme') {
+    submissionToSave.cloneError = 'no-readme';
+    shouldExtractReadme = false;
+  } else if (cloneResult === 'error') {
+    submissionToSave.cloneError = 'unspecified-error';
+    shouldExtractReadme = false;
+  }
+
+  if(shouldExtractReadme) {
+    const readme = await extractReadme(submissionData.repoUrl);
+    if (readme == null) {
+      submissionToSave.cloneError = 'no-readme';
+      return;
+    }
+
+    submissionToSave.readmeText = readme;
+    submissionToSave.readmePath = SUBMISSION_ROOT + submissionData.name + '/README.md';
+  }
+
+  try {
+    await submissionRepo.save(submissionToSave);
+  } catch (e) {
+    console.log('Final save of repo clone failed for repo: ' + submissionToSave.repo);
   }
 
 };
@@ -257,7 +273,17 @@ export const getSubmission = async (
 
   const submission = await submissionRepo.findOne({repo: repo}, {relations: ['challenges']});
   if(submission) {
-    res.status(200).send(submission);
+    const logoMimeType = submission.logoMimeType ?? 'image/png';
+    const coverMimeType = submission.coverMimeType ?? 'image/png';
+
+    const logoBase64 = submission.imageLogo ? 'data:'+logoMimeType+';base64, ' + submission.imageLogo.toString('base64') : undefined;
+    const coverBase64 = submission.imageCover ? 'data:'+coverMimeType+';base64, ' + submission.imageCover.toString('base64') : undefined;
+    const {imageLogo, imageCover, ...restOfSubmission} = submission;
+    res.status(200).send({
+      submission: restOfSubmission,
+      logo: logoBase64,
+      cover: coverBase64
+    });
   } else {
     res.sendStatus(404);
   }
@@ -276,7 +302,15 @@ export const getSubmissionPreviews = async (
 
   for(const submission of submissions) {
     const team = await teamRepo.createQueryBuilder("team").leftJoinAndSelect("team.submission", "submission").getOne();
-    output.push({...submission, team: team?.name});
+    const logoMimeType = submission.logoMimeType ?? 'image/png';
+    const coverMimeType = submission.coverMimeType ?? 'image/png';
+    output.push({
+      name: submission.projectName,
+      repo: submission.repo, 
+      team: team?.name,
+      logo: submission.imageLogo ? 'data:'+logoMimeType+';base64, ' + submission.imageLogo.toString('base64') : undefined,
+      cover: submission.imageCover ? 'data:'+coverMimeType+';base64, ' + submission.imageCover.toString('base64') : undefined
+    });
   }
  
 
