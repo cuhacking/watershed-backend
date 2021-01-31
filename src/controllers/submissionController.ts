@@ -208,6 +208,7 @@ export const submitProject = async (
       }
     }
 
+    submissionToSave.challengeList = submissionData.challenges.join(',');
     submissionToSave.challenges = challengesToAdd;
   }
 

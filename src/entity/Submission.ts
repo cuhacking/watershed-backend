@@ -36,6 +36,9 @@ export class Submission {
     @Column({nullable: true, type: 'varchar'})
     cloneError?: string;
 
+    @Column({nullable: true, type: 'varchar'})
+    challengeList?: string;
+
     @Column()
     demoVideo!: string;
 
