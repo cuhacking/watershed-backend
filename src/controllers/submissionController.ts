@@ -301,9 +301,9 @@ export const getSubmissionPreviews = async (
   for(const submission of submissions) {
     const team = await teamRepo.createQueryBuilder("team")
       .leftJoinAndSelect("team.submission", "submission")
-      .where("team.submission = :submission", {submission: submission.id})
+      .where("team.submissionId = :submission", {submission: submission.id})
       .getOne();
-      
+
     const logoMimeType = submission.logoMimeType ?? 'image/png';
     const coverMimeType = submission.coverMimeType ?? 'image/png';
     output.push({
