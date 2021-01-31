@@ -277,7 +277,7 @@ export const getSubmission = async (
     res.status(200).send({
       submission: restOfSubmission,
       team: teamData,
-      cover: `/submission/${repo}/cover`
+      cover: `/submission/${req.params.repo}/cover`
     });
   } else {
     res.sendStatus(404);
@@ -291,9 +291,9 @@ export const getSubmissionImage = async (req: Request, res: Response) => {
   const submission = await submissionRepo.findOne({repo: repo});
   if(submission) {
     const coverMimeType = submission.coverMimeType ?? 'image/png';
-    const buffer =submission.imageCover;
+    const buffer = submission.imageCover;
 
-    res.setHeader('Content-Type', coverMimeType);
+    res.set('content-type', coverMimeType);
     res.status(200).end(buffer, 'binary');
   } else {
     res.sendStatus(404);
@@ -307,17 +307,14 @@ export const getSubmissionPreviews = async (
   const submissionRepo = getManager().getRepository(Submission);
 
   const output = [];
-  const submissions = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover'], relations: ['team']});
+  const submissions = await submissionRepo.find({select: ['projectName', 'repo', 'imageCover'], relations: ['team']});
 
   for(const submission of submissions) {
-    const logoMimeType = submission.logoMimeType ?? 'image/png';
-    const coverMimeType = submission.coverMimeType ?? 'image/png';
     output.push({
       name: submission.projectName,
       repo: submission.repo, 
       team: submission.team?.name,
-      logo: submission.imageLogo ? 'data:'+logoMimeType+';base64,' + submission.imageLogo.toString('base64') : undefined,
-      cover: submission.imageCover ? 'data:'+coverMimeType+';base64,' + submission.imageCover.toString('base64') : undefined
+      cover: submission.imageCover ? `/submission/${encodeURIComponent(submission.repo)}/cover` : undefined
     });
   }
  
