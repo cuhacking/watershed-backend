@@ -295,6 +295,7 @@ export const getSubmissionImage = async (req: Request, res: Response) => {
 
     res.set('content-length', `${buffer?.length ?? 0}`)
     res.set('content-type', coverMimeType);
+    res.set('cache-control', 'public, max-age=300')
     res.status(200).end(buffer, 'binary');
   } else {
     res.sendStatus(404);
