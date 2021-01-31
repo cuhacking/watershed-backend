@@ -200,6 +200,7 @@ export const submitProject = async (
 
   if(submissionData.challenges) {
     const challengesToAdd = [];
+    console.log(user.team, submissionData.challenges);
     for(let challenge of submissionData.challenges) {
       const challengeObj = await challengeRepo.findOne({name: challenge});
       if(challengeObj) {
