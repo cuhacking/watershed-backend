@@ -295,23 +295,17 @@ export const getSubmissionPreviews = async (
   res: Response
 ): Promise<void> => {
   const submissionRepo = getManager().getRepository(Submission);
-  const teamRepo = getManager().getRepository(Team);
 
   const output = [];
-  const submissions = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover']});
+  const submissions = await submissionRepo.find({select: ['projectName', 'repo', 'imageLogo', 'imageCover'], relations: ['team']});
 
   for(const submission of submissions) {
-    const team = await teamRepo.createQueryBuilder("team")
-      .leftJoinAndSelect("team.submission", "submission")
-      .where("team.submissionId = :submission", {submission: submission.id})
-      .getOne();
-
     const logoMimeType = submission.logoMimeType ?? 'image/png';
     const coverMimeType = submission.coverMimeType ?? 'image/png';
     output.push({
       name: submission.projectName,
       repo: submission.repo, 
-      team: team?.name,
+      team: submission.team?.name,
       logo: submission.imageLogo ? 'data:'+logoMimeType+';base64,' + submission.imageLogo.toString('base64') : undefined,
       cover: submission.imageCover ? 'data:'+coverMimeType+';base64,' + submission.imageCover.toString('base64') : undefined
     });
