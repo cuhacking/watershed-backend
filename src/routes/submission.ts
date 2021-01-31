@@ -41,4 +41,7 @@ router.post('/:repo', auth.authenticate(Role.Organizer), submission.clearImages)
 
 router.get('/:repo', submission.getSubmission);
 
+router.get('/:repo/cover', submission.getSubmissionImage);
+
+
 export = router;
