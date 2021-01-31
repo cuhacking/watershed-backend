@@ -14,7 +14,7 @@ const git = simpleGit(SUBMISSION_ROOT);
 
 const CONFIG_FILE = process.env.CONFIG_FILE;
 let ENDTIME: Date = new Date('2020-01-31T12:30:00.000Z');
-let GRACE_PERIOD = process.env.GRACE_PERIOD ? parseInt(process.env.GRACE_PERIOD) : 30;
+const GRACE_PERIOD = process.env.GRACE_PERIOD ? parseInt(process.env.GRACE_PERIOD) : 30;
 
 // Result of a git-related action
 export type GitResult = 'no-repo' | 'no-readme' | 'success' | 'error';
@@ -277,7 +277,7 @@ export const getSubmission = async (
     res.status(200).send({
       submission: restOfSubmission,
       team: teamData,
-      cover: `/submission/${req.params.repo}/cover`
+      cover: `/api/submission/${encodeURIComponent(repo)}/cover`
     });
   } else {
     res.sendStatus(404);
@@ -293,6 +293,7 @@ export const getSubmissionImage = async (req: Request, res: Response) => {
     const coverMimeType = submission.coverMimeType ?? 'image/png';
     const buffer = submission.imageCover;
 
+    res.set('content-length', `${buffer?.length ?? 0}`)
     res.set('content-type', coverMimeType);
     res.status(200).end(buffer, 'binary');
   } else {
@@ -314,7 +315,7 @@ export const getSubmissionPreviews = async (
       name: submission.projectName,
       repo: submission.repo, 
       team: submission.team?.name,
-      cover: submission.imageCover ? `/submission/${encodeURIComponent(submission.repo)}/cover` : undefined
+      cover: submission.imageCover ? `/api/submission/${encodeURIComponent(submission.repo)}/cover` : undefined
     });
   }
  

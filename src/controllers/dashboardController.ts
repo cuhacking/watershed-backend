@@ -8,6 +8,7 @@ import { promises as fs } from 'fs';
 
 let ENDTIME: Date = new Date('2021-01-31T12:00:00.000Z');
 let STARTTIME = new Date('2021-01-30T12:00:00.000Z');
+let GRACE_PERIOD = process.env.GRACE_PERIOD ? parseInt(process.env.GRACE_PERIOD) : 30;
 const CONFIG_FILE = process.env.CONFIG_FILE;
 
 export const updateStartEndTime = async (): Promise<boolean> => {
@@ -91,6 +92,7 @@ export const getDashboardInfo = async (req: Request, res: Response): Promise<voi
         schedule: events,
         startTime: STARTTIME,
         endTime: ENDTIME,
+        graceTime: GRACE_PERIOD,
         firstName: user.application.firstName,
         lastName: user.application.lastName,
         teamMembers: teamMembers
