@@ -6,6 +6,7 @@ import {validate} from 'class-validator';
 import { Resource } from '../entity/Resource';
 import {User} from '../entity/User';
 import { Prize } from '../entity/Prize';
+import { Submission } from '../entity/Submission';
 
 export const createChallenge = async (req: Request, res: Response): Promise<void> => {
     const challengeRepository = getManager().getRepository(Challenge);
@@ -124,4 +125,34 @@ export const deleteChallenge = async (req: Request, res: Response): Promise<void
     } else {
         res.sendStatus(404);
     }
+}
+
+export const setWinner = async (req: Request, res: Response): Promise<void> => {
+    const challengeRepo = getManager().getRepository(Challenge);
+    const submissionRepo = getManager().getRepository(Submission);
+
+    const submissionId = req.body.submissionId;
+    const challengeId = req.body.challengeId;
+
+    const submission = await submissionRepo.findOne({id: submissionId});
+    const challenge = await challengeRepo.findOne({id: challengeId});
+
+    if(submission && challenge) {
+        submission.winner = challenge;
+        await submissionRepo.save(submission);
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(404);
+    }
+}
+
+export const getAllWinners = async (req: Request, res: Response): Promise<void> => {
+    const submissionRepo = getManager().getRepository(Submission);
+
+    const winners = await submissionRepo
+                    .createQueryBuilder("submission")
+                    .innerJoinAndSelect('submission.winner', 'winner')
+                    .getMany();
+
+    res.status(200).send(winners);
 }

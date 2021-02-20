@@ -27,6 +27,9 @@ export class Challenge {
     @JoinTable()
     prizes?: Prize[];
 
+    @OneToOne(() => Submission)
+    winner?: Submission;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {

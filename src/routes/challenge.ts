@@ -33,6 +33,15 @@ router.post('/', auth.authenticate(Role.Organizer), challenge.createChallenge);
 router.get('/', challenge.getAllChallenges);
 
 /**
+ * GET /challenge/winner
+ * @tag Challenges
+ * @summary Gets all Challenge winners
+ * @response 200 - List of Challenge winners
+ * @responseContent {Event} 200.application/json
+ */
+router.get('/winner', challenge.getAllWinners);
+
+/**
  * GET /challenge/{challengeId}
  * @tag Event
  * @summary Gets a specific event
@@ -58,5 +67,16 @@ router.delete('/:challengeId', auth.authenticate(Role.Organizer), challenge.dele
  * @response 200 - OK
  */
 router.patch('/:challengeId', auth.authenticate(Role.Organizer), challenge.editChallenge);
+
+/**
+ * POST /challenge/winner
+ * @tag Challenges
+ * @summary Create an event
+ * @description Creates a winner. Submission ID and Challenge ID in the body.
+ * @bodyContent {Event} application/json
+ * @bodyRequired
+ * @response 201 - Created
+ */
+router.post('/winner', auth.authenticate(Role.Organizer), challenge.setWinner);
 
 export = router;
