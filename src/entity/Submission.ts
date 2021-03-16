@@ -49,6 +49,9 @@ export class Submission {
     @JoinTable()
     challenges?: Challenge[];
 
+    @Column({nullable: true, type:'varchar'})
+    winner?: string;
+
     @BeforeInsert()
     @BeforeUpdate()
     async validate(): Promise<void> {

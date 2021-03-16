@@ -24,6 +24,8 @@ router.get('/preview/:repo', submission.getRepoPreview);
  */
 router.get('/', submission.getSubmissionPreviews);
 
+router.get('/winners', submission.getWinners);
+
 /**
  * POST /submission
  * @tag Submissions

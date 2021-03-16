@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import simpleGit from 'simple-git';
 import { promises as fs } from 'fs';
 import * as auth from '../middleware/authMiddleware';
-import {getManager} from 'typeorm';
+import {getManager, Not, IsNull } from 'typeorm';
 import { Submission } from '../entity/Submission';
 import { Team } from '../entity/Team';
 import { Challenge } from '../entity/Challenge';
@@ -346,3 +346,11 @@ export const clearImages = async (
     res.sendStatus(204);
   }
 };
+
+export const getWinners = async (req: Request, res: Response): Promise<void> => {
+  const submissionRepo = getManager().getRepository(Submission);
+
+  const winners = await submissionRepo.find({where: {winner: Not(IsNull())}});
+  res.status(200).send(winners);
+
+}
